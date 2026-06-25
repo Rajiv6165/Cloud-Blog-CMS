@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% load markdown_extras %}
+{% block title %}{{ object.title }} — Blog CMS{% endblock %}
+
+{% block reading_progress %}
+<div class="reading-progress" id="reading-progress"></div>
+{% endblock %}
+
+{% block content %}
+<!-- Premium Editorial Hero Header -->
+<div class="relative w-full overflow-hidden py-24 bg-gradient-to-tr from-[var(--accent-light)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] border-b border-[var(--border)]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in">
+    <!-- Tag badges -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      {% for tag in object.tags.all %}
+      <a href="{% url 'blog:post_list' %}?tag={{ tag.slug }}" class="tag-pill">
+        #{{ tag.name }}
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Title -->
+    <h1 class="font-serif font-bold text-4xl md:text-5xl lg:text-6xl tracking-tight leading-[1.1] max-w-4xl text-[var(--text-primary)]">
+      {{ object.title }}
+    </h1>
+
+    <!-- Meta descriptors -->
+    <div class="flex flex-wrap items-center gap-4 mt-8 text-sm text-[var(--text-secondary)]">
+      <div class="flex items-center gap-2">
+        <div class="avatar">
+          {{ object.author.username|first|upper }}
+        </div>
+        <span class="font-medium text-[var(--text-primary)]">
+          {{ object.author.get_full_name|default:object.author.username }}
+        </span>
+      </div>
+      <span class="text-[var(--text-muted)]">•</span>
+      <span>{{ object.published_at|date:"F j, Y" }}</span>
+      <span class="text-[var(--text-muted)]">•</span>
+      <span class="stat-badge">
+        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ object.reading_time }} min read
+      </span>
+      <span class="stat-badge">
+        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+        </svg>
+        {{ object.view_count }} views
+      </span>
+    </div>
+  </div>
+  
+  <!-- Subtle decorative abstract circle -->
+  <div class="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-[var(--accent)] opacity-[0.03] blur-3xl pointer-events-none"></div>
+</div>
+
+<!-- Core Content Grid -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div class="flex flex-col lg:flex-row gap-16">
+
+    <!-- Primary Reading Article -->
+    <article class="flex-1 min-w-0">
+      <!-- Summary Lead Paragraph -->
+      {% if object.summary %}
+      <p class="text-xl md:text-2xl text-[var(--text-secondary)] font-serif italic leading-relaxed mb-10 pb-10 border-b border-[var(--border)]">
+        {{ object.summary }}
+      </p>
+      {% endif %}
+
+      <!-- Safe Markdown Compiled Prose Content -->
+      <div class="prose-content markdown-body">
+        {{ object.content|markdownify }}
+      </div>
+
+      <!-- Footer Author Card & Moderation Controls -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mt-16 pt-8 border-t border-[var(--border)]">
+        <div class="flex items-center gap-4">
+          <div class="avatar !w-12 !h-12 !text-base">
+            {{ object.author.username|first|upper }}
+          </div>
+          <div>
+            <h4 class="font-medium text-base text-[var(--text-primary)]">
+              Written by {{ object.author.get_full_name|default:object.author.username }}
+            </h4>
+            <p class="text-xs text-[var(--text-muted)]">Author & Contributor</p>
+          </div>
+        </div>
+
+        <!-- Editor Controls (Only shown for authors/staff) -->
+        {% if user == object.author or user.is_staff %}
+        <div class="flex gap-2.5">
+          <a href="{% url 'blog:post_update' object.slug %}" class="btn-ghost !text-xs !py-1.5 !px-3.5">
+            Edit
+          </a>
+          <a href="{% url 'blog:post_delete' object.slug %}" class="btn-ghost !text-xs !py-1.5 !px-3.5 !text-red-500 !border-red-500/20 hover:!bg-red-500/5">
+            Delete
+          </a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Moderated Comments Thread Section -->
+      <section class="mt-20 border-t border-[var(--border)] pt-12">
+        <h3 class="font-serif font-bold text-2xl mb-8 text-[var(--text-primary)]">
+          Discussion ({{ object.comments.count }})
+        </h3>
+
+        <!-- Authenticated Inline Comment form -->
+        {% if user.is_authenticated %}
+          {% if object.allow_comments %}
+          <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-6 mb-10 animate-fade-in">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="avatar">{{ user.username|first|upper }}</div>
+              <span class="text-sm font-medium text-[var(--text-primary)]">{{ user.username }}</span>
+            </div>
+            <form method="post" class="space-y-4">
+              {% csrf_token %}
+              <div>
+                <textarea name="content" placeholder="Join the discussion..." rows="3" required
+                          class="form-input w-full resize-y min-h-[90px]"></textarea>
+              </div>
+              <div class="flex justify-end">
+                <button type="submit" class="btn-primary !text-xs !py-2 !px-4">Post Comment</button>
+              </div>
+            </form>
+          </div>
+          {% else %}
+          <p class="text-sm text-[var(--text-muted)] italic mb-8">Comments are disabled for this story.</p>
+          {% endif %}
+        {% else %}
+          {% if object.allow_comments %}
+          <div class="text-center py-8 px-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl mb-10">
+            <p class="text-sm text-[var(--text-secondary)] mb-4">Sign in to share your thoughts and participate in the discussion.</p>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary">Sign in</a>
+          </div>
+          {% endif %}
+        {% endif %}
+
+        <!-- Comments Feed -->
+        <div class="space-y-4">
+          {% for comment in object.comments.all %}
+            {% if comment.is_approved %}
+            <article class="comment-card flex gap-4">
+              <div class="avatar mt-0.5">{{ comment.user.username|first|upper }}</div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between gap-4 mb-1">
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-sm font-semibold text-[var(--text-primary)]">
+                      {{ comment.user.get_full_name|default:comment.user.username }}
+                    </span>
+                    <span class="text-[11px] text-[var(--text-muted)]">
+                      {{ comment.created_at|timesince }} ago
+                    </span>
+                  </div>
+                  
+                  <!-- Allow author/comment-owner/staff to delete comments -->
+                  {% if user == comment.user or user.is_staff %}
+                  <a href="{% url 'blog:comment_delete' comment.pk %}" 
+                     class="text-[11px] text-red-500 hover:underline opacity-65 hover:opacity-100 transition-opacity"
+                     onclick="return confirm('Are you sure you want to delete this comment?')">
+                    Delete
+                  </a>
+                  {% endif %}
+                </div>
+                <p class="text-sm text-[var(--text-secondary)] leading-relaxed mt-1.5">{{ comment.content|linebreaksbr }}</p>
+              </div>
+            </article>
+            {% endif %}
+          {% empty %}
+            {% if object.allow_comments %}
+            <p class="text-center text-sm text-[var(--text-muted)] py-8">No comments yet. Start the conversation!</p>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+    </article>
+
+    <!-- Navigation/Spawning Sidebars -->
+    <aside class="lg:w-64 flex-shrink-0">
+      <div class="sticky top-24 space-y-10">
+        <!-- Client-Side Generated Table of Contents -->
+        <div class="toc bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-5 shadow-sm">
+          <h3 class="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase mb-3.5">On this page</h3>
+          <div id="toc-links" class="flex flex-col gap-1.5"></div>
+        </div>
+
+        <!-- Related Stories Widget -->
+        {% if related %}
+        <div class="space-y-4">
+          <h3 class="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase">Related stories</h3>
+          <div class="flex flex-col gap-3.5">
+            {% for r in related %}
+            <a href="{{ r.get_absolute_url }}" class="block p-4 bg-[var(--bg-secondary)] hover:bg-[var(--bg-tertiary)] border border-[var(--border)] hover:border-[var(--border-hover)] rounded-xl transition-all duration-200">
+              <h4 class="text-xs font-semibold text-[var(--text-primary)] leading-snug mb-1 text-ellipsis overflow-hidden line-clamp-2">
+                {{ r.title }}
+              </h4>
+              <div class="flex items-center gap-2 mt-2 text-[10px] text-[var(--text-muted)]">
+                <span>{{ r.reading_time }}m read</span>
+                <span>•</span>
+                <span>{{ r.view_count }} views</span>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </aside>
+
+  </div>
+</div>
+{% endblock %}

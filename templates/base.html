@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Blog CMS{% endblock %}</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            accent: {
+              DEFAULT: '#6d28d9',
+              light: '#ede9fe',
+              dark: '#a78bfa',
+            }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out',
+            'slide-up': 'slideUp 0.5s cubic-bezier(0.4,0,0.2,1)',
+            'shimmer': 'shimmer 1.8s infinite',
+          },
+          keyframes: {
+            fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
+            slideUp: { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Premium Editorial Stylesheet -->
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="bg-[var(--bg-primary)] text-[var(--text-primary)] min-h-screen flex flex-col transition-colors duration-300">
+  <!-- Reading progress bar -->
+  {% block reading_progress %}{% endblock %}
+
+  <!-- Premium Glassmorphic Navigation -->
+  <header class="glass-nav sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="{% url 'blog:post_list' %}" class="font-serif font-bold text-xl logo-gradient tracking-tight">
+          Blog CMS
+        </a>
+
+        <!-- Search Bar (Desktop) -->
+        <form method="get" action="{% url 'blog:post_list' %}" class="hidden md:flex relative items-center">
+          <span class="absolute left-3.5 flex items-center pointer-events-none">
+            <svg class="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+          </span>
+          <input name="q" type="search" placeholder="Search stories..." class="search-input" value="{{ query|default:'' }}">
+        </form>
+
+        <!-- Desktop Navigation Actions -->
+        <nav class="hidden md:flex items-center gap-6">
+          {% if user.is_authenticated %}
+            <a href="{% url 'blog:post_create' %}" class="btn-primary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+              </svg>
+              New story
+            </a>
+            <a href="{% url 'blog:dashboard' %}" class="nav-link">Dashboard</a>
+            <a href="{% url 'blog:profile_edit' %}" class="nav-link">Profile</a>
+            <form method="post" action="{% url 'logout' %}" class="inline">
+              {% csrf_token %}
+              <button type="submit" class="nav-link border-none bg-transparent cursor-pointer p-0 font-medium">Logout</button>
+            </form>
+            {% if user.is_staff %}
+              <a href="{% url 'admin:index' %}" class="nav-link text-purple-600 dark:text-purple-400">Admin</a>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'register' %}" class="nav-link">Register</a>
+            <a href="{% url 'login' %}" class="btn-primary">Sign in</a>
+          {% endif %}
+
+          <!-- Theme Toggle Switcher -->
+          <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" id="theme-btn">
+            <svg id="icon-moon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+            </svg>
+            <svg id="icon-sun" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+            </svg>
+          </button>
+        </nav>
+
+        <!-- Mobile hamburger menu button -->
+        <button class="md:hidden theme-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
+          <svg id="menu-icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-menu md:hidden" id="mobile-menu">
+      <form method="get" action="{% url 'blog:post_list' %}" class="mb-4">
+        <input name="q" type="search" placeholder="Search posts..." class="form-input" value="{{ query|default:'' }}">
+      </form>
+      <div class="flex flex-col gap-2.5">
+        {% if user.is_authenticated %}
+          <a href="{% url 'blog:post_create' %}" class="btn-primary justify-center">+ New story</a>
+          <a href="{% url 'blog:dashboard' %}" class="btn-ghost justify-center">Dashboard</a>
+          <a href="{% url 'blog:profile_edit' %}" class="btn-ghost justify-center">Profile</a>
+          <form method="post" action="{% url 'logout' %}" class="w-full">
+            {% csrf_token %}
+            <button type="submit" class="btn-ghost w-full justify-center">Logout</button>
+          </form>
+          {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="btn-ghost justify-center text-purple-600 dark:text-purple-400">Admin</a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'register' %}" class="btn-ghost justify-center">Register</a>
+          <a href="{% url 'login' %}" class="btn-primary justify-center">Sign in</a>
+        {% endif %}
+        <!-- Theme toggle (mobile) -->
+        <button class="btn-ghost justify-center gap-2" onclick="toggleTheme()">
+          <span>Toggle Theme</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Feedback/Alert Flash messages -->
+  {% if messages %}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+    {% for message in messages %}
+    <div data-message class="flex items-center justify-between gap-3 p-4 rounded-xl border mb-3 animate-fade-in transition-all duration-300
+      {% if message.tags == 'success' %}border-green-200 bg-green-50/50 text-green-800 dark:border-green-900/50 dark:bg-green-950/40 dark:text-green-300
+      {% elif message.tags == 'error' %}border-red-200 bg-red-50/50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300
+      {% else %}border-blue-200 bg-blue-50/50 text-blue-800 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300{% endif %}">
+      <span class="text-sm font-medium">{{ message }}</span>
+      <button data-dismiss class="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200 text-current" aria-label="Dismiss">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Core Content Frame -->
+  <main class="page-content flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Editorial Footer -->
+  <footer class="border-t border-[var(--border)] mt-24 py-12 bg-[var(--bg-secondary)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex flex-col items-center md:items-start gap-1">
+          <span class="font-serif font-bold text-lg logo-gradient tracking-tight">Blog CMS</span>
+          <p class="text-xs text-[var(--text-muted)]">A premium writing and publishing environment.</p>
+        </div>
+        <p class="text-sm text-[var(--text-muted)]">© {% now 'Y' %} Editorial Platform. All rights reserved.</p>
+        <div class="flex items-center gap-6">
+          <a href="{% url 'blog:post_list' %}" class="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">Home</a>
+          {% if user.is_staff %}
+            <a href="{% url 'admin:index' %}" class="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">Admin Panel</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top trigger button -->
+  <button class="back-to-top shadow-lg" id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+    <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+    </svg>
+  </button>
+
+  <!-- Main JavaScript App -->
+  <script src="{% static 'js/app.js' %}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

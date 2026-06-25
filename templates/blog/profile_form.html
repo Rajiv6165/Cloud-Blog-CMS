@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile — Blog CMS{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-slide-up">
+  <!-- Header -->
+  <div class="mb-10 text-center">
+    <div class="avatar !w-16 !h-16 !text-2xl font-bold mx-auto mb-4 shadow">
+      {{ user.username|first|upper }}
+    </div>
+    <h1 class="font-serif font-bold text-3xl text-[var(--text-primary)]">
+      Edit Profile
+    </h1>
+    <p class="text-sm text-[var(--text-secondary)] mt-1.5">
+      Update your user credentials, public name details, and email notifications contact.
+    </p>
+  </div>
+
+  <form method="post" class="space-y-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="space-y-5">
+      <!-- Username (Display Only) -->
+      <div>
+        <label class="form-label" for="id_username">Username</label>
+        <input type="text" id="id_username" value="{{ user.username }}" disabled
+               class="form-input opacity-60 bg-[var(--bg-tertiary)] cursor-not-allowed">
+        <p class="text-[11px] text-[var(--text-muted)] mt-1">Username identifier cannot be changed.</p>
+      </div>
+
+      <!-- First name -->
+      <div>
+        <label class="form-label" for="id_first_name">First Name</label>
+        <input type="text" name="first_name" id="id_first_name"
+               value="{{ form.first_name.value|default:'' }}"
+               placeholder="Your first name..."
+               class="form-input">
+        {% for error in form.first_name.errors %}
+        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Last name -->
+      <div>
+        <label class="form-label" for="id_last_name">Last Name</label>
+        <input type="text" name="last_name" id="id_last_name"
+               value="{{ form.last_name.value|default:'' }}"
+               placeholder="Your last name..."
+               class="form-input">
+        {% for error in form.last_name.errors %}
+        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="form-label" for="id_email">Email Address</label>
+        <input type="email" name="email" id="id_email"
+               value="{{ form.email.value|default:'' }}"
+               placeholder="you@example.com" required
+               class="form-input">
+        {% for error in form.email.errors %}
+        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3 pt-6 border-t border-[var(--border)]">
+      <button type="submit" class="btn-primary w-full sm:w-auto justify-center">
+        Save profile updates
+      </button>
+      <a href="{% url 'blog:dashboard' %}" class="btn-ghost w-full sm:w-auto justify-center">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

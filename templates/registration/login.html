@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Sign in — Blog CMS{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto px-4 sm:px-6 py-20 animate-slide-up">
+  <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
+    <div class="mb-8 text-center">
+      <span class="font-serif font-bold text-2xl logo-gradient tracking-tight mb-2 inline-block">Blog CMS</span>
+      <h1 class="font-serif font-bold text-2xl text-[var(--text-primary)]">Welcome back</h1>
+      <p class="text-xs text-[var(--text-secondary)] mt-1.5">Sign in to your account to start writing and leaving comments.</p>
+    </div>
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+      
+      {% if form.non_field_errors %}
+      <div class="p-3.5 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 text-xs font-medium border border-red-500/10">
+        {{ form.non_field_errors|join:", " }}
+      </div>
+      {% endif %}
+
+      <!-- Username -->
+      <div>
+        <label class="form-label" for="id_username">Username</label>
+        <input type="text" name="username" id="id_username" required
+               placeholder="Your username"
+               class="form-input">
+        {% for error in form.username.errors %}
+        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="form-label" for="id_password">Password</label>
+        <input type="password" name="password" id="id_password" required
+               placeholder="••••••••"
+               class="form-input">
+        {% for error in form.password.errors %}
+        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn-primary w-full justify-center !py-3">
+        Sign in
+      </button>
+    </form>
+
+    <div class="mt-8 pt-6 border-t border-[var(--border)] text-center text-sm text-[var(--text-secondary)]">
+      <span>Don't have an account?</span>
+      <a href="{% url 'register' %}" class="font-semibold text-[var(--accent)] hover:underline ml-1">Create one</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

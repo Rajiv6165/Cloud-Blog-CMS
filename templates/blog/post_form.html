@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}{% if object %}Edit story{% else %}New story{% endif %} — Blog CMS{% endblock %}
+
+{% block head %}
+<!-- EasyMDE editor stylesheet -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<style>
+  .EasyMDEContainer .CodeMirror {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+    border-radius: 0 0 8px 8px !important;
+  }
+  .EasyMDEContainer .editor-toolbar {
+    background: var(--bg-tertiary) !important;
+    border-color: var(--border) !important;
+    border-radius: 8px 8px 0 0 !important;
+  }
+  .EasyMDEContainer .editor-toolbar button {
+    color: var(--text-secondary) !important;
+  }
+  .EasyMDEContainer .editor-toolbar button:hover,
+  .EasyMDEContainer .editor-toolbar button.active {
+    background: var(--accent-light) !important;
+    color: var(--accent) !important;
+    border-color: transparent !important;
+  }
+  .EasyMDEContainer .editor-preview-active,
+  .EasyMDEContainer .editor-preview-active-side {
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-slide-up">
+  <!-- Header -->
+  <div class="mb-10">
+    <h1 class="font-serif font-bold text-3xl md:text-4xl mb-2 text-[var(--text-primary)]">
+      {% if object %}Edit story{% else %}New story{% endif %}
+    </h1>
+    <p class="text-[var(--text-secondary)] text-sm">
+      {% if object %}Update your published draft details below.{% else %}Write and curate a new article for your readers.{% endif %}
+    </p>
+  </div>
+
+  <form method="post" enctype="multipart/form-data" class="space-y-8">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="space-y-6">
+      <!-- Title -->
+      <div>
+        <label class="form-label" for="id_title">Title</label>
+        <input type="text" name="title" id="id_title"
+               value="{{ form.title.value|default:'' }}"
+               placeholder="Write a captivating title..."
+               class="form-input !font-serif !text-xl !font-semibold !py-3.5 !px-5" required>
+        {% for error in form.title.errors %}
+        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Slug (Auto-generated) -->
+      <div>
+        <label class="form-label" for="id_slug">Slug <span class="font-normal text-[var(--text-muted)]">(auto-generated from title)</span></label>
+        <div class="flex items-center bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg overflow-hidden">
+          <span class="px-4 py-2.5 text-sm text-[var(--text-muted)] border-r border-[var(--border)] select-none">post/</span>
+          <input type="text" name="slug" id="id_slug"
+                 value="{{ form.slug.value|default:'' }}"
+                 placeholder="auto-generated-slug" required
+                 class="flex-1 bg-transparent border-none outline-none px-4 py-2.5 text-sm font-mono text-[var(--text-primary)]">
+        </div>
+        {% for error in form.slug.errors %}
+        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Summary -->
+      <div>
+        <label class="form-label" for="id_summary">Summary</label>
+        <textarea name="summary" id="id_summary" rows="2"
+                  placeholder="Provide a quick synopsis of the story..."
+                  class="form-input resize-none" maxlength="300">{{ form.summary.value|default:'' }}</textarea>
+        <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono">300 characters remaining</p>
+        {% for error in form.summary.errors %}
+        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Content (EasyMDE) -->
+      <div>
+        <label class="form-label" for="id_content">Content</label>
+        <textarea name="content" id="id_content" required>{{ form.content.value|default:'' }}</textarea>
+        {% for error in form.content.errors %}
+        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Tags & Status Fields Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Tags Multiple Select -->
+        <div>
+          <label class="form-label" for="id_tags">Tags <span class="font-normal text-[var(--text-muted)]">(Select multiple)</span></label>
+          <select name="tags" id="id_tags" multiple
+                  class="form-input min-h-[120px] !py-2.5 !px-3.5">
+            {% for value, name in form.tags.field.choices %}
+              <option value="{{ value }}" {% if value in form.tags.value %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+          </select>
+          {% for error in form.tags.errors %}
+          <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <!-- Publishing Status & Allow Comments Options -->
+        <div class="space-y-6">
+          <div>
+            <label class="form-label" for="id_status">Status</label>
+            <select name="status" id="id_status" class="form-input !py-2.5 !px-3.5">
+              {% for value, name in form.status.field.choices %}
+                <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ name }}</option>
+              {% endfor %}
+            </select>
+            {% for error in form.status.errors %}
+            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+            {% endfor %}
+          </div>
+
+          <div class="flex items-center">
+            <label class="inline-flex items-center cursor-pointer select-none">
+              <input type="checkbox" name="allow_comments" id="id_allow_comments"
+                     {% if form.allow_comments.value %}checked{% endif %}
+                     class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5">
+              <span class="text-sm font-medium text-[var(--text-secondary)]">Allow comments on this post</span>
+            </label>
+            {% for error in form.allow_comments.errors %}
+            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3 pt-6 border-t border-[var(--border)]">
+      <button type="submit" class="btn-primary">
+        {% if object %}Save updates{% else %}Publish story{% endif %}
+      </button>
+      <a href="{% if object %}{{ object.get_absolute_url }}{% else %}{% url 'blog:post_list' %}{% endif %}" class="btn-ghost">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- EasyMDE script -->
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+{% endblock %}
