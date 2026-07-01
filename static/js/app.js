@@ -482,7 +482,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Start loading state
       const originalBtnText = btnAutoSummarize.innerHTML;
-      btnAutoSummarize.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3 h-3 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Generating...</span>`;
+      btnAutoSummarize.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3.5 h-3.5 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Generating...</span>`;
       btnAutoSummarize.disabled = true;
 
       const originalPlaceholder = summaryTextarea.placeholder;
@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Start loading
       const originalBtnText = btnSuggestTags.innerHTML;
-      btnSuggestTags.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3 h-3 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Suggesting...</span>`;
+      btnSuggestTags.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3.5 h-3.5 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Suggesting...</span>`;
       btnSuggestTags.disabled = true;
 
       try {
@@ -675,6 +675,50 @@ document.addEventListener('DOMContentLoaded', () => {
         pill.innerHTML = originalHtml;
         pill.disabled = false;
       }
+    }
+  }
+
+  // ─── AI Related Posts dynamic fetching logic ───────────────────────
+  const relatedSection = document.getElementById('related-stories-section');
+  if (relatedSection) {
+    const slug = relatedSection.getAttribute('data-slug');
+    const skeleton = document.getElementById('related-stories-skeleton');
+    const container = document.getElementById('related-stories-container');
+
+    if (slug) {
+      fetch(`/ai/related/${slug}/`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.posts && data.related && data.related.length > 0) {
+            container.innerHTML = "";
+            data.related.forEach(relatedSlug => {
+              const post = data.posts[relatedSlug];
+              if (post) {
+                const card = document.createElement('a');
+                card.href = post.url;
+                card.className = "block p-4 bg-[var(--bg-secondary)] hover:bg-[var(--bg-tertiary)] border border-[var(--border)] hover:border-[var(--border-hover)] rounded-xl transition-all duration-200";
+                card.innerHTML = `
+                  <h4 class="text-xs font-semibold text-[var(--text-primary)] leading-snug mb-1 text-ellipsis overflow-hidden line-clamp-2">
+                    ${escapeHtml(post.title)}
+                  </h4>
+                  <div class="flex items-center gap-2 mt-2 text-[10px] text-[var(--text-muted)]">
+                    <span>${post.reading_time}m read</span>
+                    <span>•</span>
+                    <span>${post.view_count} views</span>
+                  </div>
+                `;
+                container.appendChild(card);
+              }
+            });
+            if (skeleton) skeleton.classList.add('hidden');
+            container.classList.remove('hidden');
+          } else {
+            relatedSection.classList.add('hidden'); // hide if no related stories found
+          }
+        })
+        .catch(() => {
+          relatedSection.classList.add('hidden'); // fail silently
+        });
     }
   }
 });

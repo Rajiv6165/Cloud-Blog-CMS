@@ -187,26 +187,33 @@
           <div id="toc-links" class="flex flex-col gap-1.5"></div>
         </div>
 
-        <!-- Related Stories Widget -->
-        {% if related %}
-        <div class="space-y-4">
+        <!-- Dynamic Related Stories Widget -->
+        <div id="related-stories-section" data-slug="{{ object.slug }}" class="space-y-4">
           <h3 class="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase">Related stories</h3>
-          <div class="flex flex-col gap-3.5">
-            {% for r in related %}
-            <a href="{{ r.get_absolute_url }}" class="block p-4 bg-[var(--bg-secondary)] hover:bg-[var(--bg-tertiary)] border border-[var(--border)] hover:border-[var(--border-hover)] rounded-xl transition-all duration-200">
-              <h4 class="text-xs font-semibold text-[var(--text-primary)] leading-snug mb-1 text-ellipsis overflow-hidden line-clamp-2">
-                {{ r.title }}
-              </h4>
-              <div class="flex items-center gap-2 mt-2 text-[10px] text-[var(--text-muted)]">
-                <span>{{ r.reading_time }}m read</span>
-                <span>•</span>
-                <span>{{ r.view_count }} views</span>
+          
+          <!-- Skeleton loaders -->
+          <div id="related-stories-skeleton" class="flex flex-col gap-3.5">
+            <div class="animate-pulse p-4 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+              <div class="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-3/4 mb-2.5"></div>
+              <div class="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-1/2 mb-3"></div>
+              <div class="flex gap-2">
+                <div class="h-2.5 bg-zinc-200 dark:bg-zinc-800 rounded w-1/4"></div>
+                <div class="h-2.5 bg-zinc-200 dark:bg-zinc-800 rounded w-1/4"></div>
               </div>
-            </a>
-            {% endfor %}
+            </div>
+            <div class="animate-pulse p-4 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl">
+              <div class="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3 mb-2.5"></div>
+              <div class="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-1/3 mb-3"></div>
+              <div class="flex gap-2">
+                <div class="h-2.5 bg-zinc-200 dark:bg-zinc-800 rounded w-1/4"></div>
+                <div class="h-2.5 bg-zinc-200 dark:bg-zinc-800 rounded w-1/4"></div>
+              </div>
+            </div>
           </div>
+
+          <!-- Loaded related cards -->
+          <div id="related-stories-container" class="flex flex-col gap-3.5 hidden"></div>
         </div>
-        {% endif %}
       </div>
     </aside>
 

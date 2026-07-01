@@ -6,8 +6,9 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
+from django.core.cache import cache
 from anthropic import Anthropic
-from .models import Tag
+from .models import Tag, Post
 
 
 class AIAssistView(LoginRequiredMixin, View):
@@ -211,3 +212,117 @@ class AICreateTagView(LoginRequiredMixin, View):
         
         tag, created = Tag.objects.get_or_create(name=name_clean, defaults={"slug": slug})
         return JsonResponse({"id": tag.id, "name": tag.name})
+
+
+class AIRelatedView(View):
+    def get(self, request, slug, *args, **kwargs):
+        try:
+            current_post = Post.objects.select_related("author").prefetch_related("tags").get(slug=slug)
+        except Post.DoesNotExist:
+            return JsonResponse({"error": "Post not found"}, status=404)
+
+        cache_key = f"related_posts_{current_post.slug}"
+        cached_result = cache.get(cache_key)
+        if cached_result:
+            return JsonResponse(cached_result)
+
+        # Get all other published posts
+        other_posts = Post.objects.filter(status="published").exclude(pk=current_post.pk).only("title", "slug", "summary")
+        if not other_posts.exists():
+            return JsonResponse({"related": [], "posts": {}})
+
+        # If there are only a few other posts, return them directly
+        if other_posts.count() <= 4:
+            ranked_slugs = list(other_posts.values_list("slug", flat=True))
+            return self._build_response(ranked_slugs, current_post.slug, cache_key)
+
+        title = current_post.title
+        summary = current_post.summary
+        tags_str = ", ".join([t.name for t in current_post.tags.all()])
+
+        posts_data = [{"title": p.title, "slug": p.slug, "summary": p.summary} for p in other_posts]
+        posts_json = json.dumps(posts_data)
+
+        user_prompt = (
+            f"Given this reference post:\n"
+            f"Title: {title}\n"
+            f"Summary: {summary}\n"
+            f"Tags: {tags_str}\n\n"
+            f"From the following JSON list of other posts:\n"
+            f"{posts_json}\n\n"
+            f"Rank the top 4 most semantically related posts from the list. "
+            f"Return ONLY a JSON array of the top 4 post slugs. Return nothing else, no markdown formatting."
+        )
+
+        try:
+            client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+            message = client.messages.create(
+                model="claude-3-5-haiku-20241022",
+                max_tokens=250,
+                temperature=0.3,
+                system="You are a related content ranker. Output only a raw JSON array of slugs.",
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            raw_result = "".join([block.text for block in message.content]).strip()
+
+            if raw_result.startswith("```"):
+                lines = raw_result.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw_result = "\n".join(lines).strip()
+
+            ranked_slugs = json.loads(raw_result)
+            if not isinstance(ranked_slugs, list):
+                raise ValueError("Claude output is not a list")
+        except Exception:
+            # Fallback to tag-based overlap
+            current_tags = current_post.tags.all()
+            if current_tags.exists():
+                fallback_posts = Post.objects.filter(status="published", tags__in=current_tags).exclude(pk=current_post.pk).distinct()[:4]
+            else:
+                fallback_posts = Post.objects.filter(status="published").exclude(pk=current_post.pk)[:4]
+            ranked_slugs = list(fallback_posts.values_list("slug", flat=True))
+
+        return self._build_response(ranked_slugs, current_post.slug, cache_key)
+
+    def _build_response(self, ranked_slugs, current_slug, cache_key):
+        posts_qs = Post.objects.filter(slug__in=ranked_slugs, status="published")
+        posts_map = {p.slug: p for p in posts_qs}
+
+        ordered_slugs = []
+        posts_details = {}
+        for s in ranked_slugs:
+            if s in posts_map:
+                p = posts_map[s]
+                ordered_slugs.append(s)
+                posts_details[s] = {
+                    "title": p.title,
+                    "url": p.get_absolute_url(),
+                    "reading_time": p.reading_time,
+                    "view_count": p.view_count
+                }
+
+        # Backfill if we have fewer than 4 related posts
+        if len(ordered_slugs) < 4:
+            extra_posts = Post.objects.filter(status="published").exclude(slug__in=ordered_slugs).exclude(slug=current_slug)[:4 - len(ordered_slugs)]
+            for p in extra_posts:
+                ordered_slugs.append(p.slug)
+                posts_details[p.slug] = {
+                    "title": p.title,
+                    "url": p.get_absolute_url(),
+                    "reading_time": p.reading_time,
+                    "view_count": p.view_count
+                }
+
+        result = {
+            "related": ordered_slugs[:4],
+            "posts": posts_details
+        }
+
+        # Cache result for 1 hour
+        cache.set(cache_key, result, 3600)
+        return JsonResponse(result)
