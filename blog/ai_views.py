@@ -3,9 +3,11 @@ from django.views import View
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
+from django.utils.text import slugify
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from anthropic import Anthropic
+from .models import Tag
 
 
 class AIAssistView(LoginRequiredMixin, View):
@@ -131,3 +133,81 @@ class AISummarizeView(LoginRequiredMixin, View):
             return JsonResponse({"summary": summary_text.strip()})
         except Exception as e:
             return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+
+
+class AITagSuggestView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
+            return JsonResponse({
+                "error": "Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file."
+            }, status=400)
+
+        try:
+            data = json.loads(request.body)
+            title = data.get("title", "")
+            content = data.get("content", "")
+            summary = data.get("summary", "")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+
+        user_prompt = (
+            "Suggest 3-5 relevant tags for this blog post.\n"
+            f"Title: {title}\n"
+            f"Summary: {summary}\n"
+            f"Content: {content[:2000]}\n\n"
+            "Return ONLY a JSON array of tag names, lowercase, no spaces (use hyphens). "
+            "Example: [\"django\", \"web-dev\", \"python-tips\"]"
+        )
+
+        try:
+            client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+            message = client.messages.create(
+                model="claude-3-5-haiku-20241022",
+                max_tokens=200,
+                temperature=0.4,
+                system="You are an AI tag suggest helper. Return only the raw JSON array string.",
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            raw_result = "".join([block.text for block in message.content]).strip()
+            
+            # Clean possible markdown wrapping
+            if raw_result.startswith("```"):
+                lines = raw_result.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw_result = "\n".join(lines).strip()
+            
+            tags_list = json.loads(raw_result)
+            if not isinstance(tags_list, list):
+                return JsonResponse({"error": "Claude response was not a valid list"}, status=500)
+                
+            # Sanitize tags list to lowercase and strip spaces
+            cleaned_tags = [str(tag).lower().replace(" ", "-").strip() for tag in tags_list if tag]
+            return JsonResponse({"tags": cleaned_tags})
+        except json.JSONDecodeError:
+            return JsonResponse({"error": f"Failed to parse Claude output: {raw_result}"}, status=500)
+        except Exception as e:
+            return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+
+
+class AICreateTagView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        try:
+            data = json.loads(request.body)
+            name = data.get("name", "").strip()
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+
+        if not name:
+            return JsonResponse({"error": "Tag name is required"}, status=400)
+
+        # Sanitize and slugify
+        name_clean = name.lower().replace(" ", "-")
+        slug = slugify(name_clean)
+        
+        tag, created = Tag.objects.get_or_create(name=name_clean, defaults={"slug": slug})
+        return JsonResponse({"id": tag.id, "name": tag.name})

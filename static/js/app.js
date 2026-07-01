@@ -525,4 +525,156 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // ─── Smart Tag Suggestions Logic ────────────────────────────────────
+  const btnSuggestTags = document.getElementById('btn-suggest-tags');
+  const tagsSelect = document.getElementById('id_tags');
+  const suggestedTagsContainer = document.getElementById('suggested-tags-container');
+
+  if (btnSuggestTags && tagsSelect && suggestedTagsContainer) {
+    btnSuggestTags.addEventListener('click', async () => {
+      const title = document.getElementById('id_title') ? document.getElementById('id_title').value : "";
+      const summary = summaryTextarea ? summaryTextarea.value : "";
+      const content = window.easyMDE ? window.easyMDE.value() : "";
+
+      if (!title.trim() && !content.trim()) {
+        alert("Please write a Title or Content first so the AI can suggest tags.");
+        return;
+      }
+
+      // Start loading
+      const originalBtnText = btnSuggestTags.innerHTML;
+      btnSuggestTags.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3 h-3 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Suggesting...</span>`;
+      btnSuggestTags.disabled = true;
+
+      try {
+        const response = await fetch('/ai/suggest-tags/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({ title, content, summary })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          alert(data.error || "Failed to suggest tags.");
+          return;
+        }
+
+        renderSuggestedTags(data.tags);
+      } catch (err) {
+        alert("Connection error. Could not reach the tag suggestion API.");
+      } finally {
+        btnSuggestTags.disabled = false;
+        btnSuggestTags.innerHTML = originalBtnText;
+      }
+    });
+
+    function renderSuggestedTags(tags) {
+      suggestedTagsContainer.innerHTML = "";
+
+      if (!tags || tags.length === 0) {
+        suggestedTagsContainer.innerHTML = `<span class="text-xs text-zinc-500">No tag suggestions found.</span>`;
+        return;
+      }
+
+      tags.forEach(tagName => {
+        const lowerName = tagName.toLowerCase().trim();
+        const options = Array.from(tagsSelect.options);
+        const existingOption = options.find(opt => opt.text.toLowerCase().trim() === lowerName);
+
+        const pill = document.createElement('button');
+        pill.type = "button";
+        pill.setAttribute('data-tag-name', lowerName);
+
+        if (existingOption) {
+          const isSelected = existingOption.selected;
+          pill.className = getPillClass(true, isSelected);
+          pill.innerHTML = `<span>#${escapeHtml(lowerName)}</span>`;
+          pill.addEventListener('click', () => toggleExistingTag(existingOption, pill));
+        } else {
+          // New tag
+          pill.className = getPillClass(false, false);
+          pill.innerHTML = `<span>#${escapeHtml(lowerName)}</span> <span class="text-[9px] uppercase tracking-wider bg-zinc-700/60 text-zinc-300 px-1 py-0.5 rounded ml-1 font-bold">(new)</span>`;
+          pill.addEventListener('click', () => createAndSelectNewTag(lowerName, pill));
+        }
+
+        suggestedTagsContainer.appendChild(pill);
+      });
+    }
+
+    function getPillClass(exists, selected) {
+      const base = "text-[11px] font-mono font-semibold px-2.5 py-1 rounded-full border transition-all select-none flex items-center gap-1 ";
+      if (!exists) {
+        // Greyed out new tag
+        return base + "bg-zinc-800/40 border-zinc-700/40 border-dashed text-zinc-400 hover:text-zinc-200 hover:border-zinc-500 cursor-pointer";
+      }
+      if (selected) {
+        // Highlighted active tag
+        return base + "bg-purple-600 text-white border-purple-500 cursor-pointer shadow-sm";
+      }
+      // Unselected active tag
+      return base + "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border-zinc-250 dark:border-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-700 cursor-pointer";
+    }
+
+    function toggleExistingTag(option, pill) {
+      option.selected = !option.selected;
+      tagsSelect.dispatchEvent(new Event('change'));
+      pill.className = getPillClass(true, option.selected);
+    }
+
+    async function createAndSelectNewTag(tagName, pill) {
+      // Show loading inside pill
+      const originalHtml = pill.innerHTML;
+      pill.innerHTML = `<span class="w-2.5 h-2.5 border border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> <span>Saving...</span>`;
+      pill.disabled = true;
+
+      try {
+        const response = await fetch('/ai/create-tag/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({ name: tagName })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          alert(data.error || "Failed to create new tag.");
+          pill.innerHTML = originalHtml;
+          pill.disabled = false;
+          return;
+        }
+
+        // Add option to select list
+        const newOpt = document.createElement('option');
+        newOpt.value = data.id;
+        newOpt.text = data.name;
+        newOpt.selected = true;
+        tagsSelect.add(newOpt);
+        tagsSelect.dispatchEvent(new Event('change'));
+
+        // Upgrade pill styling
+        pill.innerHTML = `<span>#${escapeHtml(data.name)}</span>`;
+        pill.className = getPillClass(true, true);
+        pill.disabled = false;
+
+        // Hook up standard toggle listener going forward
+        pill.replaceWith(pill.cloneNode(true)); // remove old listener
+        const freshPill = suggestedTagsContainer.querySelector(`[data-tag-name="${tagName}"]`);
+        if (freshPill) {
+          freshPill.addEventListener('click', () => toggleExistingTag(newOpt, freshPill));
+        }
+      } catch (err) {
+        alert("Failed to create tag due to connectivity issues.");
+        pill.innerHTML = originalHtml;
+        pill.disabled = false;
+      }
+    }
+  }
 });
