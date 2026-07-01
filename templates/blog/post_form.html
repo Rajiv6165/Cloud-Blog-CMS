@@ -37,7 +37,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-slide-up">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-slide-up relative">
   <!-- Header -->
   <div class="mb-10">
     <h1 class="font-serif font-bold text-3xl md:text-4xl mb-2 text-[var(--text-primary)]">
@@ -156,6 +156,128 @@
       </a>
     </div>
   </form>
+</div>
+
+<!-- AI Writing Assistant Sidebar Panel -->
+<div id="ai-assistant-panel" class="fixed top-0 right-0 h-full w-[320px] bg-zinc-950/95 backdrop-blur-md text-zinc-100 border-l border-zinc-800/80 z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+  <!-- Panel header -->
+  <div class="p-4 border-b border-zinc-800/80 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-base font-bold text-purple-400 flex items-center gap-1.5">
+        <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        AI Writing Assistant
+      </span>
+    </div>
+    <button type="button" id="close-ai-panel" class="p-1.5 rounded-lg hover:bg-zinc-800/80 transition-colors text-zinc-400 hover:text-white" aria-label="Close panel">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Panel body -->
+  <div class="flex-1 overflow-y-auto p-4 space-y-4">
+    <!-- Contextual indicator -->
+    <div id="ai-selection-status" class="text-[11px] text-zinc-400 bg-zinc-900/50 border border-zinc-800/50 p-2.5 rounded-lg">
+      <span class="text-zinc-200 font-semibold">Ready.</span> Select text in editor to focus AI actions, or run on full text.
+    </div>
+
+    <!-- AI Actions Section -->
+    <div class="space-y-2.5">
+      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Writing Tools</label>
+      
+      <!-- Action 1: Improve Writing -->
+      <button type="button" id="ai-btn-improve" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
+        <span class="flex items-center gap-2">
+          <span class="text-sm">✍️</span> Improve writing
+        </span>
+        <span class="text-[10px] text-zinc-500 font-medium">Selected / All</span>
+      </button>
+
+      <!-- Action 4: Change Tone (with inline dropdown) -->
+      <div class="bg-zinc-900 border border-zinc-800/50 p-2.5 rounded-lg space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-semibold text-zinc-200 flex items-center gap-2">
+            <span class="text-sm">🎭</span> Change tone
+          </span>
+          <span class="text-[10px] text-zinc-500 font-medium">Selected / All</span>
+        </div>
+        <div class="flex gap-1.5">
+          <select id="ai-tone-select" class="flex-1 bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-xs text-zinc-200 outline-none focus:border-purple-500">
+            <option value="Professional">Professional</option>
+            <option value="Casual">Casual</option>
+            <option value="Humorous">Humorous</option>
+            <option value="Academic">Academic</option>
+          </select>
+          <button type="button" id="ai-btn-tone" class="bg-purple-600 hover:bg-purple-500 text-white rounded px-3 py-1.5 text-xs font-bold transition-colors">
+            Go
+          </button>
+        </div>
+      </div>
+
+      <!-- Action 3: Fix Grammar -->
+      <button type="button" id="ai-btn-grammar" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
+        <span class="flex items-center gap-2">
+          <span class="text-sm">🔍</span> Fix grammar & spelling
+        </span>
+        <span class="text-[10px] text-zinc-500 font-medium">Full content</span>
+      </button>
+
+      <!-- Action 2: Continue Writing -->
+      <button type="button" id="ai-btn-continue" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
+        <span class="flex items-center gap-2">
+          <span class="text-sm">🚀</span> Continue writing
+        </span>
+        <span class="text-[10px] text-zinc-500 font-medium">Last 500 chars</span>
+      </button>
+    </div>
+
+    <!-- Spinner loading state -->
+    <div id="ai-loading-container" class="hidden flex flex-col items-center justify-center py-6 space-y-2 bg-zinc-900/20 rounded-lg border border-zinc-800/30">
+      <div class="w-6 h-6 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
+      <p class="text-[10px] text-zinc-400">Claude is composing...</p>
+    </div>
+
+    <!-- Errors output -->
+    <div id="ai-error-container" class="hidden bg-red-950/30 border border-red-900/50 p-3 rounded-lg text-xs text-red-300 leading-relaxed font-mono"></div>
+
+    <!-- Results Preview container -->
+    <div id="ai-result-section" class="hidden space-y-3">
+      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Preview Changes</label>
+      
+      <!-- Result view panel -->
+      <div class="border border-zinc-800 rounded bg-zinc-950 overflow-hidden text-xs">
+        <div id="ai-preview-tabs" class="flex border-b border-zinc-800 text-zinc-400 bg-zinc-900 text-[11px]">
+          <button type="button" id="tab-result" class="flex-1 py-2 text-center font-bold border-b border-purple-500 text-white">Result</button>
+          <button type="button" id="tab-diff" class="flex-1 py-2 text-center font-bold border-b border-transparent hover:text-zinc-200">Compare (Diff)</button>
+        </div>
+        
+        <!-- Text content -->
+        <div id="ai-preview-content" class="p-3 max-h-[220px] overflow-y-auto font-mono text-zinc-300 leading-relaxed whitespace-pre-wrap"></div>
+        
+        <!-- Diff content -->
+        <div id="ai-diff-content" class="hidden p-3 max-h-[220px] overflow-y-auto font-mono text-xs leading-relaxed whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Accept / Discard Actions -->
+      <div class="flex gap-2">
+        <button type="button" id="ai-btn-apply" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white rounded py-2 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
+          <span>✓</span> Apply
+        </button>
+        <button type="button" id="ai-btn-discard" class="flex-1 bg-zinc-900 hover:bg-zinc-850 text-zinc-300 border border-zinc-800 rounded py-2 text-xs font-bold transition-colors">
+          Discard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel footer -->
+  <div id="ai-panel-footer" class="p-3 border-t border-zinc-800 bg-zinc-950 flex justify-between items-center text-[10px] text-zinc-500 font-mono">
+    <span>claude-3-5-haiku</span>
+    <span id="ai-token-estimate">Est: -- tokens</span>
+  </div>
 </div>
 {% endblock %}
 
