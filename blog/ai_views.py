@@ -92,3 +92,42 @@ class AIAssistView(LoginRequiredMixin, View):
             })
         except Exception as e:
             return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+
+
+class AISummarizeView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
+            return JsonResponse({
+                "error": "Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file."
+            }, status=400)
+
+        try:
+            data = json.loads(request.body)
+            content = data.get("content", "")
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+
+        if not content:
+            return JsonResponse({"error": "Content is required for summarization"}, status=400)
+
+        user_prompt = (
+            "Summarize this blog post in 2-3 sentences, suitable as a meta description. "
+            "Be concise and compelling. Return only the summary, no preamble.\n\n"
+            f"Content:\n{content}"
+        )
+
+        try:
+            client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+            message = client.messages.create(
+                model="claude-3-5-haiku-20241022",
+                max_tokens=300,
+                temperature=0.5,
+                system="You are an AI summary assistant. Return only the direct summary text.",
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            summary_text = "".join([block.text for block in message.content])
+            return JsonResponse({"summary": summary_text.strip()})
+        except Exception as e:
+            return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)

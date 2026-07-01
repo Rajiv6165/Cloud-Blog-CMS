@@ -82,7 +82,12 @@
 
       <!-- Summary -->
       <div>
-        <label class="form-label" for="id_summary">Summary</label>
+        <div class="flex items-center justify-between mb-1.5">
+          <label class="form-label !mb-0" for="id_summary">Summary</label>
+          <button type="button" id="btn-auto-summarize" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all">
+            ✨ Auto-generate
+          </button>
+        </div>
         <textarea name="summary" id="id_summary" rows="2"
                   placeholder="Provide a quick synopsis of the story..."
                   class="form-input resize-none" maxlength="300">{{ form.summary.value|default:'' }}</textarea>

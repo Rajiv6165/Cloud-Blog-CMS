@@ -15,6 +15,14 @@ function applyTheme(dark) {
   }
 }
 
+// Eye toggle and setup for High Contrast
+(function() {
+  const isHighContrast = localStorage.getItem('high-contrast') === 'true';
+  if (isHighContrast) {
+    html.classList.add('high-contrast');
+  }
+})();
+
 function toggleTheme() {
   const isDark = html.classList.contains('dark');
   localStorage.setItem('theme', isDark ? 'light' : 'dark');
@@ -453,6 +461,68 @@ document.addEventListener('DOMContentLoaded', () => {
     btnDiscard.addEventListener('click', () => {
       resultSection.classList.add('hidden');
       selectionStatus.innerHTML = `<span class="text-zinc-400 font-semibold">Discarded.</span> Original text retained.`;
+    });
+  }
+
+  // ─── Auto Summarize Logic ──────────────────────────────────────────
+  const btnAutoSummarize = document.getElementById('btn-auto-summarize');
+  const summaryTextarea = document.getElementById('id_summary');
+
+  if (btnAutoSummarize && summaryTextarea) {
+    btnAutoSummarize.addEventListener('click', async () => {
+      if (!window.easyMDE) {
+        alert("Editor is not initialized.");
+        return;
+      }
+      const content = window.easyMDE.value();
+      if (!content.trim()) {
+        alert("Please write some content in the editor first before generating a summary.");
+        return;
+      }
+
+      // Start loading state
+      const originalBtnText = btnAutoSummarize.innerHTML;
+      btnAutoSummarize.innerHTML = `<span class="inline-flex items-center gap-1"><span class="w-3 h-3 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></span> Generating...</span>`;
+      btnAutoSummarize.disabled = true;
+
+      const originalPlaceholder = summaryTextarea.placeholder;
+      const originalValue = summaryTextarea.value;
+      summaryTextarea.value = "";
+      summaryTextarea.placeholder = "Generating summary with AI...";
+      summaryTextarea.disabled = true;
+
+      try {
+        const response = await fetch('/ai/summarize/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+          },
+          body: JSON.stringify({ content: content })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || data.error) {
+          alert(data.error || "Failed to generate summary.");
+          summaryTextarea.value = originalValue;
+        } else {
+          summaryTextarea.value = data.summary;
+          // Trigger char counter change
+          summaryTextarea.dispatchEvent(new Event('input'));
+          btnAutoSummarize.innerHTML = "✨ Regenerate";
+        }
+      } catch (err) {
+        alert("Connection error. Could not connect to summary API.");
+        summaryTextarea.value = originalValue;
+      } finally {
+        btnAutoSummarize.disabled = false;
+        if (btnAutoSummarize.innerHTML.includes("Generating...")) {
+          btnAutoSummarize.innerHTML = "✨ Auto-generate";
+        }
+        summaryTextarea.placeholder = originalPlaceholder;
+        summaryTextarea.disabled = false;
+      }
     });
   }
 });

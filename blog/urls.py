@@ -13,6 +13,5 @@ urlpatterns = [
     path("profile/", views.ProfileEditView.as_view(), name="profile_edit"),
     path("comment/<int:pk>/delete/", views.CommentDeleteView.as_view(), name="comment_delete"),
     path("ai/assist/", ai_views.AIAssistView.as_view(), name="ai_assist"),
+    path("ai/summarize/", ai_views.AISummarizeView.as_view(), name="ai_summarize"),
 ]
-
-
