@@ -326,3 +326,49 @@ class AIRelatedView(View):
         # Cache result for 1 hour
         cache.set(cache_key, result, 3600)
         return JsonResponse(result)
+
+
+class AIModerateView(View):
+    @classmethod
+    def moderate_comment(cls, content):
+        """
+        Internal helper to moderate a comment.
+        Sends content to Claude API.
+        Returns: tuple (spam: bool, sentiment: str, toxic: bool)
+        """
+        if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
+            return False, "neutral", False
+
+        user_prompt = (
+            f"Classify this comment: {content}\n\n"
+            f"Return JSON only: {{\"spam\": false, \"sentiment\": \"positive\", \"toxic\": false}}"
+        )
+
+        try:
+            client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+            message = client.messages.create(
+                model="claude-3-5-haiku-20241022",
+                max_tokens=150,
+                temperature=0.0,
+                system="You are a comment moderation assistant. Return ONLY a raw JSON object and nothing else.",
+                messages=[
+                    {"role": "user", "content": user_prompt}
+                ]
+            )
+            raw_result = "".join([block.text for block in message.content]).strip()
+
+            if raw_result.startswith("```"):
+                lines = raw_result.split("\n")
+                if lines[0].startswith("```"):
+                    lines = lines[1:]
+                if lines[-1].startswith("```"):
+                    lines = lines[:-1]
+                raw_result = "\n".join(lines).strip()
+
+            res = json.loads(raw_result)
+            spam = res.get("spam", False)
+            sentiment = str(res.get("sentiment", "neutral")).lower()
+            toxic = res.get("toxic", False)
+            return spam, sentiment, toxic
+        except Exception:
+            return False, "neutral", False

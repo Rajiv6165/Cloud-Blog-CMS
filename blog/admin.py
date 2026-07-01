@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from .models import Post, Tag, Comment
 
 
@@ -12,8 +13,8 @@ class TagAdmin(admin.ModelAdmin):
 class CommentInline(admin.TabularInline):
     model = Comment
     extra = 0
-    fields = ("user", "content", "is_approved", "created_at")
-    readonly_fields = ("created_at",)
+    fields = ("user", "content", "is_approved", "sentiment", "created_at")
+    readonly_fields = ("sentiment", "created_at")
 
 
 @admin.register(Post)
@@ -29,6 +30,19 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("post", "user", "is_approved", "created_at")
-    list_filter = ("is_approved", "created_at")
+    list_display = ("post", "user", "is_approved", "sentiment_badge", "created_at")
+    list_filter = ("is_approved", "sentiment", "created_at")
     search_fields = ("content",)
+    readonly_fields = ("sentiment",)
+
+    def sentiment_badge(self, obj):
+        if not obj.sentiment:
+            return mark_safe('<span style="color: #6b7280; font-size: 11px;">none</span>')
+        val = obj.sentiment.lower()
+        if val == "positive":
+            return mark_safe('<span style="background-color: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Positive</span>')
+        elif val == "negative":
+            return mark_safe('<span style="background-color: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Negative</span>')
+        else:
+            return mark_safe('<span style="background-color: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase;">Neutral</span>')
+    sentiment_badge.short_description = "Sentiment"

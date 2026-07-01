@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
@@ -77,11 +78,25 @@ class PostDetailView(DetailView):
             return redirect(self.object.get_absolute_url())
         form = CommentForm(request.POST)
         if request.user.is_authenticated and form.is_valid():
+            content = form.cleaned_data["content"]
+            
+            # Moderation check
+            from .ai_views import AIModerateView
+            spam, sentiment, toxic = AIModerateView.moderate_comment(content)
+            
+            is_approved = True
+            if spam or toxic:
+                is_approved = False
+                messages.warning(request, "Comment held for review.")
+            else:
+                messages.success(request, "Comment posted successfully.")
+
             Comment.objects.create(
                 post=self.object,
                 user=request.user,
-                content=form.cleaned_data["content"],
-                is_approved=True,
+                content=content,
+                is_approved=is_approved,
+                sentiment=sentiment,
             )
             return HttpResponseRedirect(self.object.get_absolute_url())
         context = self.get_context_data(object=self.object)

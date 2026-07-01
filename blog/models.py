@@ -73,6 +73,7 @@ class Comment(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="comments")
     content = models.TextField(max_length=2000)
     is_approved = models.BooleanField(default=True)
+    sentiment = models.CharField(max_length=50, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -80,5 +81,3 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return f"Comment by {self.user} on {self.post}"
-
-# Create your models here.
