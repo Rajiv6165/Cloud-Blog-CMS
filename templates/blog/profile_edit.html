@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile — Blog CMS{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-slide-up">
+  <!-- Header -->
+  <div class="mb-10 text-center">
+    <div class="avatar !w-16 !h-16 !text-2xl font-bold mx-auto mb-4 shadow">
+      {{ user.username|first|upper }}
+    </div>
+    <h1 class="font-serif font-bold text-3xl text-[var(--text-primary)]">
+      Edit Profile
+    </h1>
+    <p class="text-sm text-[var(--text-secondary)] mt-1.5">
+      Update your personal credentials and direct payment information.
+    </p>
+  </div>
+
+  <form method="post" class="space-y-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div class="p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-500 text-sm" role="alert">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="space-y-5">
+      <!-- Username (Display Only) -->
+      <div>
+        <label class="form-label" for="id_username">Username</label>
+        <input type="text" id="id_username" value="{{ user.username }}" disabled
+               class="form-input opacity-60 bg-[var(--bg-tertiary)] cursor-not-allowed w-full">
+        <p class="text-[11px] text-[var(--text-muted)] mt-1">Username identifier cannot be changed.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- First name -->
+        <div>
+          <label class="form-label" for="id_first_name">First Name</label>
+          <input type="text" name="first_name" id="id_first_name"
+                 value="{{ form.first_name.value|default:'' }}"
+                 placeholder="Your first name..."
+                 class="form-input w-full">
+          {% for error in form.first_name.errors %}
+          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <!-- Last name -->
+        <div>
+          <label class="form-label" for="id_last_name">Last Name</label>
+          <input type="text" name="last_name" id="id_last_name"
+                 value="{{ form.last_name.value|default:'' }}"
+                 placeholder="Your last name..."
+                 class="form-input w-full">
+          {% for error in form.last_name.errors %}
+          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="form-label" for="id_email">Email Address</label>
+        <input type="email" name="email" id="id_email"
+               value="{{ form.email.value|default:'' }}"
+               placeholder="you@example.com" required
+               class="form-input w-full">
+        {% for error in form.email.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <hr class="border-[var(--border)] my-6">
+
+      <div class="mb-4">
+        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">Donation & Payment Methods</h3>
+        <p class="text-xs text-[var(--text-muted)]">Configure how readers can tip or support your content directly.</p>
+      </div>
+
+      <!-- Buy Me A Coffee URL -->
+      <div>
+        <label class="form-label" for="id_buymeacoffee_url">Buy Me a Coffee URL</label>
+        <input type="url" name="buymeacoffee_url" id="id_buymeacoffee_url"
+               value="{{ form.buymeacoffee_url.value|default:'' }}"
+               placeholder="https://buymeacoffee.com/yourusername"
+               class="form-input w-full">
+        {% for error in form.buymeacoffee_url.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- PayPal Email -->
+      <div>
+        <label class="form-label" for="id_paypal_email">PayPal Email (for PayPal.me)</label>
+        <input type="email" name="paypal_email" id="id_paypal_email"
+               value="{{ form.paypal_email.value|default:'' }}"
+               placeholder="yourname@paypal.com"
+               class="form-input w-full">
+        {% for error in form.paypal_email.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- UPI ID -->
+      <div>
+        <label class="form-label" for="id_upi_id">UPI ID</label>
+        <input type="text" name="upi_id" id="id_upi_id"
+               value="{{ form.upi_id.value|default:'' }}"
+               placeholder="username@upi"
+               class="form-input w-full">
+        {% for error in form.upi_id.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+        <p class="text-[11px] text-[var(--text-muted)] mt-1">Enter your UPI ID format: username@bankname</p>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-3 pt-6 border-t border-[var(--border)]">
+      <button type="submit" class="btn-primary w-full sm:w-auto justify-center">
+        Save profile updates
+      </button>
+      <a href="{% url 'blog:dashboard' %}" class="btn-ghost w-full sm:w-auto justify-center">
+        Cancel
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -16,8 +16,8 @@ from django.views.generic import (
     FormView,
 )
 
-from .models import Post, Tag, Comment
-from .forms import PostForm, CommentForm, RegisterForm
+from .models import Post, Tag, Comment, Profile
+from .forms import PostForm, CommentForm, RegisterForm, UserProfileForm
 
 
 class RegisterView(FormView):
@@ -183,13 +183,41 @@ class DashboardView(LoginRequiredMixin, ListView):
 
 
 class ProfileEditView(LoginRequiredMixin, UpdateView):
-    model = get_user_model()
-    fields = ["first_name", "last_name", "email"]
-    template_name = "blog/profile_form.html"
+    model = Profile
+    form_class = UserProfileForm
+    template_name = "blog/profile_edit.html"
     success_url = reverse_lazy("blog:post_list")
 
     def get_object(self, queryset=None):
-        return self.request.user
+        profile, _ = Profile.objects.select_related("user").get_or_create(user=self.request.user)
+        return profile
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
+
+
+class AuthorDetailView(DetailView):
+    model = get_user_model()
+    template_name = "blog/author_detail.html"
+    slug_field = "username"
+    slug_url_kwarg = "username"
+    context_object_name = "author"
+
+    def get_queryset(self):
+        return get_user_model().objects.all()
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["posts"] = (
+            Post.objects.filter(author=self.object, status="published")
+            .select_related("author")
+            .prefetch_related("tags")
+        )
+        profile, _ = Profile.objects.get_or_create(user=self.object)
+        context["profile"] = profile
+        return context
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

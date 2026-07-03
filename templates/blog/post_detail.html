@@ -26,14 +26,14 @@
 
     <!-- Meta descriptors -->
     <div class="flex flex-wrap items-center gap-4 mt-8 text-sm text-[var(--text-secondary)]">
-      <div class="flex items-center gap-2">
+      <a href="{% url 'blog:author_detail' object.author.username %}" class="flex items-center gap-2 hover:underline">
         <div class="avatar">
           {{ object.author.username|first|upper }}
         </div>
         <span class="font-medium text-[var(--text-primary)]">
           {{ object.author.get_full_name|default:object.author.username }}
         </span>
-      </div>
+      </a>
       <span class="text-[var(--text-muted)]">•</span>
       <span>{{ object.published_at|date:"F j, Y" }}</span>
       <span class="text-[var(--text-muted)]">•</span>
@@ -77,17 +77,17 @@
 
       <!-- Footer Author Card & Moderation Controls -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mt-16 pt-8 border-t border-[var(--border)]">
-        <div class="flex items-center gap-4">
+        <a href="{% url 'blog:author_detail' object.author.username %}" class="flex items-center gap-4 group">
           <div class="avatar !w-12 !h-12 !text-base">
             {{ object.author.username|first|upper }}
           </div>
           <div>
-            <h4 class="font-medium text-base text-[var(--text-primary)]">
+            <h4 class="font-medium text-base text-[var(--text-primary)] group-hover:underline">
               Written by {{ object.author.get_full_name|default:object.author.username }}
             </h4>
             <p class="text-xs text-[var(--text-muted)]">Author & Contributor</p>
           </div>
-        </div>
+        </a>
 
         <!-- Editor Controls (Only shown for authors/staff) -->
         {% if user == object.author or user.is_staff %}
@@ -101,6 +101,37 @@
         </div>
         {% endif %}
       </div>
+
+      <!-- Author Donation Widget -->
+      {% if object.author.profile.buymeacoffee_url or object.author.profile.paypal_email or object.author.profile.upi_id %}
+      <div class="mt-8 p-6 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl shadow-sm animate-fade-in">
+        <h4 class="font-serif font-semibold text-lg text-[var(--text-primary)] mb-2">☕ Enjoyed this post?</h4>
+        <p class="text-sm text-[var(--text-secondary)] mb-4">Support the author by sending a tip or donation.</p>
+        <div class="flex flex-wrap items-center gap-3">
+          {% if object.author.profile.buymeacoffee_url %}
+          <a href="{{ object.author.profile.buymeacoffee_url }}" target="_blank" rel="noopener noreferrer" class="btn-primary !text-xs !py-2 !px-4">
+            Buy me a coffee
+          </a>
+          {% endif %}
+          
+          {% if object.author.profile.paypal_email %}
+          <a href="https://paypal.me/{{ object.author.profile.paypal_email }}" target="_blank" rel="noopener noreferrer" class="btn-ghost !text-xs !py-2 !px-4 border border-blue-500/20 text-blue-500 hover:bg-blue-500/5">
+            PayPal
+          </a>
+          {% endif %}
+
+          {% if object.author.profile.upi_id %}
+          <div class="flex items-center gap-2 bg-[var(--bg-tertiary)] px-3 py-2 rounded-lg border border-[var(--border)] max-w-max shadow-sm">
+            <span class="text-xs font-mono font-semibold" id="upi-val-detail">{{ object.author.profile.upi_id }}</span>
+            <button type="button" onclick="copyUPI('{{ object.author.profile.upi_id }}')" class="text-xs text-[var(--accent)] hover:underline flex items-center gap-1 font-medium" id="copy-btn-detail">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              Copy
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
 
       <!-- Moderated Comments Thread Section -->
       <section class="mt-20 border-t border-[var(--border)] pt-12">
@@ -219,4 +250,24 @@
 
   </div>
 </div>
+
+{% if object.author.profile.upi_id %}
+<script>
+  function copyUPI(upi) {
+    navigator.clipboard.writeText(upi).then(() => {
+      const btn = document.getElementById('copy-btn-detail');
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = `
+        <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+        Copied!
+      `;
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+      }, 2000);
+    }).catch(err => {
+      console.error('Failed to copy UPI: ', err);
+    });
+  }
+</script>
+{% endif %}
 {% endblock %}
