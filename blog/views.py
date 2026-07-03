@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import (
     ListView,
     DetailView,
@@ -76,6 +77,22 @@ class PostDetailView(DetailView):
         self.object = self.get_object()
         if not self.object.allow_comments:
             return redirect(self.object.get_absolute_url())
+        
+        # Access control check for commenting on premium posts
+        has_access = True
+        if self.object.is_premium:
+            if not request.user.is_authenticated:
+                has_access = False
+            elif request.user == self.object.author or request.user.is_staff or request.user.is_superuser:
+                has_access = True
+            else:
+                from .models import UserPostAccess
+                has_access = UserPostAccess.objects.filter(user=request.user, post=self.object).exists()
+
+        if not has_access:
+            messages.error(request, "You must unlock this premium post to leave comments.")
+            return redirect(self.object.get_absolute_url())
+
         form = CommentForm(request.POST)
         if request.user.is_authenticated and form.is_valid():
             content = form.cleaned_data["content"]
@@ -106,6 +123,25 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context["form"] = CommentForm()
+
+        # Access control check
+        post = self.object
+        user = self.request.user
+        has_access = True
+        if post.is_premium:
+            if not user.is_authenticated:
+                has_access = False
+            elif user == post.author or user.is_staff or user.is_superuser:
+                has_access = True
+            else:
+                from .models import UserPostAccess
+                has_access = UserPostAccess.objects.filter(user=user, post=post).exists()
+
+        context["has_access"] = has_access
+        if not has_access:
+            teaser_words = post.content.split()[:200]
+            context["teaser_content"] = " ".join(teaser_words)
+
         if self.object.tags.exists():
             context["related"] = (
                 Post.objects.filter(status="published", tags__in=self.object.tags.all())
@@ -115,6 +151,24 @@ class PostDetailView(DetailView):
         else:
             context["related"] = []
         return context
+
+
+class GrantAccessView(LoginRequiredMixin, View):
+    def post(self, request, slug, *args, **kwargs):
+        from .models import UserPostAccess
+        try:
+            post = Post.objects.get(slug=slug)
+        except Post.DoesNotExist:
+            messages.error(request, "Post not found.")
+            return redirect("blog:post_list")
+
+        UserPostAccess.objects.get_or_create(
+            user=request.user,
+            post=post,
+            defaults={"payment_reference": "FREE_UNLOCK_PLACEHOLDER"}
+        )
+        messages.success(request, f"Successfully unlocked the premium post: {post.title}")
+        return redirect(post.get_absolute_url())
 
 
 class AuthorOrStaffRequiredMixin(UserPassesTestMixin):

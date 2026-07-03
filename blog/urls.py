@@ -9,6 +9,7 @@ urlpatterns = [
     path("post/<slug:slug>/", views.PostDetailView.as_view(), name="post_detail"),
     path("post/<slug:slug>/edit/", views.PostUpdateView.as_view(), name="post_update"),
     path("post/<slug:slug>/delete/", views.PostDeleteView.as_view(), name="post_delete"),
+    path("post/<slug:slug>/unlock/", views.GrantAccessView.as_view(), name="post_unlock"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
     path("profile/", views.ProfileEditView.as_view(), name="profile_edit"),
     path("author/<str:username>/", views.AuthorDetailView.as_view(), name="author_detail"),

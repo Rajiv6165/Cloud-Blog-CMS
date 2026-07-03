@@ -11,7 +11,15 @@
 <div class="relative w-full overflow-hidden py-24 bg-gradient-to-tr from-[var(--accent-light)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] border-b border-[var(--border)]">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 animate-fade-in">
     <!-- Tag badges -->
-    <div class="flex flex-wrap gap-2 mb-6">
+    <div class="flex flex-wrap items-center gap-2 mb-6">
+      {% if object.is_premium %}
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/20 shadow-sm">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+        </svg>
+        Premium
+      </span>
+      {% endif %}
       {% for tag in object.tags.all %}
       <a href="{% url 'blog:post_list' %}?tag={{ tag.slug }}" class="tag-pill">
         #{{ tag.name }}
@@ -71,9 +79,56 @@
       {% endif %}
 
       <!-- Safe Markdown Compiled Prose Content -->
+      {% if has_access %}
       <div class="prose-content markdown-body">
         {{ object.content|markdownify }}
       </div>
+      {% else %}
+      <div class="relative">
+        <div class="prose-content markdown-body max-h-[350px] overflow-hidden select-none" style="mask-image: linear-gradient(to bottom, black 50%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);">
+          {{ teaser_content|markdownify }}
+        </div>
+      </div>
+
+      <!-- Premium Unlock CTA Card -->
+      <div class="mt-8 p-8 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl text-center shadow-lg max-w-xl mx-auto border-amber-500/30">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 mb-4">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h3 class="font-serif font-bold text-2xl text-[var(--text-primary)] mb-2">This post is premium content</h3>
+        <p class="text-sm text-[var(--text-secondary)] mb-6">Unlock this post to read the full story and participate in the discussion.</p>
+        
+        <div class="bg-[var(--bg-tertiary)] rounded-xl p-4 border border-[var(--border)] mb-6 flex items-center justify-between text-left">
+          <div>
+            <span class="text-xs text-[var(--text-muted)] block uppercase font-semibold tracking-wider">Unlock Access</span>
+            <span class="text-3xl font-bold font-serif text-[var(--text-primary)]">${{ object.premium_price|default:"4.99" }}</span>
+          </div>
+          <div class="text-xs text-[var(--text-secondary)] space-y-1">
+            <div class="flex items-center gap-1.5">✓ Lifetime reading access</div>
+            <div class="flex items-center gap-1.5">✓ Support the author directly</div>
+            <div class="flex items-center gap-1.5">✓ Comment and discuss</div>
+          </div>
+        </div>
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'blog:post_unlock' object.slug %}" method="post">
+          {% csrf_token %}
+          <button type="submit" class="btn-primary w-full py-3.5 text-base font-semibold shadow-md flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Unlock for ${{ object.premium_price|default:"4.99" }}
+          </button>
+        </form>
+        {% else %}
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-3.5 text-base font-semibold shadow-md inline-flex items-center justify-center gap-2">
+          Sign in to unlock
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
 
       <!-- Footer Author Card & Moderation Controls -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mt-16 pt-8 border-t border-[var(--border)]">

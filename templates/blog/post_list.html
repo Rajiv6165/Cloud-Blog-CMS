@@ -55,8 +55,13 @@
             <!-- Card Body -->
             <div class="p-6">
               <!-- Tags list inside card -->
-              <div class="flex flex-wrap gap-1 mb-3.5">
-                {% for tag in post.tags.all|slice:":3" %}
+              <div class="flex flex-wrap items-center gap-1.5 mb-3.5">
+                {% if post.is_premium %}
+                <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center gap-0.5">
+                  ⭐ Premium
+                </span>
+                {% endif %}
+                {% for tag in post.tags.all|slice:":2" %}
                 <span class="text-[10px] font-mono font-medium tracking-wide uppercase px-2 py-0.5 rounded bg-[var(--accent-light)] text-[var(--accent)]">
                   #{{ tag.name }}
                 </span>

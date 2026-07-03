@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Post, Tag, Comment
+from .models import Post, Tag, Comment, UserPostAccess
 
 
 @admin.register(Tag)
@@ -19,13 +19,20 @@ class CommentInline(admin.TabularInline):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ("title", "author", "status", "published_at", "created_at")
-    list_filter = ("status", "tags", "created_at", "published_at")
+    list_display = ("title", "author", "status", "is_premium", "premium_price", "published_at", "created_at")
+    list_filter = ("status", "is_premium", "tags", "created_at", "published_at")
     search_fields = ("title", "summary", "content")
     prepopulated_fields = {"slug": ("title",)}
     autocomplete_fields = ("tags",)
     inlines = [CommentInline]
     date_hierarchy = "published_at"
+
+
+@admin.register(UserPostAccess)
+class UserPostAccessAdmin(admin.ModelAdmin):
+    list_display = ("user", "post", "granted_at", "payment_reference")
+    list_filter = ("granted_at",)
+    search_fields = ("user__username", "user__email", "post__title")
 
 
 @admin.register(Comment)

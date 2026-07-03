@@ -33,6 +33,8 @@ class Post(models.Model):
     tags = models.ManyToManyField(Tag, related_name="posts", blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="draft")
     allow_comments = models.BooleanField(default=True)
+    is_premium = models.BooleanField(default=False)
+    premium_price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -66,6 +68,20 @@ class Post(models.Model):
     @property
     def view_count(self) -> int:
         return (self.pk * 47) % 430 + 12
+
+
+class UserPostAccess(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    granted_at = models.DateTimeField(auto_now_add=True)
+    payment_reference = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        unique_together = ("user", "post")
+
+    def __str__(self):
+        return f"{self.user.username} -> {self.post.title}"
+
 
 
 class Comment(models.Model):
