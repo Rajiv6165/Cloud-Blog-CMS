@@ -155,6 +155,45 @@
             <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
             {% endfor %}
           </div>
+
+          <!-- Premium post fields -->
+          <div class="border-t border-[var(--border)] pt-4 space-y-4">
+            <div class="flex items-center">
+              <label class="inline-flex items-center cursor-pointer select-none">
+                <input type="checkbox" name="is_premium" id="id_is_premium"
+                       {% if form.is_premium.value %}checked{% endif %}
+                       class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5">
+                <span class="text-sm font-medium text-[var(--text-secondary)] font-semibold">Mark as Premium post</span>
+              </label>
+            </div>
+            {% for error in form.is_premium.errors %}
+            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+            {% endfor %}
+
+            <div>
+              <label class="form-label" for="id_premium_price">Premium Price ($)</label>
+              <input type="number" name="premium_price" id="id_premium_price" step="0.01" min="0"
+                     value="{{ form.premium_price.value|default:'' }}"
+                     placeholder="e.g. 4.99"
+                     class="form-input !py-2 !px-3">
+              {% for error in form.premium_price.errors %}
+              <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Early Access fields -->
+          <div class="border-t border-[var(--border)] pt-4 space-y-4">
+            <div>
+              <label class="form-label" for="id_early_access_at">Early Access Datetime <span class="font-normal text-[var(--text-muted)]">(for subscribers)</span></label>
+              <input type="datetime-local" name="early_access_at" id="id_early_access_at"
+                     value="{{ form.early_access_at.value|date:'Y-m-d\TH:i' }}"
+                     class="form-input !py-2 !px-3">
+              {% for error in form.early_access_at.errors %}
+              <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
     </div>

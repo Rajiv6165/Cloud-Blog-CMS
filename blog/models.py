@@ -39,6 +39,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
+    early_access_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-published_at", "-created_at"]
@@ -104,9 +105,27 @@ class Profile(models.Model):
     buymeacoffee_url = models.URLField(blank=True)
     paypal_email = models.EmailField(blank=True)
     upi_id = models.CharField(max_length=100, blank=True)
+    supporter_price = models.DecimalField(max_digits=6, decimal_places=2, default=5.00)
+    patron_price = models.DecimalField(max_digits=6, decimal_places=2, default=15.00)
+    supporter_perks = models.TextField(blank=True, default="Early access to posts, No ads")
+    patron_perks = models.TextField(blank=True, default="Everything in Supporter + Direct messages")
 
     def __str__(self):
         return f"Profile of {self.user.username}"
+
+
+class AuthorSubscription(models.Model):
+    subscriber = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subscriptions')
+    author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subscribers')
+    tier = models.CharField(max_length=20, choices=[('free','Free'),('supporter','Supporter'),('patron','Patron')], default='free')
+    started_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        unique_together = ('subscriber', 'author')
+
+    def __str__(self):
+        return f"{self.subscriber.username} subscribed to {self.author.username} ({self.tier})"
 
 
 from django.db.models.signals import post_save

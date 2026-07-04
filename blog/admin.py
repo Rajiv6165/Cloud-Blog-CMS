@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Post, Tag, Comment, UserPostAccess
+from .models import Post, Tag, Comment, UserPostAccess, AuthorSubscription
 
 
 @admin.register(Tag)
@@ -33,6 +33,13 @@ class UserPostAccessAdmin(admin.ModelAdmin):
     list_display = ("user", "post", "granted_at", "payment_reference")
     list_filter = ("granted_at",)
     search_fields = ("user__username", "user__email", "post__title")
+
+
+@admin.register(AuthorSubscription)
+class AuthorSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("subscriber", "author", "tier", "started_at", "is_active")
+    list_filter = ("tier", "started_at", "is_active")
+    search_fields = ("subscriber__username", "author__username")
 
 
 @admin.register(Comment)

@@ -52,6 +52,9 @@ class PostForm(forms.ModelForm):
             "tags",
             "status",
             "allow_comments",
+            "is_premium",
+            "premium_price",
+            "early_access_at",
         ]
         widgets = {
             "title": forms.TextInput(attrs={"class": "input input-bordered w-full", "placeholder": "Post title"}),
@@ -60,6 +63,9 @@ class PostForm(forms.ModelForm):
             "content": forms.Textarea(attrs={"class": "textarea textarea-bordered w-full min-h-56", "placeholder": "Write your content..."}),
             "tags": forms.SelectMultiple(attrs={"class": "select select-bordered w-full"}),
             "status": forms.Select(attrs={"class": "select select-bordered w-full"}),
+            "is_premium": forms.CheckboxInput(attrs={"class": "checkbox checkbox-primary"}),
+            "premium_price": forms.NumberInput(attrs={"class": "input input-bordered w-full", "placeholder": "e.g. 4.99"}),
+            "early_access_at": forms.DateTimeInput(attrs={"class": "input input-bordered w-full", "type": "datetime-local"}),
         }
 
 
@@ -81,9 +87,14 @@ class UserProfileForm(forms.ModelForm):
     paypal_email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={"class": INPUT_CLASS, "placeholder": "yourname@paypal.com"}))
     upi_id = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={"class": INPUT_CLASS, "placeholder": "username@upi"}))
 
+    supporter_price = forms.DecimalField(max_digits=6, decimal_places=2, required=False, widget=forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "5.00"}))
+    patron_price = forms.DecimalField(max_digits=6, decimal_places=2, required=False, widget=forms.NumberInput(attrs={"class": INPUT_CLASS, "placeholder": "15.00"}))
+    supporter_perks = forms.CharField(required=False, widget=forms.Textarea(attrs={"class": INPUT_CLASS + " h-20", "placeholder": "Perks for supporters...", "rows": 2}))
+    patron_perks = forms.CharField(required=False, widget=forms.Textarea(attrs={"class": INPUT_CLASS + " h-20", "placeholder": "Perks for patrons...", "rows": 2}))
+
     class Meta:
         model = Profile
-        fields = ["buymeacoffee_url", "paypal_email", "upi_id"]
+        fields = ["buymeacoffee_url", "paypal_email", "upi_id", "supporter_price", "patron_price", "supporter_perks", "patron_perks"]
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user", None)

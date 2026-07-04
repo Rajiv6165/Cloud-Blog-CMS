@@ -43,7 +43,23 @@ class PostListView(ListView):
     template_name = "blog/post_list.html"
 
     def get_queryset(self):
-        queryset = Post.objects.filter(status="published").select_related("author").prefetch_related("tags")
+        from django.utils import timezone
+        now = timezone.now()
+        
+        if self.request.user.is_authenticated:
+            from .models import AuthorSubscription
+            subscribed_author_ids = AuthorSubscription.objects.filter(
+                subscriber=self.request.user,
+                is_active=True,
+                tier__in=["supporter", "patron"]
+            ).values_list("author_id", flat=True)
+            
+            base_filter = Q(published_at__lte=now) | Q(author_id__in=subscribed_author_ids, early_access_at__lte=now) | Q(author=self.request.user)
+        else:
+            base_filter = Q(published_at__lte=now)
+
+        queryset = Post.objects.filter(status="published").filter(base_filter).select_related("author").prefetch_related("tags").distinct()
+        
         query = self.request.GET.get("q")
         tag_slug = self.request.GET.get("tag")
         if query:
@@ -72,6 +88,33 @@ class PostDetailView(DetailView):
 
     def get_queryset(self):
         return Post.objects.select_related("author").prefetch_related("tags", "comments__user")
+
+    def get_object(self, queryset=None):
+        from django.http import Http404
+        from django.utils import timezone
+        post = super().get_object(queryset)
+        now = timezone.now()
+        
+        # Check early access visibility if post is scheduled for future publish
+        if post.status == "published" and post.published_at and post.published_at > now:
+            user = self.request.user
+            if not user.is_authenticated:
+                raise Http404("Post not found.")
+            if user == post.author or user.is_staff or user.is_superuser:
+                return post
+            
+            from .models import AuthorSubscription
+            is_sub = AuthorSubscription.objects.filter(
+                subscriber=user,
+                author=post.author,
+                is_active=True,
+                tier__in=["supporter", "patron"]
+            ).exists()
+            
+            if is_sub and post.early_access_at and post.early_access_at <= now:
+                return post
+            raise Http404("Post not found.")
+        return post
 
     def post(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         self.object = self.get_object()
@@ -264,14 +307,81 @@ class AuthorDetailView(DetailView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        context["posts"] = (
-            Post.objects.filter(author=self.object, status="published")
-            .select_related("author")
-            .prefetch_related("tags")
-        )
+        
+        from django.utils import timezone
+        now = timezone.now()
+        posts_qs = Post.objects.filter(author=self.object, status="published")
+        
+        user = self.request.user
+        is_subscriber = False
+        sub_tier = None
+        
+        if user.is_authenticated:
+            from .models import AuthorSubscription
+            try:
+                sub = AuthorSubscription.objects.get(subscriber=user, author=self.object, is_active=True)
+                is_subscriber = True
+                sub_tier = sub.tier
+            except AuthorSubscription.DoesNotExist:
+                pass
+            
+            if user == self.object or user.is_staff or user.is_superuser:
+                # View all posts
+                pass
+            elif is_subscriber and sub_tier in ["supporter", "patron"]:
+                posts_qs = posts_qs.filter(Q(published_at__lte=now) | Q(early_access_at__lte=now))
+            else:
+                posts_qs = posts_qs.filter(published_at__lte=now)
+        else:
+            posts_qs = posts_qs.filter(published_at__lte=now)
+            
+        context["posts"] = posts_qs.select_related("author").prefetch_related("tags").distinct()
         profile, _ = Profile.objects.get_or_create(user=self.object)
         context["profile"] = profile
+        context["is_subscriber"] = is_subscriber
+        context["sub_tier"] = sub_tier
         return context
+
+
+class SubscribeToAuthorView(LoginRequiredMixin, View):
+    def post(self, request, username, *args, **kwargs):
+        from .models import AuthorSubscription
+        User = get_user_model()
+        try:
+            author = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return JsonResponse({"success": False, "error": "Author not found"}, status=404)
+        
+        if author == request.user:
+            return JsonResponse({"success": False, "error": "You cannot subscribe to yourself"}, status=400)
+        
+        tier = request.POST.get("tier", "free")
+        if not tier and request.body:
+            try:
+                import json
+                data = json.loads(request.body)
+                tier = data.get("tier", "free")
+            except Exception:
+                pass
+                
+        if tier not in ["free", "supporter", "patron"]:
+            return JsonResponse({"success": False, "error": "Invalid tier name"}, status=400)
+            
+        sub, created = AuthorSubscription.objects.get_or_create(
+            subscriber=request.user,
+            author=author,
+            defaults={"tier": tier, "is_active": True}
+        )
+        if not created:
+            sub.tier = tier
+            sub.is_active = True
+            sub.save()
+            
+        return JsonResponse({
+            "success": True,
+            "tier": tier,
+            "message": f"Successfully subscribed to {author.username} as a {tier}!"
+        })
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):

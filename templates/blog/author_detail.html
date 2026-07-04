@@ -60,6 +60,118 @@
     {% endif %}
   </div>
 
+  <!-- CSRF Token for JavaScript calls -->
+  <div class="hidden">
+    {% csrf_token %}
+  </div>
+
+  <!-- Subscription Tiers Section -->
+  <div class="mb-12 animate-fade-in">
+    <h2 class="font-serif font-bold text-2xl mb-6 text-[var(--text-primary)] border-b border-[var(--border)] pb-3">
+      Support the Author
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Free Tier Card -->
+      <div class="bg-[var(--bg-secondary)] border {% if is_subscriber and sub_tier == 'free' %}border-sky-500 ring-2 ring-sky-500/20{% else %}border-[var(--border)]{% endif %} rounded-2xl p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+        {% if is_subscriber and sub_tier == 'free' %}
+        <div class="absolute top-3 right-3 bg-sky-500 text-white text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Active</div>
+        {% endif %}
+        <div>
+          <span class="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider block mb-1">Tier 1</span>
+          <h3 class="font-serif font-bold text-xl text-[var(--text-primary)] mb-2">Free Follower</h3>
+          <div class="text-2xl font-bold text-[var(--text-primary)] mb-4">$0 <span class="text-xs font-normal text-[var(--text-muted)]">/ month</span></div>
+          <ul class="text-xs text-[var(--text-secondary)] space-y-2 mb-6">
+            <li class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Read public blog posts
+            </li>
+            <li class="flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              Follow updates
+            </li>
+          </ul>
+        </div>
+        <div>
+          {% if user.is_authenticated %}
+            {% if author == user %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Your own profile</button>
+            {% elif is_subscriber and sub_tier == 'free' %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Following</button>
+            {% else %}
+              <button onclick="subscribeAuthor('free')" class="btn-primary w-full py-2 !text-xs">Follow</button>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center">Sign in to Follow</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Supporter Tier Card -->
+      <div class="bg-[var(--bg-secondary)] border {% if is_subscriber and sub_tier == 'supporter' %}border-amber-500 ring-2 ring-amber-500/20{% else %}border-[var(--border)]{% endif %} rounded-2xl p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+        {% if is_subscriber and sub_tier == 'supporter' %}
+        <div class="absolute top-3 right-3 bg-amber-500 text-white text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Active</div>
+        {% endif %}
+        <div>
+          <span class="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider block mb-1">Tier 2</span>
+          <h3 class="font-serif font-bold text-xl text-[var(--text-primary)] mb-2">Supporter</h3>
+          <div class="text-2xl font-bold text-[var(--text-primary)] mb-4">${{ profile.supporter_price|default:"5.00" }} <span class="text-xs font-normal text-[var(--text-muted)]">/ month</span></div>
+          <ul class="text-xs text-[var(--text-secondary)] space-y-2 mb-6">
+            <li class="flex items-start gap-1.5">
+              <svg class="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>{{ profile.supporter_perks|default:"Early access to posts, No ads" }}</span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          {% if user.is_authenticated %}
+            {% if author == user %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Your own profile</button>
+            {% elif is_subscriber and sub_tier == 'supporter' %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Subscribed</button>
+            {% else %}
+              <button onclick="subscribeAuthor('supporter')" class="btn-primary w-full py-2 !text-xs !bg-amber-600 hover:!bg-amber-700">Subscribe</button>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-amber-600 hover:!bg-amber-700">Sign in to Subscribe</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Patron Tier Card -->
+      <div class="bg-[var(--bg-secondary)] border {% if is_subscriber and sub_tier == 'patron' %}border-purple-500 ring-2 ring-purple-500/20{% else %}border-[var(--border)]{% endif %} rounded-2xl p-6 flex flex-col justify-between shadow-sm relative overflow-hidden">
+        {% if is_subscriber and sub_tier == 'patron' %}
+        <div class="absolute top-3 right-3 bg-purple-500 text-white text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full">Active</div>
+        {% endif %}
+        <div>
+          <span class="text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wider block mb-1">Tier 3</span>
+          <h3 class="font-serif font-bold text-xl text-[var(--text-primary)] mb-2">Patron</h3>
+          <div class="text-2xl font-bold text-[var(--text-primary)] mb-4">${{ profile.patron_price|default:"15.00" }} <span class="text-xs font-normal text-[var(--text-muted)]">/ month</span></div>
+          <ul class="text-xs text-[var(--text-secondary)] space-y-2 mb-6">
+            <li class="flex items-start gap-1.5">
+              <svg class="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+              <span>{{ profile.patron_perks|default:"Everything in Supporter + Direct messages" }}</span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          {% if user.is_authenticated %}
+            {% if author == user %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Your own profile</button>
+            {% elif is_subscriber and sub_tier == 'patron' %}
+              <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Subscribed</button>
+            {% else %}
+              <button onclick="subscribeAuthor('patron')" class="btn-primary w-full py-2 !text-xs !bg-purple-600 hover:!bg-purple-700">Subscribe</button>
+            {% endif %}
+          {% else %}
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-purple-600 hover:!bg-purple-700">Sign in to Subscribe</a>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Author Stories Grid -->
   <div>
     <h2 class="font-serif font-bold text-2xl mb-8 text-[var(--text-primary)] border-b border-[var(--border)] pb-3">
@@ -153,4 +265,36 @@
   }
 </script>
 {% endif %}
+
+<script>
+  function subscribeAuthor(tier) {
+    if (!confirm(`Are you sure you want to subscribe to {{ author.username }} at the ${tier} tier?`)) {
+      return;
+    }
+    
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '{{ csrf_token }}';
+    
+    fetch("{% url 'blog:author_subscribe' author.username %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrfToken
+      },
+      body: `tier=${tier}`
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message);
+        location.reload();
+      } else {
+        alert("Error: " + (data.error || "Could not subscribe. Please try again."));
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error: Failed to connect to server.");
+    });
+  }
+</script>
 {% endblock %}

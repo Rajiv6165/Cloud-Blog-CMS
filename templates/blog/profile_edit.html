@@ -116,6 +116,59 @@
         <p class="text-[11px] text-[var(--text-muted)] mt-1">Enter your UPI ID format: username@bankname</p>
       </div>
 
+      <hr class="border-[var(--border)] my-6">
+
+      <div class="mb-4">
+        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">Monthly Subscription Tiers</h3>
+        <p class="text-xs text-[var(--text-muted)]">Configure monthly support details for your reader subscriptions.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- Supporter Price -->
+        <div>
+          <label class="form-label" for="id_supporter_price">Supporter Tier Price ($)</label>
+          <input type="number" name="supporter_price" id="id_supporter_price" step="0.01" min="0"
+                 value="{{ form.supporter_price.value|default:'5.00' }}"
+                 class="form-input w-full">
+          {% for error in form.supporter_price.errors %}
+          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <!-- Patron Price -->
+        <div>
+          <label class="form-label" for="id_patron_price">Patron Tier Price ($)</label>
+          <input type="number" name="patron_price" id="id_patron_price" step="0.01" min="0"
+                 value="{{ form.patron_price.value|default:'15.00' }}"
+                 class="form-input w-full">
+          {% for error in form.patron_price.errors %}
+          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Supporter Perks -->
+      <div>
+        <label class="form-label" for="id_supporter_perks">Supporter Perks</label>
+        <textarea name="supporter_perks" id="id_supporter_perks" rows="2"
+                  placeholder="Perks for supporters..."
+                  class="form-input w-full resize-none">{{ form.supporter_perks.value|default:'Early access to posts, No ads' }}</textarea>
+        {% for error in form.supporter_perks.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <!-- Patron Perks -->
+      <div>
+        <label class="form-label" for="id_patron_perks">Patron Perks</label>
+        <textarea name="patron_perks" id="id_patron_perks" rows="2"
+                  placeholder="Perks for patrons..."
+                  class="form-input w-full resize-none">{{ form.patron_perks.value|default:'Everything in Supporter + Direct messages' }}</textarea>
+        {% for error in form.patron_perks.errors %}
+        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        {% endfor %}
+      </div>
+
     </div>
 
     <!-- Actions -->
