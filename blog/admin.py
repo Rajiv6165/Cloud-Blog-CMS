@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from .models import Post, Tag, Comment, UserPostAccess, AuthorSubscription
+from .models import Post, Tag, Comment, UserPostAccess, AuthorSubscription, Advertisement
 
 
 @admin.register(Tag)
@@ -40,6 +40,18 @@ class AuthorSubscriptionAdmin(admin.ModelAdmin):
     list_display = ("subscriber", "author", "tier", "started_at", "is_active")
     list_filter = ("tier", "started_at", "is_active")
     search_fields = ("subscriber__username", "author__username")
+
+
+@admin.register(Advertisement)
+class AdvertisementAdmin(admin.ModelAdmin):
+    list_display = ("title", "position", "is_active", "impressions", "clicks", "ctr_display", "starts_at", "ends_at")
+    list_filter = ("position", "is_active", "starts_at", "ends_at")
+    search_fields = ("title", "destination_url")
+    readonly_fields = ("impressions", "clicks")
+
+    def ctr_display(self, obj):
+        return f"{obj.ctr()}%"
+    ctr_display.short_description = "CTR"
 
 
 @admin.register(Comment)

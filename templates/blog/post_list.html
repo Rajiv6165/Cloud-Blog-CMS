@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load ad_tags %}
 {% block title %}Latest Stories — Blog CMS{% endblock %}
 
 {% block content %}
@@ -18,6 +19,18 @@
     <!-- Topics Sidebar -->
     <aside class="lg:w-56 flex-shrink-0">
       <div class="sticky top-24 space-y-4">
+        {% get_ad 'sidebar_top' as ad_sidebar_top %}
+        {% if ad_sidebar_top %}
+        <div class="mb-6 p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] flex flex-col gap-3">
+          <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] self-start">Sponsored</span>
+          <a href="{% url 'blog:ad_click' ad_sidebar_top.pk %}" target="_blank" class="block group">
+            {% if ad_sidebar_top.image %}
+            <img src="{{ ad_sidebar_top.image.url }}" alt="{{ ad_sidebar_top.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy">
+            {% endif %}
+            <h4 class="font-bold text-sm leading-[1.3] text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">{{ ad_sidebar_top.title }}</h4>
+          </a>
+        </div>
+        {% endif %}
         <h3 class="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase">Topics</h3>
         <div class="flex flex-wrap lg:flex-col gap-2">
           <a href="{% url 'blog:post_list' %}" class="tag-pill {% if not active_tag %}!bg-[var(--accent)] !text-white{% endif %}">
@@ -106,6 +119,27 @@
             </div>
           </div>
         </article>
+        {% if forloop.counter|divisibleby:6 %}
+        {% get_ad 'list_between' as ad_list_between %}
+        {% if ad_list_between %}
+        <article class="post-card flex flex-col justify-between h-full bg-[var(--bg-secondary)] border-dashed border-2">
+          <a href="{% url 'blog:ad_click' ad_list_between.pk %}" target="_blank" class="block flex-1 group p-6 relative">
+            <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] absolute top-4 right-4">Sponsored</span>
+            {% if ad_list_between.image %}
+            <div class="h-40 rounded-lg overflow-hidden mb-4 bg-zinc-100 dark:bg-zinc-800">
+              <img src="{{ ad_list_between.image.url }}" alt="{{ ad_list_between.title }}" class="w-full h-full object-cover" loading="lazy">
+            </div>
+            {% endif %}
+            <h2 class="font-serif font-bold text-xl mb-2 group-hover:text-[var(--accent)] transition-colors duration-200 leading-[1.3] text-[var(--text-primary)]">
+              {{ ad_list_between.title }}
+            </h2>
+            <p class="text-sm text-[var(--text-secondary)] leading-relaxed">
+              Click to visit our sponsor and support this site.
+            </p>
+          </a>
+        </article>
+        {% endif %}
+        {% endif %}
         {% endfor %}
       </div>
 

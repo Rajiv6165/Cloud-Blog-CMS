@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load markdown_extras %}
+{% load ad_tags %}
 {% block title %}{{ object.title }} — Blog CMS{% endblock %}
 
 {% block reading_progress %}
@@ -127,6 +128,22 @@
           Sign in to unlock
         </a>
         {% endif %}
+      </div>
+      {% endif %}
+
+      {% get_ad 'post_bottom' as ad_post_bottom %}
+      {% if ad_post_bottom %}
+      <div class="my-8 p-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] flex flex-col sm:flex-row gap-6 items-center">
+        <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] sm:self-start">Sponsored</span>
+        <div class="flex-1 min-w-0">
+          <a href="{% url 'blog:ad_click' ad_post_bottom.pk %}" target="_blank" class="block group">
+            {% if ad_post_bottom.image %}
+            <img src="{{ ad_post_bottom.image.url }}" alt="{{ ad_post_bottom.title }}" class="w-full max-h-64 object-cover rounded-xl mb-3" loading="lazy">
+            {% endif %}
+            <h4 class="font-serif font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors leading-[1.3]">{{ ad_post_bottom.title }}</h4>
+            <p class="text-sm text-[var(--text-secondary)] mt-1">Visit our sponsor to support our writing community.</p>
+          </a>
+        </div>
       </div>
       {% endif %}
 
@@ -272,6 +289,19 @@
           <h3 class="text-xs font-semibold tracking-wider text-[var(--text-muted)] uppercase mb-3.5">On this page</h3>
           <div id="toc-links" class="flex flex-col gap-1.5"></div>
         </div>
+
+        {% get_ad 'sidebar_bottom' as ad_sidebar_bottom %}
+        {% if ad_sidebar_bottom %}
+        <div class="p-4 rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)] flex flex-col gap-3">
+          <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] self-start">Sponsored</span>
+          <a href="{% url 'blog:ad_click' ad_sidebar_bottom.pk %}" target="_blank" class="block group">
+            {% if ad_sidebar_bottom.image %}
+            <img src="{{ ad_sidebar_bottom.image.url }}" alt="{{ ad_sidebar_bottom.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy">
+            {% endif %}
+            <h4 class="font-bold text-sm leading-[1.3] text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">{{ ad_sidebar_bottom.title }}</h4>
+          </a>
+        </div>
+        {% endif %}
 
         <!-- Dynamic Related Stories Widget -->
         <div id="related-stories-section" data-slug="{{ object.slug }}" class="space-y-4">

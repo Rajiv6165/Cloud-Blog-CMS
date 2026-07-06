@@ -128,6 +128,31 @@ class AuthorSubscription(models.Model):
         return f"{self.subscriber.username} subscribed to {self.author.username} ({self.tier})"
 
 
+class Advertisement(models.Model):
+    POSITION_CHOICES = [
+        ('sidebar_top', 'Sidebar Top'),
+        ('sidebar_bottom', 'Sidebar Bottom'),
+        ('post_bottom', 'After Post Content'),
+        ('list_between', 'Between Post Cards'),
+    ]
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='ads/')
+    destination_url = models.URLField()
+    position = models.CharField(max_length=20, choices=POSITION_CHOICES)
+    is_active = models.BooleanField(default=True)
+    impressions = models.PositiveIntegerField(default=0)
+    clicks = models.PositiveIntegerField(default=0)
+    starts_at = models.DateTimeField(null=True, blank=True)
+    ends_at = models.DateTimeField(null=True, blank=True)
+    created_by = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+
+    def ctr(self):
+        return round((self.clicks / self.impressions * 100), 2) if self.impressions else 0
+
+    def __str__(self):
+        return self.title
+
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 

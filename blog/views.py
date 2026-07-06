@@ -3,9 +3,9 @@ from typing import Any, Dict
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.db.models import Q
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.db.models import Q, F
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import (
@@ -17,7 +17,7 @@ from django.views.generic import (
     FormView,
 )
 
-from .models import Post, Tag, Comment, Profile
+from .models import Post, Tag, Comment, Profile, Advertisement
 from .forms import PostForm, CommentForm, RegisterForm, UserProfileForm
 
 
@@ -397,3 +397,10 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.user or self.request.user.is_staff
+
+
+class AdServeView(View):
+    def get(self, request, pk, *args, **kwargs):
+        ad = get_object_or_404(Advertisement, pk=pk)
+        Advertisement.objects.filter(pk=pk).update(clicks=F("clicks") + 1)
+        return redirect(ad.destination_url)

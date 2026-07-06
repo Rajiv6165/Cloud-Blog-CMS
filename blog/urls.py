@@ -20,4 +20,5 @@ urlpatterns = [
     path("ai/suggest-tags/", ai_views.AITagSuggestView.as_view(), name="ai_suggest_tags"),
     path("ai/create-tag/", ai_views.AICreateTagView.as_view(), name="ai_create_tag"),
     path("ai/related/<slug:slug>/", ai_views.AIRelatedView.as_view(), name="ai_related"),
+    path("ads/<int:pk>/click/", views.AdServeView.as_view(), name="ad_click"),
 ]
