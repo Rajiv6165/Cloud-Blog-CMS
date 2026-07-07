@@ -92,7 +92,19 @@
                   placeholder="Provide a quick synopsis of the story..."
                   class="form-input resize-none" maxlength="300">{{ form.summary.value|default:'' }}</textarea>
         <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono">300 characters remaining</p>
-        {% for error in form.summary.errors %}
+      </div>
+
+      <!-- Cover Image -->
+      <div>
+        <label class="form-label" for="id_cover_image">Cover Image</label>
+        <input type="file" name="cover_image" id="id_cover_image" accept="image/*"
+               class="form-input !py-2 !px-3 bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+        {% if form.instance.cover_image %}
+        <p class="text-xs text-[var(--text-secondary)] mt-1.5">
+          Current image: <a href="{{ form.instance.cover_image.url }}" target="_blank" class="text-[var(--accent)] hover:underline">{{ form.instance.cover_image.name }}</a>
+        </p>
+        {% endif %}
+        {% for error in form.cover_image.errors %}
         <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
         {% endfor %}
       </div>

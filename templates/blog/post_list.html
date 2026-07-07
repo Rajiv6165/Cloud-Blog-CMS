@@ -58,12 +58,26 @@
         {% for post in page_obj %}
         <article class="post-card flex flex-col justify-between h-full">
           <a href="{{ post.get_absolute_url }}" class="block flex-1 group">
-            <!-- Cover image placeholder or custom gradient -->
+            <!-- Cover image or placeholder -->
+            {% if post.cover_image %}
+            <div class="relative h-48 overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+              <img 
+                src="{{ post.cover_image_blur }}"
+                data-src="{{ post.cover_image.url }}"
+                class="lazy-img w-full h-full object-cover"
+                alt="{{ post.title }}"
+                loading="lazy"
+                width="400"
+                height="200"
+              >
+            </div>
+            {% else %}
             <div class="cover-placeholder">
               <span class="font-serif font-bold text-4xl text-[var(--accent)] opacity-40 select-none group-hover:scale-110 transition-transform duration-300">
                 {{ post.title|first|upper }}
               </span>
             </div>
+            {% endif %}
 
             <!-- Card Body -->
             <div class="p-6">

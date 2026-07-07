@@ -24,8 +24,18 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ("title", "summary", "content")
     prepopulated_fields = {"slug": ("title",)}
     autocomplete_fields = ("tags",)
+    readonly_fields = ("image_size_comparison",)
     inlines = [CommentInline]
     date_hierarchy = "published_at"
+
+    def image_size_comparison(self, obj):
+        if obj.original_image_size and obj.compressed_image_size:
+            before = obj.original_image_size / 1024
+            after = obj.compressed_image_size / 1024
+            savings = ((obj.original_image_size - obj.compressed_image_size) / obj.original_image_size) * 100
+            return f"Original: {before:.1f} KB | Compressed: {after:.1f} KB (Saved {savings:.1f}%)"
+        return "No cover image or not yet compressed."
+    image_size_comparison.short_description = "Cover Image Compression Status"
 
 
 @admin.register(UserPostAccess)

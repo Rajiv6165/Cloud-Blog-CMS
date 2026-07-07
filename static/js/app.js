@@ -721,4 +721,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
   }
+
+  // ─── Lazy Loading Images ─────────────────────────────────────────────
+  const lazyImages = document.querySelectorAll('.lazy-img');
+  const imgObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        if (img.dataset.src) {
+          img.src = img.dataset.src;
+        }
+        img.classList.add('loaded');
+        imgObserver.unobserve(img);
+      }
+    });
+  });
+  lazyImages.forEach(img => imgObserver.observe(img));
 });

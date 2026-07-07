@@ -36,6 +36,11 @@ class Post(models.Model):
     is_premium = models.BooleanField(default=False)
     premium_price = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
 
+    cover_image = models.ImageField(upload_to="covers/", blank=True, null=True)
+    cover_image_blur = models.TextField(blank=True)
+    original_image_size = models.PositiveIntegerField(null=True, blank=True)
+    compressed_image_size = models.PositiveIntegerField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(null=True, blank=True)
@@ -52,11 +57,69 @@ class Post(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
+        is_new_image = False
+        if self.cover_image:
+            if self.pk:
+                try:
+                    old_post = Post.objects.get(pk=self.pk)
+                    if old_post.cover_image != self.cover_image:
+                        is_new_image = True
+                except Post.DoesNotExist:
+                    is_new_image = True
+            else:
+                is_new_image = True
+
         if not self.slug:
             self.slug = slugify(self.title)
         if self.status == "published" and not self.published_at:
             self.published_at = timezone.now()
+
         super().save(*args, **kwargs)
+
+        if is_new_image and self.cover_image:
+            try:
+                from PIL import Image
+                import io
+                import base64
+                from django.core.files.base import ContentFile
+
+                # Save original size
+                orig_size = self.cover_image.size
+                self.original_image_size = orig_size
+
+                img = Image.open(self.cover_image.path)
+                if img.mode in ('RGBA', 'P'):
+                    img = img.convert('RGB')
+
+                max_width = 1200
+                if img.width > max_width:
+                    ratio = max_width / img.width
+                    new_height = int(img.height * ratio)
+                    img = img.resize((max_width, new_height), Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS)
+
+                # Save with 85% quality WebP
+                output = io.BytesIO()
+                img.save(output, format='WEBP', quality=85, optimize=True)
+                comp_bytes = output.getvalue()
+                self.compressed_image_size = len(comp_bytes)
+
+                # Replace original file on model
+                webp_name = self.cover_image.name.rsplit('.', 1)[0] + '.webp'
+                self.cover_image.save(
+                    webp_name,
+                    ContentFile(comp_bytes),
+                    save=False
+                )
+
+                # Generate blur placeholder (20x20 base64)
+                img_small = img.resize((20, 20), Image.Resampling.LANCZOS if hasattr(Image, 'Resampling') else Image.LANCZOS)
+                buffer = io.BytesIO()
+                img_small.save(buffer, format='WEBP', quality=30)
+                self.cover_image_blur = 'data:image/webp;base64,' + base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+                super().save(update_fields=['cover_image', 'cover_image_blur', 'original_image_size', 'compressed_image_size'])
+            except Exception as e:
+                print(f"Error compressing cover image: {e}")
 
     def get_absolute_url(self):
         return reverse("blog:post_detail", args=[self.slug])
