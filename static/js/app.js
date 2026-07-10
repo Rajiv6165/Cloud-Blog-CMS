@@ -708,6 +708,10 @@ document.addEventListener('DOMContentLoaded', () => {
                   </div>
                 `;
                 container.appendChild(card);
+                const prefetchLink = document.createElement('link');
+                prefetchLink.rel = 'prefetch';
+                prefetchLink.href = post.url;
+                document.head.appendChild(prefetchLink);
               }
             });
             if (skeleton) skeleton.classList.add('hidden');

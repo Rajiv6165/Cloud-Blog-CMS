@@ -80,7 +80,7 @@
           data-src="{{ object.cover_image.url }}"
           class="lazy-img w-full h-full object-cover"
           alt="{{ object.title }}"
-          loading="lazy"
+          fetchpriority="high"
           width="800"
           height="450"
         >
@@ -153,7 +153,7 @@
         <div class="flex-1 min-w-0">
           <a href="{% url 'blog:ad_click' ad_post_bottom.pk %}" target="_blank" class="block group">
             {% if ad_post_bottom.image %}
-            <img src="{{ ad_post_bottom.image.url }}" alt="{{ ad_post_bottom.title }}" class="w-full max-h-64 object-cover rounded-xl mb-3" loading="lazy">
+            <img src="{{ ad_post_bottom.image.url }}" alt="{{ ad_post_bottom.title }}" class="w-full max-h-64 object-cover rounded-xl mb-3" loading="lazy" width="600" height="300">
             {% endif %}
             <h4 class="font-serif font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors leading-[1.3]">{{ ad_post_bottom.title }}</h4>
             <p class="text-sm text-[var(--text-secondary)] mt-1">Visit our sponsor to support our writing community.</p>
@@ -311,7 +311,7 @@
           <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] self-start">Sponsored</span>
           <a href="{% url 'blog:ad_click' ad_sidebar_bottom.pk %}" target="_blank" class="block group">
             {% if ad_sidebar_bottom.image %}
-            <img src="{{ ad_sidebar_bottom.image.url }}" alt="{{ ad_sidebar_bottom.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy">
+            <img src="{{ ad_sidebar_bottom.image.url }}" alt="{{ ad_sidebar_bottom.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy" width="300" height="250">
             {% endif %}
             <h4 class="font-bold text-sm leading-[1.3] text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">{{ ad_sidebar_bottom.title }}</h4>
           </a>

@@ -3,7 +3,7 @@
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#6d28d9">
   <title>{% block title %}Blog CMS{% endblock %}</title>
 
@@ -18,54 +18,108 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   </noscript>
 
-  <!-- Tailwind Configuration -->
-  <script>
-    window.tailwind = window.tailwind || {};
-    window.tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            serif: ['Playfair Display', 'Georgia', 'serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            accent: {
-              DEFAULT: '#6d28d9',
-              light: '#ede9fe',
-              dark: '#a78bfa',
-            }
-          },
-          animation: {
-            'fade-in': 'fadeIn 0.4s ease-out',
-            'slide-up': 'slideUp 0.5s cubic-bezier(0.4,0,0.2,1)',
-            'shimmer': 'shimmer 1.8s infinite',
-          },
-          keyframes: {
-            fadeIn: { from: { opacity: '0' }, to: { opacity: '1' } },
-            slideUp: { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
-            shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
-          }
-        }
-      }
-    }
-  </script>
-  <!-- Tailwind CDN (Deferred) -->
+  <!-- Minified Tailwind Configuration & CDN -->
+  <script>window.tailwind=window.tailwind||{};window.tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif'],serif:['Playfair Display','Georgia','serif'],mono:['JetBrains Mono','monospace']},colors:{accent:{DEFAULT:'#6d28d9',light:'#ede9fe',dark:'#a78bfa'}},animation:{'fade-in':'fadeIn 0.4s ease-out','slide-up':'slideUp 0.5s cubic-bezier(0.4,0,0.2,1)','shimmer':'shimmer 1.8s infinite'},keyframes:{fadeIn:{from:{opacity:'0'},to:{opacity:'1'}},slideUp:{from:{opacity:'0',transform:'translateY(16px)'},to:{opacity:'1',transform:'translateY(0)'}},shimmer:{'0%':{backgroundPosition:'-200% 0'},'100%':{backgroundPosition:'200% 0'}}}}}};</script>
   <script src="https://cdn.tailwindcss.com" defer></script>
 
-  <!-- Non-critical CSS loaded after page paint -->
-  <script>
-    window.addEventListener('load', function() {
-      var link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = "{% static 'css/app.css' %}";
-      document.head.appendChild(link);
-    });
-  </script>
+  <!-- Minified Non-critical CSS loader -->
+  <script>window.addEventListener('load',function(){var l=document.createElement('link');l.rel='stylesheet';l.href="{% static 'css/app.css' %}";document.head.appendChild(l);});</script>
   <noscript>
     <link rel="stylesheet" href="{% static 'css/app.css' %}">
   </noscript>
+
+  <!-- Critical Inline Styles -->
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f7f4;
+      --bg-tertiary: #f0ede8;
+      --text-primary: #0a0a0a;
+      --text-secondary: #525252;
+      --text-muted: #a3a3a3;
+      --accent: #6d28d9;
+      --accent-light: #ede9fe;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-hover: rgba(0, 0, 0, 0.16);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-card: 16px;
+      --radius-lg: 24px;
+      --radius-pill: 9999px;
+      --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.06);
+      --shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.05), 0 12px 40px rgba(0, 0, 0, 0.10);
+      --transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dark {
+      --bg-primary: #09090b;
+      --bg-secondary: #111113;
+      --bg-tertiary: #18181b;
+      --text-primary: #fafafa;
+      --text-secondary: #a1a1aa;
+      --text-muted: #52525b;
+      --accent: #a78bfa;
+      --accent-light: #1e1b4b;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      --shadow-card: none;
+      --shadow-hover: none;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 300ms, color 300ms;
+    }
+    .glass-nav {
+      background: rgba(9, 9, 11, 0.7);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border);
+      transition: var(--transition);
+      will-change: transform;
+    }
+    .light .glass-nav, html:not(.dark) .glass-nav {
+      background: rgba(255, 255, 255, 0.75);
+    }
+    .logo-gradient {
+      background: linear-gradient(135deg, var(--accent) 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .nav-link {
+      position: relative;
+      color: var(--text-secondary);
+      transition: color 200ms;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .post-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      box-shadow: var(--shadow-card);
+    }
+    .post-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-hover);
+      will-change: transform;
+    }
+    .dark .post-card:hover {
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+    .content-visibility-auto {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 500px;
+    }
+  </style>
   {% block head %}{% endblock %}
 </head>
 <body class="bg-[var(--bg-primary)] text-[var(--text-primary)] min-h-screen flex flex-col transition-colors duration-300">
