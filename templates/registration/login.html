@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Sign in — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Sign in — Blog CMS" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-md mx-auto px-4 sm:px-6 py-20 animate-slide-up">
   <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
     <div class="mb-8 text-center">
-      <span class="font-serif font-bold text-2xl logo-gradient tracking-tight mb-2 inline-block">Blog CMS</span>
-      <h1 class="font-serif font-bold text-2xl text-[var(--text-primary)]">Welcome back</h1>
-      <p class="text-xs text-[var(--text-secondary)] mt-1.5">Sign in to your account to start writing and leaving comments.</p>
+      <span class="font-serif font-bold text-2xl logo-gradient tracking-tight mb-2 inline-block">{% trans "Blog CMS" %}</span>
+      <h1 class="font-serif font-bold text-2xl text-[var(--text-primary)]">{% trans "Welcome back" %}</h1>
+      <p class="text-xs text-[var(--text-secondary)] mt-1.5">{% trans "Sign in to your account to start writing and leaving comments." %}</p>
     </div>
 
     <form method="post" class="space-y-5">
@@ -21,9 +22,9 @@
 
       <!-- Username -->
       <div>
-        <label class="form-label" for="id_username">Username</label>
+        <label class="form-label" for="id_username">{% trans "Username" %}</label>
         <input type="text" name="username" id="id_username" required
-               placeholder="Your username"
+               placeholder="{% trans 'Your username' %}"
                class="form-input"
                {% if form.username.errors %}aria-invalid="true" aria-describedby="username-error"{% endif %}>
         {% for error in form.username.errors %}
@@ -33,7 +34,7 @@
 
       <!-- Password -->
       <div>
-        <label class="form-label" for="id_password">Password</label>
+        <label class="form-label" for="id_password">{% trans "Password" %}</label>
         <input type="password" name="password" id="id_password" required
                placeholder="••••••••"
                class="form-input"
@@ -45,13 +46,13 @@
 
       <!-- Submit button -->
       <button type="submit" class="btn-primary w-full justify-center !py-3">
-        Sign in
+        {% trans "Sign in" %}
       </button>
     </form>
 
     <div class="mt-8 pt-6 border-t border-[var(--border)] text-center text-sm text-[var(--text-secondary)]">
-      <span>Don't have an account?</span>
-      <a href="{% url 'register' %}" class="font-semibold text-[var(--accent)] hover:underline ml-1">Create one</a>
+      <span>{% trans "Don't have an account?" %}</span>
+      <a href="{% url 'register' %}" class="font-semibold text-[var(--accent)] hover:underline ml-1">{% trans "Create one" %}</a>
     </div>
   </div>
 </div>

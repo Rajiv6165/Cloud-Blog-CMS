@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Create Account — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Create Account — Blog CMS" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-md mx-auto px-4 sm:px-6 py-16 animate-slide-up">
   <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 shadow-sm">
     <div class="mb-8 text-center">
-      <span class="font-serif font-bold text-2xl logo-gradient tracking-tight mb-2 inline-block">Blog CMS</span>
-      <h1 class="font-serif font-bold text-2xl text-[var(--text-primary)]">Create your account</h1>
-      <p class="text-xs text-[var(--text-secondary)] mt-1.5">Join the writing community and share your insights.</p>
+      <span class="font-serif font-bold text-2xl logo-gradient tracking-tight mb-2 inline-block">{% trans "Blog CMS" %}</span>
+      <h1 class="font-serif font-bold text-2xl text-[var(--text-primary)]">{% trans "Create your account" %}</h1>
+      <p class="text-xs text-[var(--text-secondary)] mt-1.5">{% trans "Join the writing community and share your insights." %}</p>
     </div>
 
     <form method="post" class="space-y-5">
@@ -21,10 +22,10 @@
 
       <!-- Username -->
       <div>
-        <label class="form-label" for="id_username">Username</label>
+        <label class="form-label" for="id_username">{% trans "Username" %}</label>
         <input type="text" name="username" id="id_username" required
                value="{{ form.username.value|default:'' }}"
-               placeholder="Username"
+               placeholder="{% trans 'Username' %}"
                class="form-input"
                aria-describedby="{% if form.username.help_text %}username-helper {% endif %}{% if form.username.errors %}username-error{% endif %}"
                {% if form.username.errors %}aria-invalid="true"{% endif %}>
@@ -38,10 +39,10 @@
 
       <!-- Email -->
       <div>
-        <label class="form-label" for="id_email">Email Address</label>
+        <label class="form-label" for="id_email">{% trans "Email Address" %}</label>
         <input type="email" name="email" id="id_email" required
                value="{{ form.email.value|default:'' }}"
-               placeholder="you@example.com"
+               placeholder="{% trans 'you@example.com' %}"
                class="form-input"
                {% if form.email.errors %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
         {% for error in form.email.errors %}
@@ -51,7 +52,7 @@
 
       <!-- Password -->
       <div>
-        <label class="form-label" for="id_password1">Password</label>
+        <label class="form-label" for="id_password1">{% trans "Password" %}</label>
         <input type="password" name="password1" id="id_password1" required
                placeholder="••••••••"
                class="form-input"
@@ -67,7 +68,7 @@
 
       <!-- Confirm Password -->
       <div>
-        <label class="form-label" for="id_password2">Confirm Password</label>
+        <label class="form-label" for="id_password2">{% trans "Confirm Password" %}</label>
         <input type="password" name="password2" id="id_password2" required
                placeholder="••••••••"
                class="form-input"
@@ -79,13 +80,13 @@
 
       <!-- Submit button -->
       <button type="submit" class="btn-primary w-full justify-center !py-3">
-        Register Account
+        {% trans "Register Account" %}
       </button>
     </form>
 
     <div class="mt-8 pt-6 border-t border-[var(--border)] text-center text-sm text-[var(--text-secondary)]">
-      <span>Already have an account?</span>
-      <a href="{% url 'login' %}" class="font-semibold text-[var(--accent)] hover:underline ml-1">Sign in</a>
+      <span>{% trans "Already have an account?" %}</span>
+      <a href="{% url 'login' %}" class="font-semibold text-[var(--accent)] hover:underline ml-1">{% trans "Sign in" %}</a>
     </div>
   </div>
 </div>

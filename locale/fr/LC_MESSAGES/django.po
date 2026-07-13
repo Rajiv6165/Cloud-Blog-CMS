@@ -1,0 +1,736 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: you@example.com\n"
+"POT-Creation-Date: 2026-07-13 18:00+0000\n"
+"PO-Revision-Date: 2026-07-13 18:00+0000\n"
+"Last-Translator: Antigravity <you@example.com>\n"
+"Language-Team: Antigravity Team\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "300 characters remaining"
+msgstr ""
+
+msgid "A premium writing and publishing environment."
+msgstr ""
+
+msgid "AI Writing Assistant"
+msgstr "Assistant d'écriture IA"
+
+msgid "Academic"
+msgstr "Académique"
+
+msgid "Actions"
+msgstr "Actions"
+
+msgid "Admin"
+msgstr ""
+
+msgid "Admin Panel"
+msgstr ""
+
+msgid "Advertisement for"
+msgstr "Publicité pour"
+
+msgid "After Post Content"
+msgstr ""
+
+msgid "All posts"
+msgstr ""
+
+msgid "Allow comments on this post"
+msgstr "Autoriser les commentaires sur cet article"
+
+msgid "Already have an account?"
+msgstr "Vous avez déjà un compte ?"
+
+msgid "Anthropic API Call Failed: %(error)s"
+msgstr ""
+
+msgid ""
+"Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to"
+" your .env file."
+msgstr ""
+
+msgid "Apply"
+msgstr "Appliquer"
+
+msgid ""
+"Are you sure you want to permanently delete <strong "
+"class=\"text-[var(--text-primary)]\">\"{{ title }}\"</strong>? This action "
+"is irreversible and will remove all comments associated with it."
+msgstr ""
+
+msgid "Author & Contributor"
+msgstr "Auteur et contributeur"
+
+msgid "Author Dashboard"
+msgstr "Tableau de bord de l'auteur"
+
+msgid "Author Profile:"
+msgstr ""
+
+msgid "Author not found"
+msgstr ""
+
+msgid "Auto-generate"
+msgstr "Générer automatiquement"
+
+msgid "Auto-generate summary from content"
+msgstr "Générer automatiquement le résumé à partir du contenu"
+
+msgid "Back to home"
+msgstr "Retour à l'accueil"
+
+msgid "Back to top"
+msgstr ""
+
+msgid "Between Post Cards"
+msgstr ""
+
+msgid "Blog CMS"
+msgstr "Blog CMS"
+
+msgid "Blog CMS Home"
+msgstr ""
+
+msgid "Buy Me a Coffee URL"
+msgstr ""
+
+msgid "Buy me a coffee"
+msgstr "Achetez-moi un café"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Cancel and return"
+msgstr "Annuler et retourner"
+
+msgid "Casual"
+msgstr "Décontracté"
+
+msgid "Change tone"
+msgstr "Changer le ton"
+
+msgid "Claude is composing..."
+msgstr "Claude compose..."
+
+msgid "Claude response was not a valid list"
+msgstr ""
+
+msgid "Click to visit our sponsor and support this site."
+msgstr ""
+
+msgid "Close panel"
+msgstr "Fermer le panneau"
+
+msgid "Comment and discuss"
+msgstr "Commenter et discuter"
+
+msgid "Comment held for review."
+msgstr ""
+
+msgid "Comment posted successfully."
+msgstr ""
+
+msgid "Comments are disabled for this story."
+msgstr "Les commentaires sont désactivés pour cette histoire."
+
+msgid "Compare (Diff)"
+msgstr "Comparer (Diff)"
+
+msgid "Configure how readers can tip or support your content directly."
+msgstr ""
+
+msgid "Configure monthly support details for your reader subscriptions."
+msgstr ""
+"Configurez les détails du support mensuel pour les abonnements de vos "
+"lecteurs."
+
+msgid "Confirm Password"
+msgstr "Confirmer le mot de passe"
+
+msgid "Content"
+msgstr "Contenu"
+
+msgid "Content is required for summarization"
+msgstr ""
+
+msgid "Continue writing"
+msgstr "Continuer à écrire"
+
+msgid "Copied!"
+msgstr "Copié !"
+
+msgid "Copy"
+msgstr "Copier"
+
+msgid "Cover Image"
+msgstr ""
+
+msgid "Cover image for"
+msgstr "Image de couverture pour"
+
+msgid "Create Account — Blog CMS"
+msgstr ""
+
+msgid "Create one"
+msgstr "Créez-en un"
+
+msgid "Create your account"
+msgstr ""
+
+msgid "Current image:"
+msgstr "Image actuelle :"
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Dashboard — Blog CMS"
+msgstr ""
+
+msgid "Date Updated"
+msgstr "Date de mise à jour"
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete Story"
+msgstr "Supprimer l'histoire"
+
+msgid "Delete Story — Blog CMS"
+msgstr ""
+
+msgid "Delete comment by"
+msgstr "Supprimer le commentaire de"
+
+msgid "Discard"
+msgstr "Abandonner"
+
+msgid "Discussion ({{ count }})"
+msgstr "Discussion ({{ count }})"
+
+msgid "Dismiss alert"
+msgstr ""
+
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte ?"
+
+msgid "Donation & Payment Methods"
+msgstr ""
+
+msgid "Draft"
+msgstr "Brouillon"
+
+msgid "Early Access Datetime"
+msgstr "Date et heure de l'accès anticipé"
+
+msgid "Edit"
+msgstr "Modifier"
+
+msgid "Edit Profile"
+msgstr "Modifier le profil"
+
+msgid "Edit Profile — Blog CMS"
+msgstr ""
+
+msgid "Edit story"
+msgstr "Modifier l'histoire"
+
+msgid "Email Address"
+msgstr "Adresse e-mail"
+
+msgid "Enter your UPI ID format: username@bankname"
+msgstr "Entrez votre format d'identifiant UPI : username@bankname"
+
+msgid "Estimated reading time"
+msgstr "Temps de lecture estimé"
+
+msgid "Failed to parse Claude output: %(result)s"
+msgstr ""
+
+msgid "First Name"
+msgstr "Prénom"
+
+msgid "Fix grammar & spelling"
+msgstr "Corriger la grammaire et l'orthographe"
+
+msgid ""
+"Found {{ count }} result for \"<strong class=\"text-[var(--text-"
+"primary)]\">{{ query }}</strong>\"{% plural %}Found {{ count }} results for "
+"\"<strong class=\"text-[var(--text-primary)]\">{{ query }}</strong>\""
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Full content"
+msgstr "Contenu complet"
+
+msgid "Go"
+msgstr "Aller"
+
+msgid "Home"
+msgstr ""
+
+msgid "Humorous"
+msgstr "Humoristique"
+
+msgid "Ideas, guides, and insights from our team of writers."
+msgstr ""
+
+msgid "Improve writing"
+msgstr "Améliorer l'écriture"
+
+msgid "Invalid JSON payload"
+msgstr ""
+
+msgid "Invalid UPI ID format. Should be like username@upi."
+msgstr ""
+
+msgid "Invalid tier name"
+msgstr ""
+
+msgid "Join the discussion..."
+msgstr "Rejoignez la discussion..."
+
+msgid "Join the writing community and share your insights."
+msgstr ""
+
+msgid "Last 500 chars"
+msgstr "500 derniers caractères"
+
+msgid "Last Name"
+msgstr "Nom"
+
+msgid "Latest"
+msgstr ""
+
+msgid "Latest Stories — Blog CMS"
+msgstr ""
+
+msgid "Lifetime reading access"
+msgstr "Accès de lecture à vie"
+
+msgid "Logout"
+msgstr ""
+
+msgid "Logout from your account"
+msgstr ""
+
+msgid "Main navigation"
+msgstr ""
+
+msgid "Manage your publications, update content, and oversee draft stories."
+msgstr ""
+
+msgid "Mark as Premium post"
+msgstr "Marquer comme article Premium"
+
+msgid "Mobile navigation"
+msgstr ""
+
+msgid "Monthly Subscription Tiers"
+msgstr "Niveaux d'abonnement mensuel"
+
+msgid "New story"
+msgstr "Nouvelle histoire"
+
+msgid "No comments yet. Start the conversation!"
+msgstr "Aucun commentaire pour l'instant. Commencez la conversation !"
+
+msgid "No posts found"
+msgstr ""
+
+msgid "No posts yet"
+msgstr "Aucun article pour l'instant"
+
+msgid "No stories yet"
+msgstr "Aucune histoire pour l'instant"
+
+msgid "On this page"
+msgstr "Sur cette page"
+
+msgid "Open mobile menu"
+msgstr ""
+
+msgid "Page {{ current }} of {{ total }}"
+msgstr "Page {{ current }} sur {{ total }}"
+
+msgid "Password"
+msgstr "Mot de passe"
+
+msgid "Patron"
+msgstr ""
+
+msgid "Patron Perks"
+msgstr "Avantages de patron"
+
+msgid "Patron Tier Price ($)"
+msgstr "Prix du niveau Patron ($)"
+
+msgid "PayPal"
+msgstr "PayPal"
+
+msgid "PayPal Email (for PayPal.me)"
+msgstr ""
+
+msgid "Perks for patrons..."
+msgstr "Avantages pour les patrons..."
+
+msgid "Perks for supporters..."
+msgstr "Avantages pour les supporters..."
+
+msgid "Post Comment"
+msgstr "Publier un commentaire"
+
+msgid "Post not found"
+msgstr ""
+
+msgid "Post not found."
+msgstr ""
+
+msgid "Premium"
+msgstr "Premium"
+
+msgid "Premium Content"
+msgstr ""
+
+msgid "Premium Price ($)"
+msgstr "Prix Premium ($)"
+
+msgid "Preview Changes"
+msgstr "Aperçu des modifications"
+
+msgid "Professional"
+msgstr "Professionnel"
+
+msgid "Profile"
+msgstr ""
+
+msgid "Provide a quick synopsis of the story..."
+msgstr "Fournissez un résumé rapide de l'histoire..."
+
+msgid "Publish story"
+msgstr "Publier l'histoire"
+
+msgid "Published"
+msgstr "Publié"
+
+msgid "Read full story:"
+msgstr "Lire l'histoire complète :"
+
+msgid "Ready."
+msgstr "Prêt."
+
+msgid "Register"
+msgstr "S'inscrire"
+
+msgid "Register Account"
+msgstr "Créer un compte"
+
+msgid "Related stories"
+msgstr "Histoires connexes"
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Save profile updates"
+msgstr "Enregistrer les modifications du profil"
+
+msgid "Save updates"
+msgstr "Enregistrer les modifications"
+
+msgid "Search posts"
+msgstr ""
+
+msgid "Search posts..."
+msgstr ""
+
+msgid "Search stories"
+msgstr ""
+
+msgid "Search stories..."
+msgstr ""
+
+msgid "Select Language"
+msgstr ""
+
+msgid "Select multiple"
+msgstr "Sélectionner plusieurs"
+
+msgid "Select text in editor to focus AI actions, or run on full text."
+msgstr ""
+"Sélectionnez du texte dans l'éditeur pour cibler les actions de l'IA, ou "
+"exécutez sur l'ensemble du texte."
+
+msgid "Selected / All"
+msgstr "Sélectionné / Tout"
+
+msgid "Showing all published stories cataloged under this topic."
+msgstr ""
+"Affichage de toutes les histoires publiées répertoriées sous ce sujet."
+
+msgid "Sidebar Bottom"
+msgstr ""
+
+msgid "Sidebar Top"
+msgstr ""
+
+msgid "Sign in"
+msgstr "Se connecter"
+
+msgid "Sign in to share your thoughts and participate in the discussion."
+msgstr ""
+"Connectez-vous pour partager vos pensées et participer à la discussion."
+
+msgid "Sign in to unlock"
+msgstr "Se connecter pour déverrouiller"
+
+msgid "Sign in to your account to start writing and leaving comments."
+msgstr ""
+
+msgid "Sign in — Blog CMS"
+msgstr ""
+
+msgid "Simulated views"
+msgstr "Vues simulées"
+
+msgid "Skip to main content"
+msgstr ""
+
+msgid "Slug"
+msgstr "Slug"
+
+msgid "Sponsored"
+msgstr "Sponsorisé"
+
+msgid "Sponsored Ad:"
+msgstr ""
+
+msgid "Stats"
+msgstr "Stats"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Story Details"
+msgstr "Détails de l'histoire"
+
+msgid "Successfully subscribed to %(username)s as a %(tier)s!"
+msgstr ""
+
+msgid "Successfully unlocked the premium post: %(title)s"
+msgstr ""
+
+msgid "Suggest relevant tags using AI"
+msgstr "Suggérer des mots-clés pertinents à l'aide de l'IA"
+
+msgid "Suggest tags"
+msgstr "Suggérer des mots-clés"
+
+msgid "Summary"
+msgstr "Résumé"
+
+msgid "Support the author by sending a tip or donation."
+msgstr ""
+
+msgid "Support the author directly"
+msgstr "Soutenez l'auteur directement"
+
+msgid "Supporter"
+msgstr ""
+
+msgid "Supporter Perks"
+msgstr "Avantages de supporter"
+
+msgid "Supporter Tier Price ($)"
+msgstr "Prix du niveau Supporter ($)"
+
+msgid "Tag name is required"
+msgstr ""
+
+msgid "Tag: #{{ tag }} — Blog CMS"
+msgstr "Mot-clé : #{{ tag }} — Blog CMS"
+
+msgid "Tags"
+msgstr "Mots-clés"
+
+msgid "Text content is required"
+msgstr ""
+
+msgid "There are no stories published in this category yet."
+msgstr ""
+
+msgid "There are no stories published under this category tag."
+msgstr "Aucune histoire n'est publiée sous cette étiquette de catégorie."
+
+msgid "This email address is already in use."
+msgstr ""
+
+msgid "This post is premium content"
+msgstr "Cet article est du contenu premium"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Toggle Theme"
+msgstr ""
+
+msgid "Toggle dark mode"
+msgstr ""
+
+msgid "Toggle light and dark mode"
+msgstr ""
+
+msgid "Tone is required for tone adjustments"
+msgstr ""
+
+msgid "Topic Category"
+msgstr "Catégorie de sujet"
+
+msgid "Topics"
+msgstr ""
+
+msgid "UPI ID"
+msgstr ""
+
+msgid "Unknown action: %(action)s"
+msgstr ""
+
+msgid "Unlock Access"
+msgstr "Débloquer l'accès"
+
+msgid "Unlock for ${{ price }}"
+msgstr "Déverrouiller pour ${{ price }}"
+
+msgid ""
+"Unlock this post to read the full story and participate in the discussion."
+msgstr ""
+"Déverrouillez cet article pour lire l'histoire complète et participer à la "
+"discussion."
+
+msgid "Update your personal credentials and direct payment information."
+msgstr ""
+
+msgid "Update your published draft details below."
+msgstr "Mettez à jour les détails de votre projet publié ci-dessous."
+
+msgid ""
+"Update your user credentials, public name details, and email notifications "
+"contact."
+msgstr ""
+"Mettez à jour vos identifiants d'utilisateur, les détails de votre nom "
+"public et le contact pour les notifications par e-mail."
+
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgid "Username identifier cannot be changed."
+msgstr "L'identifiant du nom d'utilisateur ne peut pas être modifié."
+
+msgid "Visit our sponsor to support our writing community."
+msgstr "Visitez notre sponsor pour soutenir notre communauté d'écrivains."
+
+msgid "Welcome back"
+msgstr "Bon retour"
+
+msgid "Write a captivating title..."
+msgstr "Écrivez un titre captivant..."
+
+msgid "Write and curate a new article for your readers."
+msgstr ""
+
+msgid "Write new story"
+msgstr "Écrire une nouvelle histoire"
+
+msgid "Write the first post"
+msgstr ""
+
+msgid "Write your first story"
+msgstr "Écrivez votre première histoire"
+
+msgid "Writing Tools"
+msgstr "Outils d'écriture"
+
+msgid "Written by {{ author }}"
+msgstr "Écrit par {{ author }}"
+
+msgid "Yes, delete permanently"
+msgstr "Oui, supprimer définitivement"
+
+msgid "You cannot subscribe to yourself"
+msgstr ""
+
+msgid "You haven't written any posts yet. Start publishing today."
+msgstr ""
+
+msgid "You must unlock this premium post to leave comments."
+msgstr ""
+
+msgid "Your first name..."
+msgstr ""
+
+msgid "Your last name..."
+msgstr ""
+
+msgid "Your username"
+msgstr ""
+
+msgid "auto-generated from title"
+msgstr ""
+
+msgid "auto-generated-slug"
+msgstr "slug-genere-automatiquement"
+
+msgid "for subscribers"
+msgstr "pour les abonnés"
+
+msgid "https://buymeacoffee.com/yourusername"
+msgstr ""
+
+msgid "m"
+msgstr ""
+
+msgid "stories"
+msgstr ""
+
+msgid "username@upi"
+msgstr ""
+
+msgid "you@example.com"
+msgstr ""
+
+msgid "yourname@paypal.com"
+msgstr ""
+
+msgid "{{ duration }} ago"
+msgstr "il y a {{ duration }}"
+
+msgid "{{ minutes }} min read"
+msgstr "{{ minutes }} min de lecture"
+
+msgid "{{ minutes }} minutes read"
+msgstr "{{ minutes }} minutes de lecture"
+
+msgid "{{ minutes }}m"
+msgstr ""
+
+msgid "{{ views }} views"
+msgstr "{{ views }} vues"
+
+msgid "© {% now 'Y' %} Editorial Platform. All rights reserved."
+msgstr ""
+
+msgid "⏱ {{ minutes }} min read"
+msgstr ""
+
+msgid "☕ Enjoyed this post?"
+msgstr ""
+
+msgid "👁 {{ views }} views"
+msgstr ""

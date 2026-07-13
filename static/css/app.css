@@ -508,3 +508,8 @@ body {
   .back-to-top { transition: none; }
 }
 
+/* RTL Support for Arabic */
+[lang="ar"] { direction: rtl; text-align: right; }
+[lang="ar"] .post-card { direction: rtl; }
+[lang="ar"] .toc { direction: rtl; }
+

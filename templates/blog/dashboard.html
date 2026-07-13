@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}Dashboard — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Dashboard — Blog CMS" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-slide-up">
@@ -7,10 +8,10 @@
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10 pb-6 border-b border-[var(--border)]">
     <div>
       <h1 class="font-serif font-bold text-3xl md:text-4xl text-[var(--text-primary)]">
-        Author Dashboard
+        {% trans "Author Dashboard" %}
       </h1>
       <p class="text-sm text-[var(--text-secondary)] mt-1.5">
-        Manage your publications, update content, and oversee draft stories.
+        {% trans "Manage your publications, update content, and oversee draft stories." %}
       </p>
     </div>
     <div>
@@ -18,7 +19,7 @@
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Write new story
+        {% trans "Write new story" %}
       </a>
     </div>
   </div>
@@ -30,11 +31,11 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="border-b border-[var(--border)] bg-[var(--bg-tertiary)]/55">
-            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">Story Details</th>
-            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">Status</th>
-            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">Date Updated</th>
-            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">Stats</th>
-            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase text-right">Actions</th>
+            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">{% trans "Story Details" %}</th>
+            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">{% trans "Status" %}</th>
+            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">{% trans "Date Updated" %}</th>
+            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase">{% trans "Stats" %}</th>
+            <th class="py-4 px-6 text-xs font-semibold tracking-wider text-[var(--text-secondary)] uppercase text-right">{% trans "Actions" %}</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-[var(--border)]">
@@ -52,12 +53,12 @@
               {% if post.status == 'published' %}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Published
+                {% trans "Published" %}
               </span>
               {% else %}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
                 <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                Draft
+                {% trans "Draft" %}
               </span>
               {% endif %}
             </td>
@@ -66,19 +67,19 @@
             </td>
             <td class="py-4 px-6 text-xs text-[var(--text-secondary)] space-y-1 whitespace-nowrap">
               <div class="flex items-center gap-1">
-                <span>⏱ {{ post.reading_time }} min read</span>
+                <span>{% blocktrans with minutes=post.reading_time %}⏱ {{ minutes }} min read{% endblocktrans %}</span>
               </div>
               <div class="flex items-center gap-1">
-                <span>👁 {{ post.view_count }} views</span>
+                <span>{% blocktrans with views=post.view_count %}👁 {{ views }} views{% endblocktrans %}</span>
               </div>
             </td>
             <td class="py-4 px-6 text-right whitespace-nowrap">
               <div class="inline-flex gap-2.5">
                 <a href="{% url 'blog:post_update' post.slug %}" class="btn-ghost !text-xs !py-1 !px-3 hover:!border-[var(--accent)] hover:!text-[var(--accent)]">
-                  Edit
+                  {% trans "Edit" %}
                 </a>
                 <a href="{% url 'blog:post_delete' post.slug %}" class="btn-ghost !text-xs !py-1 !px-3 !text-red-500 !border-red-500/20 hover:!bg-red-500/5">
-                  Delete
+                  {% trans "Delete" %}
                 </a>
               </div>
             </td>
@@ -101,7 +102,7 @@
     {% endif %}
     
     <span class="text-sm font-medium text-[var(--text-secondary)] px-4">
-      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      {% blocktrans with current=page_obj.number total=page_obj.paginator.num_pages %}Page {{ current }} of {{ total }}{% endblocktrans %}
     </span>
 
     {% if page_obj.has_next %}
@@ -117,9 +118,9 @@
   {% else %}
   <div class="text-center py-20 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl">
     <div class="text-5xl mb-4 select-none">✏️</div>
-    <h3 class="font-serif font-bold text-xl text-[var(--text-primary)] mb-1">No stories yet</h3>
-    <p class="text-sm text-[var(--text-muted)] mb-6">You haven't written any posts yet. Start publishing today.</p>
-    <a href="{% url 'blog:post_create' %}" class="btn-primary">Write your first story</a>
+    <h3 class="font-serif font-bold text-xl text-[var(--text-primary)] mb-1">{% trans "No stories yet" %}</h3>
+    <p class="text-sm text-[var(--text-muted)] mb-6">{% trans "You haven't written any posts yet. Start publishing today." %}</p>
+    <a href="{% url 'blog:post_create' %}" class="btn-primary">{% trans "Write your first story" %}</a>
   </div>
   {% endif %}
 </div>

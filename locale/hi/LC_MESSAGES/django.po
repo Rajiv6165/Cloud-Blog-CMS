@@ -1,0 +1,730 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0\n"
+"Report-Msgid-Bugs-To: you@example.com\n"
+"POT-Creation-Date: 2026-07-13 18:00+0000\n"
+"PO-Revision-Date: 2026-07-13 18:00+0000\n"
+"Last-Translator: Antigravity <you@example.com>\n"
+"Language-Team: Antigravity Team\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "300 characters remaining"
+msgstr ""
+
+msgid "A premium writing and publishing environment."
+msgstr ""
+
+msgid "AI Writing Assistant"
+msgstr "एआई लेखन सहायक"
+
+msgid "Academic"
+msgstr "शैक्षणिक"
+
+msgid "Actions"
+msgstr "कार्रवाई"
+
+msgid "Admin"
+msgstr ""
+
+msgid "Admin Panel"
+msgstr ""
+
+msgid "Advertisement for"
+msgstr "विज्ञापन के लिए"
+
+msgid "After Post Content"
+msgstr ""
+
+msgid "All posts"
+msgstr ""
+
+msgid "Allow comments on this post"
+msgstr "इस पोस्ट पर टिप्पणियों की अनुमति दें"
+
+msgid "Already have an account?"
+msgstr "क्या आपका पहले से ही एक खाता है?"
+
+msgid "Anthropic API Call Failed: %(error)s"
+msgstr ""
+
+msgid ""
+"Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to"
+" your .env file."
+msgstr ""
+
+msgid "Apply"
+msgstr "लागू करें"
+
+msgid ""
+"Are you sure you want to permanently delete <strong "
+"class=\"text-[var(--text-primary)]\">\"{{ title }}\"</strong>? This action "
+"is irreversible and will remove all comments associated with it."
+msgstr ""
+
+msgid "Author & Contributor"
+msgstr "लेखक और योगदानकर्ता"
+
+msgid "Author Dashboard"
+msgstr "लेखक डैशबोर्ड"
+
+msgid "Author Profile:"
+msgstr ""
+
+msgid "Author not found"
+msgstr ""
+
+msgid "Auto-generate"
+msgstr "स्वतः उत्पन्न करें"
+
+msgid "Auto-generate summary from content"
+msgstr "सामग्री से स्वतः सारांश जनरेट करें"
+
+msgid "Back to home"
+msgstr "मुख्य पृष्ठ पर वापस जाएं"
+
+msgid "Back to top"
+msgstr ""
+
+msgid "Between Post Cards"
+msgstr ""
+
+msgid "Blog CMS"
+msgstr "ब्लॉग सीएमएस"
+
+msgid "Blog CMS Home"
+msgstr ""
+
+msgid "Buy Me a Coffee URL"
+msgstr ""
+
+msgid "Buy me a coffee"
+msgstr "मेरे लिए एक कॉफ़ी खरीदें"
+
+msgid "Cancel"
+msgstr "रद्द करें"
+
+msgid "Cancel and return"
+msgstr "रद्द करें और वापस जाएं"
+
+msgid "Casual"
+msgstr "अनौपचारिक"
+
+msgid "Change tone"
+msgstr "टोन बदलें"
+
+msgid "Claude is composing..."
+msgstr "क्लाउड लिख रहा है..."
+
+msgid "Claude response was not a valid list"
+msgstr ""
+
+msgid "Click to visit our sponsor and support this site."
+msgstr ""
+
+msgid "Close panel"
+msgstr "पैनल बंद करें"
+
+msgid "Comment and discuss"
+msgstr "टिप्पणी और चर्चा"
+
+msgid "Comment held for review."
+msgstr ""
+
+msgid "Comment posted successfully."
+msgstr ""
+
+msgid "Comments are disabled for this story."
+msgstr "इस कहानी के लिए टिप्पणियां बंद हैं।"
+
+msgid "Compare (Diff)"
+msgstr "तुलना (अंतर)"
+
+msgid "Configure how readers can tip or support your content directly."
+msgstr ""
+
+msgid "Configure monthly support details for your reader subscriptions."
+msgstr "अपने पाठक सदस्यताओं के लिए मासिक समर्थन विवरण कॉन्फ़िगर करें।"
+
+msgid "Confirm Password"
+msgstr "पासवर्ड की पुष्टि करें"
+
+msgid "Content"
+msgstr "सामग्री"
+
+msgid "Content is required for summarization"
+msgstr ""
+
+msgid "Continue writing"
+msgstr "लिखना जारी रखें"
+
+msgid "Copied!"
+msgstr "कॉपी हो गया!"
+
+msgid "Copy"
+msgstr "कॉपी"
+
+msgid "Cover Image"
+msgstr ""
+
+msgid "Cover image for"
+msgstr "कवर छवि के लिए"
+
+msgid "Create Account — Blog CMS"
+msgstr ""
+
+msgid "Create one"
+msgstr "एक बनाएं"
+
+msgid "Create your account"
+msgstr ""
+
+msgid "Current image:"
+msgstr "वर्तमान छवि:"
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Dashboard — Blog CMS"
+msgstr ""
+
+msgid "Date Updated"
+msgstr "अपडेट की तारीख"
+
+msgid "Delete"
+msgstr "हटाएं"
+
+msgid "Delete Story"
+msgstr "कहानी हटाएं"
+
+msgid "Delete Story — Blog CMS"
+msgstr ""
+
+msgid "Delete comment by"
+msgstr "टिप्पणी हटाएं द्वारा"
+
+msgid "Discard"
+msgstr "अस्वीकार करें"
+
+msgid "Discussion ({{ count }})"
+msgstr "चर्चा ({{ count }})"
+
+msgid "Dismiss alert"
+msgstr ""
+
+msgid "Don't have an account?"
+msgstr "क्या आपका खाता नहीं है?"
+
+msgid "Donation & Payment Methods"
+msgstr ""
+
+msgid "Draft"
+msgstr "ड्राफ्ट"
+
+msgid "Early Access Datetime"
+msgstr "प्रारंभिक पहुंच दिनांक-समय"
+
+msgid "Edit"
+msgstr "संपादित करें"
+
+msgid "Edit Profile"
+msgstr "प्रोफ़ाइल संपादित करें"
+
+msgid "Edit Profile — Blog CMS"
+msgstr ""
+
+msgid "Edit story"
+msgstr "कहानी संपादित करें"
+
+msgid "Email Address"
+msgstr "ईमेल पता"
+
+msgid "Enter your UPI ID format: username@bankname"
+msgstr "अपना UPI आईडी प्रारूप दर्ज करें: username@bankname"
+
+msgid "Estimated reading time"
+msgstr "अनुमानित पढ़ने का समय"
+
+msgid "Failed to parse Claude output: %(result)s"
+msgstr ""
+
+msgid "First Name"
+msgstr "पहला नाम"
+
+msgid "Fix grammar & spelling"
+msgstr "व्याकरण और वर्तनी ठीक करें"
+
+msgid ""
+"Found {{ count }} result for \"<strong class=\"text-[var(--text-"
+"primary)]\">{{ query }}</strong>\"{% plural %}Found {{ count }} results for "
+"\"<strong class=\"text-[var(--text-primary)]\">{{ query }}</strong>\""
+msgstr ""
+
+msgid "Free"
+msgstr ""
+
+msgid "Full content"
+msgstr "पूरी सामग्री"
+
+msgid "Go"
+msgstr "जाएं"
+
+msgid "Home"
+msgstr ""
+
+msgid "Humorous"
+msgstr "हास्यपूर्ण"
+
+msgid "Ideas, guides, and insights from our team of writers."
+msgstr ""
+
+msgid "Improve writing"
+msgstr "लेखन में सुधार करें"
+
+msgid "Invalid JSON payload"
+msgstr ""
+
+msgid "Invalid UPI ID format. Should be like username@upi."
+msgstr ""
+
+msgid "Invalid tier name"
+msgstr ""
+
+msgid "Join the discussion..."
+msgstr "चर्चा में शामिल हों..."
+
+msgid "Join the writing community and share your insights."
+msgstr ""
+
+msgid "Last 500 chars"
+msgstr "अंतिम 500 अक्षर"
+
+msgid "Last Name"
+msgstr "अंतिम नाम"
+
+msgid "Latest"
+msgstr ""
+
+msgid "Latest Stories — Blog CMS"
+msgstr ""
+
+msgid "Lifetime reading access"
+msgstr "आजीवन पढ़ने की पहुंच"
+
+msgid "Logout"
+msgstr ""
+
+msgid "Logout from your account"
+msgstr ""
+
+msgid "Main navigation"
+msgstr ""
+
+msgid "Manage your publications, update content, and oversee draft stories."
+msgstr ""
+
+msgid "Mark as Premium post"
+msgstr "प्रीमियम पोस्ट के रूप में चिह्नित करें"
+
+msgid "Mobile navigation"
+msgstr ""
+
+msgid "Monthly Subscription Tiers"
+msgstr "मासिक सदस्यता स्तर"
+
+msgid "New story"
+msgstr "नई कहानी"
+
+msgid "No comments yet. Start the conversation!"
+msgstr "अभी तक कोई टिप्पणी नहीं। बातचीत शुरू करें!"
+
+msgid "No posts found"
+msgstr ""
+
+msgid "No posts yet"
+msgstr "अभी तक कोई पोस्ट नहीं है"
+
+msgid "No stories yet"
+msgstr "अभी तक कोई कहानियां नहीं हैं"
+
+msgid "On this page"
+msgstr "इस पृष्ठ पर"
+
+msgid "Open mobile menu"
+msgstr ""
+
+msgid "Page {{ current }} of {{ total }}"
+msgstr "पृष्ठ {{ current }} का {{ total }}"
+
+msgid "Password"
+msgstr "पासवर्ड"
+
+msgid "Patron"
+msgstr ""
+
+msgid "Patron Perks"
+msgstr "संरक्षक लाभ"
+
+msgid "Patron Tier Price ($)"
+msgstr "संरक्षक स्तर की कीमत ($)"
+
+msgid "PayPal"
+msgstr "पेपाल"
+
+msgid "PayPal Email (for PayPal.me)"
+msgstr ""
+
+msgid "Perks for patrons..."
+msgstr "संरक्षकों के लिए लाभ..."
+
+msgid "Perks for supporters..."
+msgstr "समर्थकों के लिए लाभ..."
+
+msgid "Post Comment"
+msgstr "टिप्पणी पोस्ट करें"
+
+msgid "Post not found"
+msgstr ""
+
+msgid "Post not found."
+msgstr ""
+
+msgid "Premium"
+msgstr "प्रीमियम"
+
+msgid "Premium Content"
+msgstr ""
+
+msgid "Premium Price ($)"
+msgstr "प्रीमियम मूल्य ($)"
+
+msgid "Preview Changes"
+msgstr "परिवर्तनों का पूर्वावलोकन"
+
+msgid "Professional"
+msgstr "पेशेवर"
+
+msgid "Profile"
+msgstr ""
+
+msgid "Provide a quick synopsis of the story..."
+msgstr "कहानी का एक त्वरित सारांश प्रदान करें..."
+
+msgid "Publish story"
+msgstr "कहानी प्रकाशित करें"
+
+msgid "Published"
+msgstr "प्रकाशित"
+
+msgid "Read full story:"
+msgstr "पूरी कहानी पढ़ें:"
+
+msgid "Ready."
+msgstr "तैयार।"
+
+msgid "Register"
+msgstr "पंजीकरण"
+
+msgid "Register Account"
+msgstr "खाता पंजीकृत करें"
+
+msgid "Related stories"
+msgstr "संबंधित कहानियां"
+
+msgid "Result"
+msgstr "परिणाम"
+
+msgid "Save profile updates"
+msgstr "प्रोफ़ाइल अपडेट सहेजें"
+
+msgid "Save updates"
+msgstr "अपडेट सहेजें"
+
+msgid "Search posts"
+msgstr ""
+
+msgid "Search posts..."
+msgstr ""
+
+msgid "Search stories"
+msgstr ""
+
+msgid "Search stories..."
+msgstr ""
+
+msgid "Select Language"
+msgstr ""
+
+msgid "Select multiple"
+msgstr "एकाधिक चुनें"
+
+msgid "Select text in editor to focus AI actions, or run on full text."
+msgstr ""
+"एआई क्रियाओं को केंद्रित करने के लिए संपादक में पाठ का चयन करें, या पूर्ण "
+"पाठ पर चलाएं।"
+
+msgid "Selected / All"
+msgstr "चयनित / सभी"
+
+msgid "Showing all published stories cataloged under this topic."
+msgstr "इस विषय के अंतर्गत सूचीबद्ध सभी प्रकाशित कहानियाँ दिखाई जा रही हैं।"
+
+msgid "Sidebar Bottom"
+msgstr ""
+
+msgid "Sidebar Top"
+msgstr ""
+
+msgid "Sign in"
+msgstr "साइन इन करें"
+
+msgid "Sign in to share your thoughts and participate in the discussion."
+msgstr "अपने विचार साझा करने और चर्चा में भाग लेने के लिए साइन इन करें।"
+
+msgid "Sign in to unlock"
+msgstr "अनलॉक करने के लिए साइन इन करें"
+
+msgid "Sign in to your account to start writing and leaving comments."
+msgstr ""
+
+msgid "Sign in — Blog CMS"
+msgstr ""
+
+msgid "Simulated views"
+msgstr "सिम्युलेटेड दृश्य"
+
+msgid "Skip to main content"
+msgstr ""
+
+msgid "Slug"
+msgstr "स्लग"
+
+msgid "Sponsored"
+msgstr "प्रायोजित"
+
+msgid "Sponsored Ad:"
+msgstr ""
+
+msgid "Stats"
+msgstr "आंकड़े"
+
+msgid "Status"
+msgstr "स्थिति"
+
+msgid "Story Details"
+msgstr "कहानी विवरण"
+
+msgid "Successfully subscribed to %(username)s as a %(tier)s!"
+msgstr ""
+
+msgid "Successfully unlocked the premium post: %(title)s"
+msgstr ""
+
+msgid "Suggest relevant tags using AI"
+msgstr "एआई का उपयोग करके प्रासंगिक टैग सुझाएं"
+
+msgid "Suggest tags"
+msgstr "टैग सुझाएं"
+
+msgid "Summary"
+msgstr "सारांश"
+
+msgid "Support the author by sending a tip or donation."
+msgstr ""
+
+msgid "Support the author directly"
+msgstr "लेखक का सीधे समर्थन करें"
+
+msgid "Supporter"
+msgstr ""
+
+msgid "Supporter Perks"
+msgstr "समर्थक लाभ"
+
+msgid "Supporter Tier Price ($)"
+msgstr "समर्थक स्तर की कीमत ($)"
+
+msgid "Tag name is required"
+msgstr ""
+
+msgid "Tag: #{{ tag }} — Blog CMS"
+msgstr "टैग: #{{ tag }} — ब्लॉग सीएमएस"
+
+msgid "Tags"
+msgstr "टैग"
+
+msgid "Text content is required"
+msgstr ""
+
+msgid "There are no stories published in this category yet."
+msgstr ""
+
+msgid "There are no stories published under this category tag."
+msgstr "इस श्रेणी टैग के तहत कोई कहानी प्रकाशित नहीं की गई है।"
+
+msgid "This email address is already in use."
+msgstr ""
+
+msgid "This post is premium content"
+msgstr "यह पोस्ट प्रीमियम सामग्री है"
+
+msgid "Title"
+msgstr "शीर्षक"
+
+msgid "Toggle Theme"
+msgstr ""
+
+msgid "Toggle dark mode"
+msgstr ""
+
+msgid "Toggle light and dark mode"
+msgstr ""
+
+msgid "Tone is required for tone adjustments"
+msgstr ""
+
+msgid "Topic Category"
+msgstr "विषय श्रेणी"
+
+msgid "Topics"
+msgstr ""
+
+msgid "UPI ID"
+msgstr ""
+
+msgid "Unknown action: %(action)s"
+msgstr ""
+
+msgid "Unlock Access"
+msgstr "अनलॉक एक्सेस"
+
+msgid "Unlock for ${{ price }}"
+msgstr "${{ price }} के लिए अनलॉक करें"
+
+msgid ""
+"Unlock this post to read the full story and participate in the discussion."
+msgstr "पूरी कहानी पढ़ने और चर्चा में भाग लेने के लिए इस पोस्ट को अनलॉक करें।"
+
+msgid "Update your personal credentials and direct payment information."
+msgstr ""
+
+msgid "Update your published draft details below."
+msgstr "नीचे अपने प्रकाशित ड्राफ्ट विवरण अपडेट करें।"
+
+msgid ""
+"Update your user credentials, public name details, and email notifications "
+"contact."
+msgstr ""
+"अपने उपयोगकर्ता क्रेडेंशियल, सार्वजनिक नाम विवरण और ईमेल सूचना संपर्क अपडेट "
+"करें।"
+
+msgid "Username"
+msgstr "उपयोगकर्ता नाम"
+
+msgid "Username identifier cannot be changed."
+msgstr "उपयोगकर्ता नाम पहचानकर्ता को बदला नहीं जा सकता।"
+
+msgid "Visit our sponsor to support our writing community."
+msgstr "हमारे लेखन समुदाय का समर्थन करने के लिए हमारे प्रायोजक से मिलें।"
+
+msgid "Welcome back"
+msgstr "आपका स्वागत है"
+
+msgid "Write a captivating title..."
+msgstr "एक आकर्षक शीर्षक लिखें..."
+
+msgid "Write and curate a new article for your readers."
+msgstr ""
+
+msgid "Write new story"
+msgstr "नई कहानी लिखें"
+
+msgid "Write the first post"
+msgstr ""
+
+msgid "Write your first story"
+msgstr "अपनी पहली कहानी लिखें"
+
+msgid "Writing Tools"
+msgstr "लेखन उपकरण"
+
+msgid "Written by {{ author }}"
+msgstr "{{ author }} द्वारा लिखित"
+
+msgid "Yes, delete permanently"
+msgstr "हाँ, स्थायी रूप से हटाएं"
+
+msgid "You cannot subscribe to yourself"
+msgstr ""
+
+msgid "You haven't written any posts yet. Start publishing today."
+msgstr ""
+
+msgid "You must unlock this premium post to leave comments."
+msgstr ""
+
+msgid "Your first name..."
+msgstr ""
+
+msgid "Your last name..."
+msgstr ""
+
+msgid "Your username"
+msgstr ""
+
+msgid "auto-generated from title"
+msgstr ""
+
+msgid "auto-generated-slug"
+msgstr "स्वतः-जनरेट-स्लग"
+
+msgid "for subscribers"
+msgstr "ग्राहकों के लिए"
+
+msgid "https://buymeacoffee.com/yourusername"
+msgstr ""
+
+msgid "m"
+msgstr ""
+
+msgid "stories"
+msgstr ""
+
+msgid "username@upi"
+msgstr ""
+
+msgid "you@example.com"
+msgstr ""
+
+msgid "yourname@paypal.com"
+msgstr ""
+
+msgid "{{ duration }} ago"
+msgstr "{{ duration }} पहले"
+
+msgid "{{ minutes }} min read"
+msgstr "{{ minutes }} मिनट का पठन"
+
+msgid "{{ minutes }} minutes read"
+msgstr "{{ minutes }} मिनट का पठन"
+
+msgid "{{ minutes }}m"
+msgstr ""
+
+msgid "{{ views }} views"
+msgstr "{{ views }} बार देखा गया"
+
+msgid "© {% now 'Y' %} Editorial Platform. All rights reserved."
+msgstr ""
+
+msgid "⏱ {{ minutes }} min read"
+msgstr ""
+
+msgid "☕ Enjoyed this post?"
+msgstr ""
+
+msgid "👁 {{ views }} views"
+msgstr ""

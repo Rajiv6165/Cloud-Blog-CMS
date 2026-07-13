@@ -8,6 +8,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonRes
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
+from django.utils.translation import gettext as _
 from django.views.generic import (
     ListView,
     DetailView,
@@ -133,7 +134,7 @@ class PostDetailView(DetailView):
                 has_access = UserPostAccess.objects.filter(user=request.user, post=self.object).exists()
 
         if not has_access:
-            messages.error(request, "You must unlock this premium post to leave comments.")
+            messages.error(request, _("You must unlock this premium post to leave comments."))
             return redirect(self.object.get_absolute_url())
 
         form = CommentForm(request.POST)
@@ -147,9 +148,9 @@ class PostDetailView(DetailView):
             is_approved = True
             if spam or toxic:
                 is_approved = False
-                messages.warning(request, "Comment held for review.")
+                messages.warning(request, _("Comment held for review."))
             else:
-                messages.success(request, "Comment posted successfully.")
+                messages.success(request, _("Comment posted successfully."))
 
             Comment.objects.create(
                 post=self.object,
@@ -202,7 +203,7 @@ class GrantAccessView(LoginRequiredMixin, View):
         try:
             post = Post.objects.get(slug=slug)
         except Post.DoesNotExist:
-            messages.error(request, "Post not found.")
+            messages.error(request, _("Post not found."))
             return redirect("blog:post_list")
 
         UserPostAccess.objects.get_or_create(
@@ -210,7 +211,7 @@ class GrantAccessView(LoginRequiredMixin, View):
             post=post,
             defaults={"payment_reference": "FREE_UNLOCK_PLACEHOLDER"}
         )
-        messages.success(request, f"Successfully unlocked the premium post: {post.title}")
+        messages.success(request, _("Successfully unlocked the premium post: %(title)s") % {'title': post.title})
         return redirect(post.get_absolute_url())
 
 
@@ -350,10 +351,10 @@ class SubscribeToAuthorView(LoginRequiredMixin, View):
         try:
             author = User.objects.get(username=username)
         except User.DoesNotExist:
-            return JsonResponse({"success": False, "error": "Author not found"}, status=404)
+            return JsonResponse({"success": False, "error": _("Author not found")}, status=404)
         
         if author == request.user:
-            return JsonResponse({"success": False, "error": "You cannot subscribe to yourself"}, status=400)
+            return JsonResponse({"success": False, "error": _("You cannot subscribe to yourself")}, status=400)
         
         tier = request.POST.get("tier", "free")
         if not tier and request.body:
@@ -365,7 +366,7 @@ class SubscribeToAuthorView(LoginRequiredMixin, View):
                 pass
                 
         if tier not in ["free", "supporter", "patron"]:
-            return JsonResponse({"success": False, "error": "Invalid tier name"}, status=400)
+            return JsonResponse({"success": False, "error": _("Invalid tier name")}, status=400)
             
         sub, created = AuthorSubscription.objects.get_or_create(
             subscriber=request.user,
@@ -380,7 +381,7 @@ class SubscribeToAuthorView(LoginRequiredMixin, View):
         return JsonResponse({
             "success": True,
             "tier": tier,
-            "message": f"Successfully subscribed to {author.username} as a {tier}!"
+            "message": _("Successfully subscribed to %(username)s as a %(tier)s!") % {'username': author.username, 'tier': tier}
         })
 
 

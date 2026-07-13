@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.utils.text import slugify
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class Tag(models.Model):
@@ -21,8 +22,8 @@ class Tag(models.Model):
 
 class Post(models.Model):
     STATUS_CHOICES = (
-        ("draft", "Draft"),
-        ("published", "Published"),
+        ("draft", _("Draft")),
+        ("published", _("Published")),
     )
 
     title = models.CharField(max_length=200)
@@ -180,7 +181,7 @@ class Profile(models.Model):
 class AuthorSubscription(models.Model):
     subscriber = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subscriptions')
     author = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='subscribers')
-    tier = models.CharField(max_length=20, choices=[('free','Free'),('supporter','Supporter'),('patron','Patron')], default='free')
+    tier = models.CharField(max_length=20, choices=[('free', _('Free')), ('supporter', _('Supporter')), ('patron', _('Patron'))], default='free')
     started_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
 
@@ -193,10 +194,10 @@ class AuthorSubscription(models.Model):
 
 class Advertisement(models.Model):
     POSITION_CHOICES = [
-        ('sidebar_top', 'Sidebar Top'),
-        ('sidebar_bottom', 'Sidebar Bottom'),
-        ('post_bottom', 'After Post Content'),
-        ('list_between', 'Between Post Cards'),
+        ('sidebar_top', _('Sidebar Top')),
+        ('sidebar_bottom', _('Sidebar Bottom')),
+        ('post_bottom', _('After Post Content')),
+        ('list_between', _('Between Post Cards')),
     ]
     title = models.CharField(max_length=200)
     image = models.ImageField(upload_to='ads/')

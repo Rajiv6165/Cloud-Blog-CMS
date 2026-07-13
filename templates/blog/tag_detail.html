@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Tag: #{{ object.name }} — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% blocktrans with tag=object.name %}Tag: #{{ tag }} — Blog CMS{% endblocktrans %}{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-slide-up">
   <!-- Topic header -->
   <div class="mb-12 border-b border-[var(--border)] pb-8">
     <span class="text-xs font-mono font-medium tracking-wide uppercase px-2.5 py-1 rounded-full bg-[var(--accent-light)] text-[var(--accent)] mb-4 inline-block">
-      Topic Category
+      {% trans "Topic Category" %}
     </span>
     <h1 class="font-serif font-bold text-4xl md:text-5xl text-[var(--text-primary)] mt-2">
       #{{ object.name }}
     </h1>
     <p class="text-sm text-[var(--text-muted)] mt-2">
-      Showing all published stories cataloged under this topic.
+      {% trans "Showing all published stories cataloged under this topic." %}
     </p>
   </div>
 
@@ -21,10 +22,10 @@
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
     {% for post in posts %}
     <article class="post-card flex flex-col justify-between h-full relative">
-      <a href="{{ post.get_absolute_url }}" class="block flex-1 group after:absolute after:inset-0" aria-label="Read full story: {{ post.title }}">
+      <a href="{{ post.get_absolute_url }}" class="block flex-1 group after:absolute after:inset-0" aria-label="{% trans 'Read full story:' %} {{ post.title }}">
         <!-- Cover image placeholder or custom gradient -->
-        <div class="cover-placeholder">
-          <span class="font-serif font-bold text-4xl text-[var(--accent)] opacity-40 select-none group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+        <div class="cover-placeholder" aria-hidden="true">
+          <span class="font-serif font-bold text-4xl text-[var(--accent)] opacity-40 select-none group-hover:scale-110 transition-transform duration-300">
             {{ post.title|first|upper }}
           </span>
         </div>
@@ -59,13 +60,13 @@
         </div>
         
         <div class="flex items-center gap-3">
-          <span class="stat-badge" aria-label="{{ post.reading_time }} minutes read" title="Estimated reading time">
+          <span class="stat-badge" aria-label="{% blocktrans with minutes=post.reading_time %}{{ minutes }} minutes read{% endblocktrans %}" title="{% trans 'Estimated reading time' %}">
             <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
             </svg>
-            <span aria-hidden="true">{{ post.reading_time }}m</span>
+            <span aria-hidden="true">{% blocktrans with minutes=post.reading_time %}{{ minutes }}m{% endblocktrans %}</span>
           </span>
-          <span class="stat-badge" aria-label="{{ post.view_count }} views" title="Simulated views">
+          <span class="stat-badge" aria-label="{% blocktrans with views=post.view_count %}{{ views }} views{% endblocktrans %}" title="{% trans 'Simulated views' %}">
             <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
@@ -80,9 +81,9 @@
   {% else %}
   <div class="text-center py-24 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl">
     <div class="text-5xl mb-4 select-none">📁</div>
-    <p class="font-serif font-bold text-2xl mb-2 text-[var(--text-primary)]">No posts yet</p>
-    <p class="text-[var(--text-muted)] text-sm mb-6 max-w-xs mx-auto">There are no stories published under this category tag.</p>
-    <a href="{% url 'blog:post_list' %}" class="btn-ghost">Back to home</a>
+    <p class="font-serif font-bold text-2xl mb-2 text-[var(--text-primary)]">{% trans "No posts yet" %}</p>
+    <p class="text-[var(--text-muted)] text-sm mb-6 max-w-xs mx-auto">{% trans "There are no stories published under this category tag." %}</p>
+    <a href="{% url 'blog:post_list' %}" class="btn-ghost">{% trans "Back to home" %}</a>
   </div>
   {% endif %}
 </div>

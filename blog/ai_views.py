@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_protect
 from django.core.cache import cache
 from anthropic import Anthropic
+from django.utils.translation import gettext as _
 from .models import Tag, Post
 
 
@@ -15,7 +16,7 @@ class AIAssistView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
             return JsonResponse({
-                "error": "Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file."
+                "error": _("Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file.")
             }, status=400)
 
         try:
@@ -24,10 +25,10 @@ class AIAssistView(LoginRequiredMixin, View):
             text = data.get("text", "")
             tone = data.get("tone", "")
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+            return JsonResponse({"error": _("Invalid JSON payload")}, status=400)
 
         if not text:
-            return JsonResponse({"error": "Text content is required"}, status=400)
+            return JsonResponse({"error": _("Text content is required")}, status=400)
 
         # Construct prompt based on action
         system_instruction = "You are an AI writing assistant integrated into a blog CMS. Follow instructions precisely."
@@ -59,7 +60,7 @@ class AIAssistView(LoginRequiredMixin, View):
             )
         elif action == "tone":
             if not tone:
-                return JsonResponse({"error": "Tone is required for tone adjustments"}, status=400)
+                return JsonResponse({"error": _("Tone is required for tone adjustments")}, status=400)
             user_prompt = (
                 f"Rewrite the following text in a clear '{tone}' tone. Maintain the underlying message "
                 "but adjust vocabulary, phrasing, and style to match the target tone. "
@@ -68,7 +69,7 @@ class AIAssistView(LoginRequiredMixin, View):
                 f"Text:\n{text}"
             )
         else:
-            return JsonResponse({"error": f"Unknown action: {action}"}, status=400)
+            return JsonResponse({"error": _("Unknown action: %(action)s") % {'action': action}}, status=400)
 
         try:
             client = Anthropic(api_key=settings.ANTHROPIC_API_KEY)
@@ -94,24 +95,24 @@ class AIAssistView(LoginRequiredMixin, View):
                 "output_tokens_est": output_tokens
             })
         except Exception as e:
-            return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+            return JsonResponse({"error": _("Anthropic API Call Failed: %(error)s") % {'error': str(e)}}, status=500)
 
 
 class AISummarizeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
             return JsonResponse({
-                "error": "Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file."
+                "error": _("Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file.")
             }, status=400)
 
         try:
             data = json.loads(request.body)
             content = data.get("content", "")
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+            return JsonResponse({"error": _("Invalid JSON payload")}, status=400)
 
         if not content:
-            return JsonResponse({"error": "Content is required for summarization"}, status=400)
+            return JsonResponse({"error": _("Content is required for summarization")}, status=400)
 
         user_prompt = (
             "Summarize this blog post in 2-3 sentences, suitable as a meta description. "
@@ -133,14 +134,14 @@ class AISummarizeView(LoginRequiredMixin, View):
             summary_text = "".join([block.text for block in message.content])
             return JsonResponse({"summary": summary_text.strip()})
         except Exception as e:
-            return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+            return JsonResponse({"error": _("Anthropic API Call Failed: %(error)s") % {'error': str(e)}}, status=500)
 
 
 class AITagSuggestView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if not settings.ANTHROPIC_API_KEY or settings.ANTHROPIC_API_KEY == "your-key-here":
             return JsonResponse({
-                "error": "Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file."
+                "error": _("Anthropic API key is not configured. Please add a valid ANTHROPIC_API_KEY to your .env file.")
             }, status=400)
 
         try:
@@ -149,7 +150,7 @@ class AITagSuggestView(LoginRequiredMixin, View):
             content = data.get("content", "")
             summary = data.get("summary", "")
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+            return JsonResponse({"error": _("Invalid JSON payload")}, status=400)
 
         user_prompt = (
             "Suggest 3-5 relevant tags for this blog post.\n"
@@ -184,15 +185,15 @@ class AITagSuggestView(LoginRequiredMixin, View):
             
             tags_list = json.loads(raw_result)
             if not isinstance(tags_list, list):
-                return JsonResponse({"error": "Claude response was not a valid list"}, status=500)
+                return JsonResponse({"error": _("Claude response was not a valid list")}, status=500)
                 
             # Sanitize tags list to lowercase and strip spaces
             cleaned_tags = [str(tag).lower().replace(" ", "-").strip() for tag in tags_list if tag]
             return JsonResponse({"tags": cleaned_tags})
         except json.JSONDecodeError:
-            return JsonResponse({"error": f"Failed to parse Claude output: {raw_result}"}, status=500)
+            return JsonResponse({"error": _("Failed to parse Claude output: %(result)s") % {'result': raw_result}}, status=500)
         except Exception as e:
-            return JsonResponse({"error": f"Anthropic API Call Failed: {str(e)}"}, status=500)
+            return JsonResponse({"error": _("Anthropic API Call Failed: %(error)s") % {'error': str(e)}}, status=500)
 
 
 class AICreateTagView(LoginRequiredMixin, View):
@@ -201,10 +202,10 @@ class AICreateTagView(LoginRequiredMixin, View):
             data = json.loads(request.body)
             name = data.get("name", "").strip()
         except json.JSONDecodeError:
-            return JsonResponse({"error": "Invalid JSON payload"}, status=400)
+            return JsonResponse({"error": _("Invalid JSON payload")}, status=400)
 
         if not name:
-            return JsonResponse({"error": "Tag name is required"}, status=400)
+            return JsonResponse({"error": _("Tag name is required")}, status=400)
 
         # Sanitize and slugify
         name_clean = name.lower().replace(" ", "-")
@@ -219,7 +220,7 @@ class AIRelatedView(View):
         try:
             current_post = Post.objects.select_related("author").prefetch_related("tags").get(slug=slug)
         except Post.DoesNotExist:
-            return JsonResponse({"error": "Post not found"}, status=404)
+            return JsonResponse({"error": _("Post not found")}, status=404)
 
         cache_key = f"related_posts_{current_post.slug}"
         cached_result = cache.get(cache_key)

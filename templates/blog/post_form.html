@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{% if object %}Edit story{% else %}New story{% endif %} — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% if object %}{% trans "Edit story" %}{% else %}{% trans "New story" %}{% endif %} — {% trans "Blog CMS" %}{% endblock %}
 
 {% block head %}
 <!-- EasyMDE editor stylesheet -->
@@ -41,10 +42,10 @@
   <!-- Header -->
   <div class="mb-10">
     <h1 class="font-serif font-bold text-3xl md:text-4xl mb-2 text-[var(--text-primary)]">
-      {% if object %}Edit story{% else %}New story{% endif %}
+      {% if object %}{% trans "Edit story" %}{% else %}{% trans "New story" %}{% endif %}
     </h1>
     <p class="text-[var(--text-secondary)] text-sm">
-      {% if object %}Update your published draft details below.{% else %}Write and curate a new article for your readers.{% endif %}
+      {% if object %}{% trans "Update your published draft details below." %}{% else %}{% trans "Write and curate a new article for your readers." %}{% endif %}
     </p>
   </div>
 
@@ -55,10 +56,10 @@
     <div class="space-y-6">
       <!-- Title -->
       <div>
-        <label class="form-label" for="id_title">Title</label>
+        <label class="form-label" for="id_title">{% trans "Title" %}</label>
         <input type="text" name="title" id="id_title"
                value="{{ form.title.value|default:'' }}"
-               placeholder="Write a captivating title..."
+               placeholder="{% trans 'Write a captivating title...' %}"
                class="form-input !font-serif !text-xl !font-semibold !py-3.5 !px-5" required
                {% if form.title.errors %}aria-invalid="true" aria-describedby="title-error"{% endif %}>
         {% if form.title.errors %}
@@ -68,12 +69,12 @@
 
       <!-- Slug (Auto-generated) -->
       <div>
-        <label class="form-label" for="id_slug">Slug <span class="font-normal text-[var(--text-muted)]">(auto-generated from title)</span></label>
+        <label class="form-label" for="id_slug">{% trans "Slug" %} <span class="font-normal text-[var(--text-muted)]">({% trans "auto-generated from title" %})</span></label>
         <div class="flex items-center bg-[var(--bg-secondary)] border border-[var(--border)] rounded-lg overflow-hidden">
           <span class="px-4 py-2.5 text-sm text-[var(--text-muted)] border-r border-[var(--border)] select-none">post/</span>
           <input type="text" name="slug" id="id_slug"
                  value="{{ form.slug.value|default:'' }}"
-                 placeholder="auto-generated-slug" required
+                 placeholder="{% trans 'auto-generated-slug' %}" required
                  class="flex-1 bg-transparent border-none outline-none px-4 py-2.5 text-sm font-mono text-[var(--text-primary)]"
                  {% if form.slug.errors %}aria-invalid="true" aria-describedby="slug-error"{% endif %}>
         </div>
@@ -85,17 +86,17 @@
       <!-- Summary -->
       <div>
         <div class="flex items-center justify-between mb-1.5">
-          <label class="form-label !mb-0" for="id_summary">Summary</label>
-          <button type="button" id="btn-auto-summarize" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="Auto-generate summary from content">
-            ✨ Auto-generate
+          <label class="form-label !mb-0" for="id_summary">{% trans "Summary" %}</label>
+          <button type="button" id="btn-auto-summarize" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="{% trans 'Auto-generate summary from content' %}">
+            ✨ {% trans "Auto-generate" %}
           </button>
         </div>
         <textarea name="summary" id="id_summary" rows="2"
-                  placeholder="Provide a quick synopsis of the story..."
+                  placeholder="{% trans 'Provide a quick synopsis of the story...' %}"
                   class="form-input resize-none" maxlength="300"
                   aria-describedby="summary-counter {% if form.summary.errors %}summary-error{% endif %}"
                   {% if form.summary.errors %}aria-invalid="true"{% endif %}>{{ form.summary.value|default:'' }}</textarea>
-        <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono" aria-live="polite">300 characters remaining</p>
+        <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono" aria-live="polite">{% trans "300 characters remaining" %}</p>
         {% if form.summary.errors %}
         <p id="summary-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.summary.errors|join:", " }}</p>
         {% endif %}
@@ -103,13 +104,13 @@
 
       <!-- Cover Image -->
       <div>
-        <label class="form-label" for="id_cover_image">Cover Image</label>
+        <label class="form-label" for="id_cover_image">{% trans "Cover Image" %}</label>
         <input type="file" name="cover_image" id="id_cover_image" accept="image/*"
                class="form-input !py-2 !px-3 bg-[var(--bg-secondary)] text-[var(--text-primary)]"
                {% if form.cover_image.errors %}aria-invalid="true" aria-describedby="cover_image-error"{% endif %}>
         {% if form.instance.cover_image %}
         <p class="text-xs text-[var(--text-secondary)] mt-1.5">
-          Current image: <a href="{{ form.instance.cover_image.url }}" target="_blank" class="text-[var(--accent)] hover:underline">{{ form.instance.cover_image.name }}</a>
+          {% trans "Current image:" %} <a href="{{ form.instance.cover_image.url }}" target="_blank" class="text-[var(--accent)] hover:underline">{{ form.instance.cover_image.name }}</a>
         </p>
         {% endif %}
         {% if form.cover_image.errors %}
@@ -119,7 +120,7 @@
 
       <!-- Content (EasyMDE) -->
       <div>
-        <label class="form-label" for="id_content">Content</label>
+        <label class="form-label" for="id_content">{% trans "Content" %}</label>
         <textarea name="content" id="id_content" required
                   {% if form.content.errors %}aria-invalid="true" aria-describedby="content-error"{% endif %}>{{ form.content.value|default:'' }}</textarea>
         {% if form.content.errors %}
@@ -132,9 +133,9 @@
         <!-- Tags Multiple Select -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <label class="form-label !mb-0" for="id_tags">Tags <span class="font-normal text-[var(--text-muted)]">(Select multiple)</span></label>
-            <button type="button" id="btn-suggest-tags" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="Suggest relevant tags using AI">
-              ✨ Suggest tags
+            <label class="form-label !mb-0" for="id_tags">{% trans "Tags" %} <span class="font-normal text-[var(--text-muted)]">({% trans "Select multiple" %})</span></label>
+            <button type="button" id="btn-suggest-tags" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="{% trans 'Suggest relevant tags using AI' %}">
+              ✨ {% trans "Suggest tags" %}
             </button>
           </div>
           <select name="tags" id="id_tags" multiple
@@ -156,7 +157,7 @@
         <!-- Publishing Status & Allow Comments Options -->
         <div class="space-y-6">
           <div>
-            <label class="form-label" for="id_status">Status</label>
+            <label class="form-label" for="id_status">{% trans "Status" %}</label>
             <select name="status" id="id_status" class="form-input !py-2.5 !px-3.5"
                     {% if form.status.errors %}aria-invalid="true" aria-describedby="status-error"{% endif %}>
               {% for value, name in form.status.field.choices %}
@@ -174,7 +175,7 @@
                      {% if form.allow_comments.value %}checked{% endif %}
                      class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5"
                      {% if form.allow_comments.errors %}aria-invalid="true" aria-describedby="allow_comments-error"{% endif %}>
-              <span class="text-sm font-medium text-[var(--text-secondary)]">Allow comments on this post</span>
+              <span class="text-sm font-medium text-[var(--text-secondary)]">{% trans "Allow comments on this post" %}</span>
             </label>
             {% if form.allow_comments.errors %}
             <p id="allow_comments-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.allow_comments.errors|join:", " }}</p>
@@ -189,7 +190,7 @@
                        {% if form.is_premium.value %}checked{% endif %}
                        class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5"
                        {% if form.is_premium.errors %}aria-invalid="true" aria-describedby="is_premium-error"{% endif %}>
-                <span class="text-sm font-medium text-[var(--text-secondary)] font-semibold">Mark as Premium post</span>
+                <span class="text-sm font-medium text-[var(--text-secondary)] font-semibold">{% trans "Mark as Premium post" %}</span>
               </label>
             </div>
             {% if form.is_premium.errors %}
@@ -197,7 +198,7 @@
             {% endif %}
 
             <div>
-              <label class="form-label" for="id_premium_price">Premium Price ($)</label>
+              <label class="form-label" for="id_premium_price">{% trans "Premium Price ($)" %}</label>
               <input type="number" name="premium_price" id="id_premium_price" step="0.01" min="0"
                      value="{{ form.premium_price.value|default:'' }}"
                      placeholder="e.g. 4.99"
@@ -212,7 +213,7 @@
           <!-- Early Access fields -->
           <div class="border-t border-[var(--border)] pt-4 space-y-4">
             <div>
-              <label class="form-label" for="id_early_access_at">Early Access Datetime <span class="font-normal text-[var(--text-muted)]">(for subscribers)</span></label>
+              <label class="form-label" for="id_early_access_at">{% trans "Early Access Datetime" %} <span class="font-normal text-[var(--text-muted)]">({% trans "for subscribers" %})</span></label>
               <input type="datetime-local" name="early_access_at" id="id_early_access_at"
                      value="{{ form.early_access_at.value|date:'Y-m-d\TH:i' }}"
                      class="form-input !py-2 !px-3"
@@ -229,10 +230,10 @@
     <!-- Actions -->
     <div class="flex items-center gap-3 pt-6 border-t border-[var(--border)]">
       <button type="submit" class="btn-primary">
-        {% if object %}Save updates{% else %}Publish story{% endif %}
+        {% if object %}{% trans "Save updates" %}{% else %}{% trans "Publish story" %}{% endif %}
       </button>
       <a href="{% if object %}{{ object.get_absolute_url }}{% else %}{% url 'blog:post_list' %}{% endif %}" class="btn-ghost">
-        Cancel
+        {% trans "Cancel" %}
       </a>
     </div>
   </form>
@@ -247,10 +248,10 @@
         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
         </svg>
-        AI Writing Assistant
+        {% trans "AI Writing Assistant" %}
       </span>
     </div>
-    <button type="button" id="close-ai-panel" class="p-1.5 rounded-lg hover:bg-zinc-800/80 transition-colors text-zinc-400 hover:text-white" aria-label="Close panel">
+    <button type="button" id="close-ai-panel" class="p-1.5 rounded-lg hover:bg-zinc-800/80 transition-colors text-zinc-400 hover:text-white" aria-label="{% trans 'Close panel' %}">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
       </svg>
@@ -261,38 +262,38 @@
   <div class="flex-1 overflow-y-auto p-4 space-y-4">
     <!-- Contextual indicator -->
     <div id="ai-selection-status" class="text-[11px] text-zinc-400 bg-zinc-900/50 border border-zinc-800/50 p-2.5 rounded-lg">
-      <span class="text-zinc-200 font-semibold">Ready.</span> Select text in editor to focus AI actions, or run on full text.
+      <span class="text-zinc-200 font-semibold">{% trans "Ready." %}</span> {% trans "Select text in editor to focus AI actions, or run on full text." %}
     </div>
 
     <!-- AI Actions Section -->
     <div class="space-y-2.5">
-      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Writing Tools</label>
+      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">{% trans "Writing Tools" %}</label>
       
       <!-- Action 1: Improve Writing -->
       <button type="button" id="ai-btn-improve" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
         <span class="flex items-center gap-2">
-          <span class="text-sm">✍️</span> Improve writing
+          <span class="text-sm">✍️</span> {% trans "Improve writing" %}
         </span>
-        <span class="text-[10px] text-zinc-500 font-medium">Selected / All</span>
+        <span class="text-[10px] text-zinc-500 font-medium">{% trans "Selected / All" %}</span>
       </button>
 
       <!-- Action 4: Change Tone (with inline dropdown) -->
       <div class="bg-zinc-900 border border-zinc-800/50 p-2.5 rounded-lg space-y-2">
         <div class="flex items-center justify-between">
           <span class="text-xs font-semibold text-zinc-200 flex items-center gap-2">
-            <span class="text-sm">🎭</span> Change tone
+            <span class="text-sm">🎭</span> {% trans "Change tone" %}
           </span>
-          <span class="text-[10px] text-zinc-500 font-medium">Selected / All</span>
+          <span class="text-[10px] text-zinc-500 font-medium">{% trans "Selected / All" %}</span>
         </div>
         <div class="flex gap-1.5">
           <select id="ai-tone-select" class="flex-1 bg-zinc-950 border border-zinc-800 rounded px-2 py-1.5 text-xs text-zinc-200 outline-none focus:border-purple-500">
-            <option value="Professional">Professional</option>
-            <option value="Casual">Casual</option>
-            <option value="Humorous">Humorous</option>
-            <option value="Academic">Academic</option>
+            <option value="Professional">{% trans "Professional" %}</option>
+            <option value="Casual">{% trans "Casual" %}</option>
+            <option value="Humorous">{% trans "Humorous" %}</option>
+            <option value="Academic">{% trans "Academic" %}</option>
           </select>
           <button type="button" id="ai-btn-tone" class="bg-purple-600 hover:bg-purple-500 text-white rounded px-3 py-1.5 text-xs font-bold transition-colors">
-            Go
+            {% trans "Go" %}
           </button>
         </div>
       </div>
@@ -300,24 +301,24 @@
       <!-- Action 3: Fix Grammar -->
       <button type="button" id="ai-btn-grammar" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
         <span class="flex items-center gap-2">
-          <span class="text-sm">🔍</span> Fix grammar & spelling
+          <span class="text-sm">🔍</span> {% trans "Fix grammar & spelling" %}
         </span>
-        <span class="text-[10px] text-zinc-500 font-medium">Full content</span>
+        <span class="text-[10px] text-zinc-500 font-medium">{% trans "Full content" %}</span>
       </button>
 
       <!-- Action 2: Continue Writing -->
       <button type="button" id="ai-btn-continue" class="w-full text-left flex items-center justify-between p-2.5 rounded-lg bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/50 hover:border-zinc-700/50 transition-all text-xs font-semibold text-zinc-200">
         <span class="flex items-center gap-2">
-          <span class="text-sm">🚀</span> Continue writing
+          <span class="text-sm">🚀</span> {% trans "Continue writing" %}
         </span>
-        <span class="text-[10px] text-zinc-500 font-medium">Last 500 chars</span>
+        <span class="text-[10px] text-zinc-500 font-medium">{% trans "Last 500 chars" %}</span>
       </button>
     </div>
 
     <!-- Spinner loading state -->
     <div id="ai-loading-container" class="hidden flex flex-col items-center justify-center py-6 space-y-2 bg-zinc-900/20 rounded-lg border border-zinc-800/30">
       <div class="w-6 h-6 border-2 border-purple-500/20 border-t-purple-500 rounded-full animate-spin"></div>
-      <p class="text-[10px] text-zinc-400">Claude is composing...</p>
+      <p class="text-[10px] text-zinc-400">{% trans "Claude is composing..." %}</p>
     </div>
 
     <!-- Errors output -->
@@ -325,13 +326,13 @@
 
     <!-- Results Preview container -->
     <div id="ai-result-section" class="hidden space-y-3">
-      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">Preview Changes</label>
+      <label class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">{% trans "Preview Changes" %}</label>
       
       <!-- Result view panel -->
       <div class="border border-zinc-800 rounded bg-zinc-950 overflow-hidden text-xs">
         <div id="ai-preview-tabs" class="flex border-b border-zinc-800 text-zinc-400 bg-zinc-900 text-[11px]">
-          <button type="button" id="tab-result" class="flex-1 py-2 text-center font-bold border-b border-purple-500 text-white">Result</button>
-          <button type="button" id="tab-diff" class="flex-1 py-2 text-center font-bold border-b border-transparent hover:text-zinc-200">Compare (Diff)</button>
+          <button type="button" id="tab-result" class="flex-1 py-2 text-center font-bold border-b border-purple-500 text-white">{% trans "Result" %}</button>
+          <button type="button" id="tab-diff" class="flex-1 py-2 text-center font-bold border-b border-transparent hover:text-zinc-200">{% trans "Compare (Diff)" %}</button>
         </div>
         
         <!-- Text content -->
@@ -344,10 +345,10 @@
       <!-- Accept / Discard Actions -->
       <div class="flex gap-2">
         <button type="button" id="ai-btn-apply" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white rounded py-2 text-xs font-bold transition-colors flex items-center justify-center gap-1.5">
-          <span>✓</span> Apply
+          <span>✓</span> {% trans "Apply" %}
         </button>
         <button type="button" id="ai-btn-discard" class="flex-1 bg-zinc-900 hover:bg-zinc-850 text-zinc-300 border border-zinc-800 rounded py-2 text-xs font-bold transition-colors">
-          Discard
+          {% trans "Discard" %}
         </button>
       </div>
     </div>

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
 
 from .models import Post, Comment, Tag, Profile
 
@@ -109,13 +110,13 @@ class UserProfileForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.exclude(pk=self.user.pk).filter(email=email).exists():
-            raise forms.ValidationError("This email address is already in use.")
+            raise forms.ValidationError(_("This email address is already in use."))
         return email
 
     def clean_upi_id(self):
         upi_id = self.cleaned_data.get("upi_id")
         if upi_id and "@" not in upi_id:
-            raise forms.ValidationError("Invalid UPI ID format. Should be like username@upi.")
+            raise forms.ValidationError(_("Invalid UPI ID format. Should be like username@upi."))
         return upi_id
 
     def save(self, commit=True):

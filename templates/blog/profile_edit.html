@@ -1,18 +1,19 @@
 {% extends 'base.html' %}
-{% block title %}Edit Profile — Blog CMS{% endblock %}
+{% load i18n %}
+{% block title %}{% trans "Edit Profile — Blog CMS" %}{% endblock %}
 
 {% block content %}
 <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-slide-up">
   <!-- Header -->
   <div class="mb-10 text-center">
-    <div class="avatar !w-16 !h-16 !text-2xl font-bold mx-auto mb-4 shadow">
+    <div class="avatar !w-16 !h-16 !text-2xl font-bold mx-auto mb-4 shadow" aria-hidden="true">
       {{ user.username|first|upper }}
     </div>
     <h1 class="font-serif font-bold text-3xl text-[var(--text-primary)]">
-      Edit Profile
+      {% trans "Edit Profile" %}
     </h1>
     <p class="text-sm text-[var(--text-secondary)] mt-1.5">
-      Update your personal credentials and direct payment information.
+      {% trans "Update your personal credentials and direct payment information." %}
     </p>
   </div>
 
@@ -28,19 +29,19 @@
     <div class="space-y-5">
       <!-- Username (Display Only) -->
       <div>
-        <label class="form-label" for="id_username">Username</label>
+        <label class="form-label" for="id_username">{% trans "Username" %}</label>
         <input type="text" id="id_username" value="{{ user.username }}" disabled
                class="form-input opacity-60 bg-[var(--bg-tertiary)] cursor-not-allowed w-full">
-        <p class="text-[11px] text-[var(--text-muted)] mt-1">Username identifier cannot be changed.</p>
+        <p class="text-[11px] text-[var(--text-muted)] mt-1">{% trans "Username identifier cannot be changed." %}</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- First name -->
         <div>
-          <label class="form-label" for="id_first_name">First Name</label>
+          <label class="form-label" for="id_first_name">{% trans "First Name" %}</label>
           <input type="text" name="first_name" id="id_first_name"
                  value="{{ form.first_name.value|default:'' }}"
-                 placeholder="Your first name..."
+                 placeholder="{% trans 'Your first name...' %}"
                  class="form-input w-full"
                  {% if form.first_name.errors %}aria-invalid="true" aria-describedby="first_name-error"{% endif %}>
           {% for error in form.first_name.errors %}
@@ -50,10 +51,10 @@
 
         <!-- Last name -->
         <div>
-          <label class="form-label" for="id_last_name">Last Name</label>
+          <label class="form-label" for="id_last_name">{% trans "Last Name" %}</label>
           <input type="text" name="last_name" id="id_last_name"
                  value="{{ form.last_name.value|default:'' }}"
-                 placeholder="Your last name..."
+                 placeholder="{% trans 'Your last name...' %}"
                  class="form-input w-full"
                  {% if form.last_name.errors %}aria-invalid="true" aria-describedby="last_name-error"{% endif %}>
           {% for error in form.last_name.errors %}
@@ -64,10 +65,10 @@
 
       <!-- Email -->
       <div>
-        <label class="form-label" for="id_email">Email Address</label>
+        <label class="form-label" for="id_email">{% trans "Email Address" %}</label>
         <input type="email" name="email" id="id_email"
                value="{{ form.email.value|default:'' }}"
-               placeholder="you@example.com" required
+               placeholder="{% trans 'you@example.com' %}" required
                class="form-input w-full"
                {% if form.email.errors %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
         {% for error in form.email.errors %}
@@ -78,16 +79,16 @@
       <hr class="border-[var(--border)] my-6">
 
       <div class="mb-4">
-        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">Donation & Payment Methods</h3>
-        <p class="text-xs text-[var(--text-muted)]">Configure how readers can tip or support your content directly.</p>
+        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">{% trans "Donation & Payment Methods" %}</h3>
+        <p class="text-xs text-[var(--text-muted)]">{% trans "Configure how readers can tip or support your content directly." %}</p>
       </div>
 
       <!-- Buy Me A Coffee URL -->
       <div>
-        <label class="form-label" for="id_buymeacoffee_url">Buy Me a Coffee URL</label>
+        <label class="form-label" for="id_buymeacoffee_url">{% trans "Buy Me a Coffee URL" %}</label>
         <input type="url" name="buymeacoffee_url" id="id_buymeacoffee_url"
                value="{{ form.buymeacoffee_url.value|default:'' }}"
-               placeholder="https://buymeacoffee.com/yourusername"
+               placeholder="{% trans 'https://buymeacoffee.com/yourusername' %}"
                class="form-input w-full"
                {% if form.buymeacoffee_url.errors %}aria-invalid="true" aria-describedby="buymeacoffee_url-error"{% endif %}>
         {% for error in form.buymeacoffee_url.errors %}
@@ -97,10 +98,10 @@
 
       <!-- PayPal Email -->
       <div>
-        <label class="form-label" for="id_paypal_email">PayPal Email (for PayPal.me)</label>
+        <label class="form-label" for="id_paypal_email">{% trans "PayPal Email (for PayPal.me)" %}</label>
         <input type="email" name="paypal_email" id="id_paypal_email"
                value="{{ form.paypal_email.value|default:'' }}"
-               placeholder="yourname@paypal.com"
+               placeholder="{% trans 'yourname@paypal.com' %}"
                class="form-input w-full"
                {% if form.paypal_email.errors %}aria-invalid="true" aria-describedby="paypal_email-error"{% endif %}>
         {% for error in form.paypal_email.errors %}
@@ -110,30 +111,30 @@
 
       <!-- UPI ID -->
       <div>
-        <label class="form-label" for="id_upi_id">UPI ID</label>
+        <label class="form-label" for="id_upi_id">{% trans "UPI ID" %}</label>
         <input type="text" name="upi_id" id="id_upi_id"
                value="{{ form.upi_id.value|default:'' }}"
-               placeholder="username@upi"
+               placeholder="{% trans 'username@upi' %}"
                class="form-input w-full"
                aria-describedby="upi_id-helper {% if form.upi_id.errors %}upi_id-error{% endif %}"
                {% if form.upi_id.errors %}aria-invalid="true"{% endif %}>
         {% for error in form.upi_id.errors %}
         <p id="upi-id-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
-        <p id="upi_id-helper" class="text-[11px] text-[var(--text-muted)] mt-1">Enter your UPI ID format: username@bankname</p>
+        <p id="upi_id-helper" class="text-[11px] text-[var(--text-muted)] mt-1">{% trans "Enter your UPI ID format: username@bankname" %}</p>
       </div>
 
       <hr class="border-[var(--border)] my-6">
 
       <div class="mb-4">
-        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">Monthly Subscription Tiers</h3>
-        <p class="text-xs text-[var(--text-muted)]">Configure monthly support details for your reader subscriptions.</p>
+        <h3 class="text-base font-serif font-semibold text-[var(--text-primary)]">{% trans "Monthly Subscription Tiers" %}</h3>
+        <p class="text-xs text-[var(--text-muted)]">{% trans "Configure monthly support details for your reader subscriptions." %}</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <!-- Supporter Price -->
         <div>
-          <label class="form-label" for="id_supporter_price">Supporter Tier Price ($)</label>
+          <label class="form-label" for="id_supporter_price">{% trans "Supporter Tier Price ($)" %}</label>
           <input type="number" name="supporter_price" id="id_supporter_price" step="0.01" min="0"
                  value="{{ form.supporter_price.value|default:'5.00' }}"
                  class="form-input w-full"
@@ -145,7 +146,7 @@
 
         <!-- Patron Price -->
         <div>
-          <label class="form-label" for="id_patron_price">Patron Tier Price ($)</label>
+          <label class="form-label" for="id_patron_price">{% trans "Patron Tier Price ($)" %}</label>
           <input type="number" name="patron_price" id="id_patron_price" step="0.01" min="0"
                  value="{{ form.patron_price.value|default:'15.00' }}"
                  class="form-input w-full"
@@ -158,9 +159,9 @@
 
       <!-- Supporter Perks -->
       <div>
-        <label class="form-label" for="id_supporter_perks">Supporter Perks</label>
+        <label class="form-label" for="id_supporter_perks">{% trans "Supporter Perks" %}</label>
         <textarea name="supporter_perks" id="id_supporter_perks" rows="2"
-                  placeholder="Perks for supporters..."
+                  placeholder="{% trans 'Perks for supporters...' %}"
                   class="form-input w-full resize-none"
                   {% if form.supporter_perks.errors %}aria-invalid="true" aria-describedby="supporter_perks-error"{% endif %}>{{ form.supporter_perks.value|default:'Early access to posts, No ads' }}</textarea>
         {% for error in form.supporter_perks.errors %}
@@ -170,9 +171,9 @@
 
       <!-- Patron Perks -->
       <div>
-        <label class="form-label" for="id_patron_perks">Patron Perks</label>
+        <label class="form-label" for="id_patron_perks">{% trans "Patron Perks" %}</label>
         <textarea name="patron_perks" id="id_patron_perks" rows="2"
-                  placeholder="Perks for patrons..."
+                  placeholder="{% trans 'Perks for patrons...' %}"
                   class="form-input w-full resize-none"
                   {% if form.patron_perks.errors %}aria-invalid="true" aria-describedby="patron_perks-error"{% endif %}>{{ form.patron_perks.value|default:'Everything in Supporter + Direct messages' }}</textarea>
         {% for error in form.patron_perks.errors %}
@@ -185,10 +186,10 @@
     <!-- Actions -->
     <div class="flex items-center gap-3 pt-6 border-t border-[var(--border)]">
       <button type="submit" class="btn-primary w-full sm:w-auto justify-center">
-        Save profile updates
+        {% trans "Save profile updates" %}
       </button>
       <a href="{% url 'blog:dashboard' %}" class="btn-ghost w-full sm:w-auto justify-center">
-        Cancel
+        {% trans "Cancel" %}
       </a>
     </div>
   </form>
