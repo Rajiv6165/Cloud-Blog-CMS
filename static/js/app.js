@@ -132,11 +132,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ─── Back to top ─────────────────────────────────────────────────────
   const backToTop = document.getElementById('back-to-top');
-  window.addEventListener('scroll', () => {
-    if (backToTop) {
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
       backToTop.classList.toggle('visible', window.scrollY > 400);
-    }
-  }, { passive: true });
+    }, { passive: true });
+
+    backToTop.addEventListener('click', () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
+    });
+  }
 
   // ─── Reading progress bar ─────────────────────────────────────────────
   const progressBar = document.getElementById('reading-progress');
