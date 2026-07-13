@@ -372,4 +372,66 @@
   }
 </script>
 {% endif %}
+
+<!-- Floating Reading Preferences Trigger Button -->
+<button type="button" id="reading-pref-btn" class="fixed bottom-6 left-6 z-40 flex items-center justify-center w-12 h-12 rounded-full bg-[var(--bg-secondary)] border border-[var(--border)] shadow-lg hover:shadow-xl hover:bg-[var(--bg-tertiary)] transition-all text-sm font-semibold select-none text-[var(--text-primary)]" aria-label="{% trans 'Open reading preferences' %}" aria-expanded="false" aria-controls="reading-pref-panel">
+  Aa
+</button>
+
+<!-- Reading Preferences Glass Panel -->
+<div id="reading-pref-panel" class="fixed bottom-20 left-6 z-50 w-72 bg-zinc-950/95 backdrop-blur-md text-zinc-100 border border-zinc-800/80 rounded-2xl shadow-xl transform translate-y-8 opacity-0 pointer-events-none transition-all duration-300 ease-out flex flex-col p-5" role="dialog" aria-label="{% trans 'Reading preferences' %}">
+  <div class="flex items-center justify-between mb-4 border-b border-zinc-800/80 pb-2.5">
+    <span class="text-xs font-bold uppercase tracking-wider text-purple-400">{% trans "Reading Settings" %}</span>
+    <button type="button" id="close-reading-pref" class="p-1 rounded hover:bg-zinc-800/80 transition-colors text-zinc-400 hover:text-white" aria-label="{% trans 'Close panel' %}">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="space-y-4 text-xs">
+    <!-- Font Size -->
+    <div class="space-y-1.5">
+      <div class="flex justify-between font-semibold text-zinc-300">
+        <span>{% trans "Font Size" %}</span>
+        <span id="font-size-label">{% trans "Medium" %}</span>
+      </div>
+      <input type="range" id="pref-font-size" min="1" max="4" value="2" class="w-full h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-purple-500" aria-valuemin="1" aria-valuemax="4" aria-valuenow="2">
+      <div class="flex justify-between text-[9px] text-zinc-500 font-mono">
+        <span>{% trans "A-" %}</span>
+        <span>{% trans "A" %}</span>
+        <span>{% trans "A+" %}</span>
+        <span>{% trans "A++" %}</span>
+      </div>
+    </div>
+
+    <!-- Font Family -->
+    <div class="space-y-1.5">
+      <span class="font-semibold text-zinc-300 block">{% trans "Font Family" %}</span>
+      <div class="flex bg-zinc-900 border border-zinc-800 p-0.5 rounded-lg">
+        <button type="button" id="font-sans" class="flex-1 py-1 rounded text-center font-medium font-sans">{% trans "Sans" %}</button>
+        <button type="button" id="font-serif" class="flex-1 py-1 rounded text-center font-medium font-serif">{% trans "Serif" %}</button>
+        <button type="button" id="font-mono" class="flex-1 py-1 rounded text-center font-medium font-mono">{% trans "Mono" %}</button>
+      </div>
+    </div>
+
+    <!-- Line Height -->
+    <div class="space-y-1.5">
+      <span class="font-semibold text-zinc-300 block">{% trans "Line Spacing" %}</span>
+      <div class="flex bg-zinc-900 border border-zinc-800 p-0.5 rounded-lg">
+        <button type="button" id="lh-compact" class="flex-1 py-1 rounded text-center font-medium">{% trans "Compact" %}</button>
+        <button type="button" id="lh-normal" class="flex-1 py-1 rounded text-center font-medium">{% trans "Normal" %}</button>
+        <button type="button" id="lh-relaxed" class="flex-1 py-1 rounded text-center font-medium">{% trans "Relaxed" %}</button>
+      </div>
+    </div>
+
+    <!-- Reading Width -->
+    <div class="space-y-1.5">
+      <span class="font-semibold text-zinc-300 block">{% trans "Content Width" %}</span>
+      <div class="flex bg-zinc-900 border border-zinc-800 p-0.5 rounded-lg">
+        <button type="button" id="width-narrow" class="flex-1 py-1 rounded text-center font-medium">{% trans "Narrow" %}</button>
+        <button type="button" id="width-normal" class="flex-1 py-1 rounded text-center font-medium">{% trans "Normal" %}</button>
+        <button type="button" id="width-wide" class="flex-1 py-1 rounded text-center font-medium">{% trans "Wide" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

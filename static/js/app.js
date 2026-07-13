@@ -23,6 +23,70 @@ function applyTheme(dark) {
   }
 })();
 
+function toggleHighContrast() {
+  const isContrast = html.classList.contains('high-contrast');
+  localStorage.setItem('high-contrast', isContrast ? 'false' : 'true');
+  html.classList.toggle('high-contrast', !isContrast);
+}
+
+// Reading Preferences Global Application Functions
+window.applyFontSize = function(size) {
+  let px;
+  switch (size) {
+    case 'small': px = '0.875rem'; break;
+    case 'medium': px = '1.125rem'; break;
+    case 'large': px = '1.25rem'; break;
+    case 'xl': px = '1.5rem'; break;
+    default: px = '1.125rem';
+  }
+  document.documentElement.style.setProperty('--reading-font-size', px);
+};
+
+window.applyFontFamily = function(family) {
+  let fontStack;
+  switch (family) {
+    case 'sans': fontStack = "'Inter', system-ui, -apple-system, sans-serif"; break;
+    case 'serif': fontStack = "'Playfair Display', Georgia, serif"; break;
+    case 'mono': fontStack = "'JetBrains Mono', monospace"; break;
+    default: fontStack = "'Inter', system-ui, sans-serif";
+  }
+  document.documentElement.style.setProperty('--reading-font-family', fontStack);
+};
+
+window.applyLineSpacing = function(spacing) {
+  let val;
+  switch (spacing) {
+    case 'compact': val = '1.4'; break;
+    case 'normal': val = '1.75'; break;
+    case 'relaxed': val = '2.1'; break;
+    default: val = '1.75';
+  }
+  document.documentElement.style.setProperty('--reading-line-height', val);
+};
+
+window.applyContentWidth = function(width) {
+  let val;
+  switch (width) {
+    case 'narrow': val = '55ch'; break;
+    case 'normal': val = '65ch'; break;
+    case 'wide': val = '80ch'; break;
+    default: val = '65ch';
+  }
+  document.documentElement.style.setProperty('--reading-max-width', val);
+};
+
+// Apply saved reading preferences immediately
+(function() {
+  const size = localStorage.getItem('reading-font-size') || 'medium';
+  const family = localStorage.getItem('reading-font-family') || 'sans';
+  const spacing = localStorage.getItem('reading-line-spacing') || 'normal';
+  const width = localStorage.getItem('reading-content-width') || 'normal';
+  window.applyFontSize(size);
+  window.applyFontFamily(family);
+  window.applyLineSpacing(spacing);
+  window.applyContentWidth(width);
+})();
+
 function toggleTheme() {
   const isDark = html.classList.contains('dark');
   localStorage.setItem('theme', isDark ? 'light' : 'dark');
@@ -78,6 +142,165 @@ document.addEventListener('DOMContentLoaded', () => {
   // Sync the theme icons after DOM load
   const isDark = html.classList.contains('dark');
   applyTheme(isDark);
+
+  // ─── Reading Preferences Panel ───────────────────────────────────────
+  const prefBtn = document.getElementById('reading-pref-btn');
+  const prefPanel = document.getElementById('reading-pref-panel');
+  const closePrefBtn = document.getElementById('close-reading-pref');
+  
+  if (prefBtn && prefPanel && closePrefBtn) {
+    // Open/Close
+    prefBtn.addEventListener('click', () => {
+      const isOpen = prefPanel.classList.contains('open');
+      if (isOpen) {
+        prefPanel.classList.remove('open', 'opacity-100', 'translate-y-0');
+        prefPanel.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none');
+        prefBtn.setAttribute('aria-expanded', 'false');
+      } else {
+        prefPanel.classList.add('open', 'opacity-100', 'translate-y-0');
+        prefPanel.classList.remove('opacity-0', 'translate-y-8', 'pointer-events-none');
+        prefBtn.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    closePrefBtn.addEventListener('click', () => {
+      prefPanel.classList.remove('open', 'opacity-100', 'translate-y-0');
+      prefPanel.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none');
+      prefBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    // Font Size Slider
+    const fontSizeSlider = document.getElementById('pref-font-size');
+    const fontSizeLabel = document.getElementById('font-size-label');
+    const fontSizesMap = { 1: 'small', 2: 'medium', 3: 'large', 4: 'xl' };
+    
+    // Set initial slider position
+    const curSize = localStorage.getItem('reading-font-size') || 'medium';
+    const initSliderVal = Object.keys(fontSizesMap).find(key => fontSizesMap[key] === curSize) || '2';
+    fontSizeSlider.value = initSliderVal;
+    fontSizeSlider.setAttribute('aria-valuenow', initSliderVal);
+    
+    const fontSizeTexts = {
+      'small': 'Small',
+      'medium': 'Medium',
+      'large': 'Large',
+      'xl': 'Extra Large'
+    };
+    if (fontSizeLabel) fontSizeLabel.textContent = fontSizeTexts[curSize];
+    fontSizeSlider.setAttribute('aria-valuetext', fontSizeTexts[curSize]);
+
+    fontSizeSlider.addEventListener('input', (e) => {
+      const val = e.target.value;
+      const sizeStr = fontSizesMap[val];
+      if (fontSizeLabel) fontSizeLabel.textContent = fontSizeTexts[sizeStr];
+      fontSizeSlider.setAttribute('aria-valuenow', val);
+      fontSizeSlider.setAttribute('aria-valuetext', fontSizeTexts[sizeStr]);
+      localStorage.setItem('reading-font-size', sizeStr);
+      window.applyFontSize(sizeStr);
+    });
+
+    // Font Family buttons
+    const familyButtons = {
+      'sans': document.getElementById('font-sans'),
+      'serif': document.getElementById('font-serif'),
+      'mono': document.getElementById('font-mono')
+    };
+    
+    function updateFamilyUI(activeFamily) {
+      Object.keys(familyButtons).forEach(fam => {
+        const btn = familyButtons[fam];
+        if (btn) {
+          if (fam === activeFamily) {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium bg-purple-600 text-white font-' + fam;
+          } else {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium text-zinc-400 hover:text-white font-' + fam;
+          }
+        }
+      });
+    }
+    
+    const curFamily = localStorage.getItem('reading-font-family') || 'sans';
+    updateFamilyUI(curFamily);
+    
+    Object.keys(familyButtons).forEach(fam => {
+      const btn = familyButtons[fam];
+      if (btn) {
+        btn.addEventListener('click', () => {
+          localStorage.setItem('reading-font-family', fam);
+          updateFamilyUI(fam);
+          window.applyFontFamily(fam);
+        });
+      }
+    });
+
+    // Line Spacing buttons
+    const spacingButtons = {
+      'compact': document.getElementById('lh-compact'),
+      'normal': document.getElementById('lh-normal'),
+      'relaxed': document.getElementById('lh-relaxed')
+    };
+
+    function updateSpacingUI(activeSpacing) {
+      Object.keys(spacingButtons).forEach(sp => {
+        const btn = spacingButtons[sp];
+        if (btn) {
+          if (sp === activeSpacing) {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium bg-purple-600 text-white';
+          } else {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium text-zinc-400 hover:text-white';
+          }
+        }
+      });
+    }
+
+    const curSpacing = localStorage.getItem('reading-line-spacing') || 'normal';
+    updateSpacingUI(curSpacing);
+
+    Object.keys(spacingButtons).forEach(sp => {
+      const btn = spacingButtons[sp];
+      if (btn) {
+        btn.addEventListener('click', () => {
+          localStorage.setItem('reading-line-spacing', sp);
+          updateSpacingUI(sp);
+          window.applyLineSpacing(sp);
+        });
+      }
+    });
+
+    // Reading Width buttons
+    const widthButtons = {
+      'narrow': document.getElementById('width-narrow'),
+      'normal': document.getElementById('width-normal'),
+      'wide': document.getElementById('width-wide')
+    };
+
+    function updateWidthUI(activeWidth) {
+      Object.keys(widthButtons).forEach(wd => {
+        const btn = widthButtons[wd];
+        if (btn) {
+          if (wd === activeWidth) {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium bg-purple-600 text-white';
+          } else {
+            btn.className = 'flex-1 py-1 rounded text-center font-medium text-zinc-400 hover:text-white';
+          }
+        }
+      });
+    }
+
+    const curWidth = localStorage.getItem('reading-content-width') || 'normal';
+    updateWidthUI(curWidth);
+
+    Object.keys(widthButtons).forEach(wd => {
+      const btn = widthButtons[wd];
+      if (btn) {
+        btn.addEventListener('click', () => {
+          localStorage.setItem('reading-content-width', wd);
+          updateWidthUI(wd);
+          window.applyContentWidth(wd);
+        });
+      }
+    });
+  }
 
   // ─── Mobile menu ─────────────────────────────────────────────────────
   const menuBtn = document.getElementById('mobile-menu-btn');

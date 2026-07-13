@@ -736,3 +736,72 @@ msgstr ""
 
 msgid "👁 {{ views }} views"
 msgstr ""
+
+msgid "A"
+msgstr ""
+
+msgid "A+"
+msgstr ""
+
+msgid "A++"
+msgstr ""
+
+msgid "A-"
+msgstr ""
+
+msgid "Compact"
+msgstr ""
+
+msgid "Content Width"
+msgstr ""
+
+msgid "Font Family"
+msgstr ""
+
+msgid "Font Size"
+msgstr ""
+
+msgid "Line Spacing"
+msgstr ""
+
+msgid "Medium"
+msgstr ""
+
+msgid "Mono"
+msgstr ""
+
+msgid "Narrow"
+msgstr ""
+
+msgid "Normal"
+msgstr ""
+
+msgid "Open reading preferences"
+msgstr ""
+
+msgid "Reading Settings"
+msgstr ""
+
+msgid "Reading preferences"
+msgstr ""
+
+msgid "Relaxed"
+msgstr ""
+
+msgid "Sans"
+msgstr ""
+
+msgid "Serif"
+msgstr ""
+
+msgid "Toggle High Contrast"
+msgstr ""
+
+msgid "Toggle high contrast"
+msgstr ""
+
+msgid "Toggle high contrast mode"
+msgstr ""
+
+msgid "Wide"
+msgstr ""

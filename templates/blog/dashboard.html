@@ -52,12 +52,12 @@
             <td class="py-4 px-6">
               {% if post.status == 'published' %}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                <span class="text-[10px]" aria-hidden="true">●</span>
                 {% trans "Published" %}
               </span>
               {% else %}
               <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
+                <span class="text-[10px]" aria-hidden="true">○</span>
                 {% trans "Draft" %}
               </span>
               {% endif %}

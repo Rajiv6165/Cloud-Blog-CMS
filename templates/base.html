@@ -2,12 +2,26 @@
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 {% get_current_language_bidi as LANGUAGE_BIDI %}
-<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} class="dark">
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#6d28d9">
   <title>{% block title %}Blog CMS{% endblock %}</title>
+  <script>
+    (function() {
+      if (localStorage.getItem('high-contrast') === 'true') {
+        document.documentElement.classList.add('high-contrast');
+      }
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    })();
+  </script>
 
   <!-- DNS Prefetch & Preconnect Hints -->
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
@@ -204,6 +218,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
             </svg>
           </button>
+
+          <!-- High Contrast Toggle -->
+          <button class="theme-toggle" onclick="toggleHighContrast()" aria-label="{% trans 'Toggle high contrast' %}" id="contrast-btn">
+            <svg id="icon-eye" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
         </nav>
 
         <!-- Mobile hamburger menu button -->
@@ -240,6 +262,10 @@
         <button class="btn-ghost justify-center gap-2" onclick="toggleTheme()" aria-label="{% trans 'Toggle light and dark mode' %}">
           <span>{% trans "Toggle Theme" %}</span>
         </button>
+        <!-- Contrast toggle (mobile) -->
+        <button class="btn-ghost justify-center gap-2" onclick="toggleHighContrast()" aria-label="{% trans 'Toggle high contrast mode' %}">
+          <span>{% trans "Toggle High Contrast" %}</span>
+        </button>
       </div>
     </div>
   </header>
@@ -252,7 +278,16 @@
       {% if message.tags == 'success' %}border-green-200 bg-green-50/50 text-green-800 dark:border-green-900/50 dark:bg-green-950/40 dark:text-green-300
       {% elif message.tags == 'error' %}border-red-200 bg-red-50/50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300
       {% else %}border-blue-200 bg-blue-50/50 text-blue-800 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300{% endif %}">
-      <span class="text-sm font-medium">{{ message }}</span>
+      <span class="text-sm font-medium flex items-center gap-1.5">
+        {% if message.tags == 'success' %}
+          <span aria-hidden="true">✓</span>
+        {% elif message.tags == 'error' %}
+          <span aria-hidden="true">✗</span>
+        {% else %}
+          <span aria-hidden="true">ℹ</span>
+        {% endif %}
+        {{ message }}
+      </span>
       <button data-dismiss class="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200 text-current" aria-label="{% trans 'Dismiss alert' %}">
         <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>

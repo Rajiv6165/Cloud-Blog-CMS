@@ -513,3 +513,109 @@ body {
 [lang="ar"] .post-card { direction: rtl; }
 [lang="ar"] .toc { direction: rtl; }
 
+/* High Contrast Theme Manual Overrides */
+html.high-contrast {
+  --bg-primary: #ffffff !important;
+  --bg-secondary: #f0f0f0 !important;
+  --bg-tertiary: #e0e0e0 !important;
+  --text-primary: #000000 !important;
+  --text-secondary: #1a1a1a !important;
+  --text-muted: #333333 !important;
+  --accent: #0000cc !important;
+  --accent-light: #e0e0ff !important;
+  --border: #000000 !important;
+  --border-hover: #000000 !important;
+}
+
+html.high-contrast.dark {
+  --bg-primary: #000000 !important;
+  --bg-secondary: #111113 !important;
+  --bg-tertiary: #222225 !important;
+  --text-primary: #ffffff !important;
+  --text-secondary: #eeeeee !important;
+  --text-muted: #cccccc !important;
+  --accent: #6699ff !important;
+  --accent-light: #111133 !important;
+  --border: #ffffff !important;
+  --border-hover: #ffffff !important;
+}
+
+html.high-contrast .post-card,
+html.high-contrast .toc,
+html.high-contrast .comment-card {
+  border-width: 2px !important;
+  border-color: var(--border) !important;
+}
+
+html.high-contrast .btn-primary {
+  border: 2px solid currentColor !important;
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+html.high-contrast .tag-pill {
+  border: 1px solid currentColor !important;
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --bg-primary: #ffffff !important;
+    --bg-secondary: #f0f0f0 !important;
+    --bg-tertiary: #e0e0e0 !important;
+    --text-primary: #000000 !important;
+    --text-secondary: #1a1a1a !important;
+    --text-muted: #333333 !important;
+    --accent: #0000cc !important;
+    --accent-light: #e0e0ff !important;
+    --border: #000000 !important;
+    --border-hover: #000000 !important;
+  }
+  .dark {
+    --bg-primary: #000000 !important;
+    --bg-secondary: #111113 !important;
+    --bg-tertiary: #222225 !important;
+    --text-primary: #ffffff !important;
+    --text-secondary: #eeeeee !important;
+    --text-muted: #cccccc !important;
+    --accent: #6699ff !important;
+    --accent-light: #111133 !important;
+    --border: #ffffff !important;
+    --border-hover: #ffffff !important;
+  }
+  .post-card, .toc, .comment-card {
+    border-width: 2px !important;
+    border-color: var(--border) !important;
+  }
+  .btn-primary {
+    border: 2px solid currentColor !important;
+    background: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+  }
+  .tag-pill {
+    border: 1px solid currentColor !important;
+  }
+}
+
+/* Reading Preferences Base CSS Styles */
+:root {
+  --reading-font-size: 1.125rem;
+  --reading-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --reading-line-height: 1.75;
+  --reading-max-width: 65ch;
+}
+
+.prose-content {
+  font-size: var(--reading-font-size) !important;
+  font-family: var(--reading-font-family) !important;
+  line-height: var(--reading-line-height) !important;
+  max-width: var(--reading-max-width) !important;
+}
+
+.prose-content p,
+.prose-content li {
+  font-size: var(--reading-font-size) !important;
+  font-family: var(--reading-font-family) !important;
+  line-height: var(--reading-line-height) !important;
+}
+
+
