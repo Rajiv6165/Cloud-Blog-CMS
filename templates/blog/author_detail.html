@@ -7,7 +7,7 @@
   <!-- Author Header Section -->
   <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-8 mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-8 shadow-sm">
     <div class="flex items-center gap-6">
-      <div class="avatar !w-20 !h-20 !text-3xl font-bold shadow-md">
+      <div class="avatar !w-20 !h-20 !text-3xl font-bold shadow-md" aria-hidden="true">
         {{ author.username|first|upper }}
       </div>
       <div>
@@ -16,11 +16,11 @@
         </h1>
         <p class="text-sm text-[var(--text-muted)] mt-1">@{{ author.username }}</p>
         <div class="flex items-center gap-3 mt-3.5">
-          <span class="stat-badge">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <span class="stat-badge" aria-label="{{ posts.count }} stories published">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
             </svg>
-            {{ posts.count }} Stories
+            <span aria-hidden="true">{{ posts.count }} Stories</span>
           </span>
         </div>
       </div>
@@ -35,22 +35,22 @@
       <p class="text-xs text-[var(--text-muted)] mb-4">Support my work directly via payment options below.</p>
       <div class="flex flex-wrap items-center gap-3.5">
         {% if profile.buymeacoffee_url %}
-        <a href="{{ profile.buymeacoffee_url }}" target="_blank" rel="noopener noreferrer" class="btn-primary !text-xs !py-1.5 !px-3.5 flex items-center gap-1.5 shadow-sm">
-          <span>☕ Buy me a coffee</span>
+        <a href="{{ profile.buymeacoffee_url }}" target="_blank" rel="noopener noreferrer" class="btn-primary !text-xs !py-1.5 !px-3.5 flex items-center gap-1.5 shadow-sm" aria-label="Buy me a coffee on external site">
+          <span aria-hidden="true">☕ Buy me a coffee</span>
         </a>
         {% endif %}
         
         {% if profile.paypal_email %}
-        <a href="https://paypal.me/{{ profile.paypal_email }}" target="_blank" rel="noopener noreferrer" class="btn-ghost !text-xs !py-1.5 !px-3.5 flex items-center gap-1.5 border border-blue-500/20 text-blue-500 hover:bg-blue-500/5">
-          <span>PayPal</span>
+        <a href="https://paypal.me/{{ profile.paypal_email }}" target="_blank" rel="noopener noreferrer" class="btn-ghost !text-xs !py-1.5 !px-3.5 flex items-center gap-1.5 border border-blue-500/20 text-blue-500 hover:bg-blue-500/5" aria-label="Support via PayPal on external site">
+          <span aria-hidden="true">PayPal</span>
         </a>
         {% endif %}
 
         {% if profile.upi_id %}
         <div class="flex items-center gap-2 bg-[var(--bg-tertiary)] px-3 py-1.5 rounded-lg border border-[var(--border)] max-w-max shadow-sm">
           <span class="text-xs font-mono font-semibold" id="upi-val">{{ profile.upi_id }}</span>
-          <button type="button" onclick="copyUPI('{{ profile.upi_id }}')" class="text-xs text-[var(--accent)] hover:underline flex items-center gap-1 font-medium" id="copy-btn">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+          <button type="button" onclick="copyUPI('{{ profile.upi_id }}')" class="text-xs text-[var(--accent)] hover:underline flex items-center gap-1 font-medium" id="copy-btn" aria-label="Copy UPI ID to clipboard">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
             Copy
           </button>
         </div>
@@ -99,10 +99,10 @@
             {% elif is_subscriber and sub_tier == 'free' %}
               <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Following</button>
             {% else %}
-              <button onclick="subscribeAuthor('free')" class="btn-primary w-full py-2 !text-xs">Follow</button>
+              <button onclick="subscribeAuthor('free')" class="btn-primary w-full py-2 !text-xs" aria-label="Follow {{ author.username }} for free">Follow</button>
             {% endif %}
           {% else %}
-            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center">Sign in to Follow</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center" aria-label="Sign in to follow {{ author.username }}">Sign in to Follow</a>
           {% endif %}
         </div>
       </div>
@@ -130,10 +130,10 @@
             {% elif is_subscriber and sub_tier == 'supporter' %}
               <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Subscribed</button>
             {% else %}
-              <button onclick="subscribeAuthor('supporter')" class="btn-primary w-full py-2 !text-xs !bg-amber-600 hover:!bg-amber-700">Subscribe</button>
+              <button onclick="subscribeAuthor('supporter')" class="btn-primary w-full py-2 !text-xs !bg-amber-600 hover:!bg-amber-700" aria-label="Subscribe as a Supporter for ${{ profile.supporter_price|default:'5.00' }} per month">Subscribe</button>
             {% endif %}
           {% else %}
-            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-amber-600 hover:!bg-amber-700">Sign in to Subscribe</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-amber-600 hover:!bg-amber-700" aria-label="Sign in to subscribe as a Supporter for ${{ profile.supporter_price|default:'5.00' }} per month">Sign in to Subscribe</a>
           {% endif %}
         </div>
       </div>
@@ -161,10 +161,10 @@
             {% elif is_subscriber and sub_tier == 'patron' %}
               <button class="btn-ghost w-full py-2 !text-xs opacity-50 cursor-not-allowed" disabled>Subscribed</button>
             {% else %}
-              <button onclick="subscribeAuthor('patron')" class="btn-primary w-full py-2 !text-xs !bg-purple-600 hover:!bg-purple-700">Subscribe</button>
+              <button onclick="subscribeAuthor('patron')" class="btn-primary w-full py-2 !text-xs !bg-purple-600 hover:!bg-purple-700" aria-label="Subscribe as a Patron for ${{ profile.patron_price|default:'15.00' }} per month">Subscribe</button>
             {% endif %}
           {% else %}
-            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-purple-600 hover:!bg-purple-700">Sign in to Subscribe</a>
+            <a href="{% url 'login' %}?next={{ request.path }}" class="btn-primary w-full py-2 !text-xs block text-center !bg-purple-600 hover:!bg-purple-700" aria-label="Sign in to subscribe as a Patron for ${{ profile.patron_price|default:'15.00' }} per month">Sign in to Subscribe</a>
           {% endif %}
         </div>
       </div>
@@ -181,16 +181,16 @@
     {% if posts %}
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {% for post in posts %}
-      <article class="post-card flex flex-col justify-between h-full">
-        <a href="{{ post.get_absolute_url }}" class="block flex-1 group">
+      <article class="post-card flex flex-col justify-between h-full relative">
+        <a href="{{ post.get_absolute_url }}" class="block flex-1 group after:absolute after:inset-0" aria-label="Read full story: {{ post.title }}">
           <div class="cover-placeholder">
-            <span class="font-serif font-bold text-4xl text-[var(--accent)] opacity-40 select-none group-hover:scale-110 transition-transform duration-300">
+            <span class="font-serif font-bold text-4xl text-[var(--accent)] opacity-40 select-none group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
               {{ post.title|first|upper }}
             </span>
           </div>
 
           <div class="p-6">
-            <div class="flex flex-wrap gap-1 mb-3.5">
+            <div class="flex flex-wrap gap-1 mb-3.5 relative z-10">
               {% for tag in post.tags.all|slice:":3" %}
               <span class="text-[10px] font-mono font-medium tracking-wide uppercase px-2 py-0.5 rounded bg-[var(--accent-light)] text-[var(--accent)]">
                 #{{ tag.name }}
@@ -208,27 +208,27 @@
           </div>
         </a>
 
-        <div class="px-6 pb-6 pt-4 border-t border-[var(--border)] flex items-center justify-between">
+        <div class="px-6 pb-6 pt-4 border-t border-[var(--border)] flex items-center justify-between relative z-10">
           <div class="flex items-center gap-2">
-            <div class="avatar">
+            <div class="avatar" aria-hidden="true">
               {{ post.author.username|first|upper }}
             </div>
             <span class="text-xs font-medium text-[var(--text-secondary)]">{{ post.author.get_full_name|default:post.author.username }}</span>
           </div>
           
           <div class="flex items-center gap-3">
-            <span class="stat-badge" title="Estimated reading time">
-              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="stat-badge" aria-label="{{ post.reading_time }} minutes read" title="Estimated reading time">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
               </svg>
-              {{ post.reading_time }}m
+              <span aria-hidden="true">{{ post.reading_time }}m</span>
             </span>
-            <span class="stat-badge" title="Simulated views">
-              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="stat-badge" aria-label="{{ post.view_count }} views" title="Simulated views">
+              <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
               </svg>
-              {{ post.view_count }}
+              <span aria-hidden="true">{{ post.view_count }}</span>
             </span>
           </div>
         </div>

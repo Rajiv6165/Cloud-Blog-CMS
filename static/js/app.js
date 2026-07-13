@@ -80,9 +80,54 @@ document.addEventListener('DOMContentLoaded', () => {
   applyTheme(isDark);
 
   // ─── Mobile menu ─────────────────────────────────────────────────────
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let firstFocusable = null;
+  let lastFocusable = null;
+
+  function focusTrapListener(e) {
+    if (e.key === 'Tab') {
+      const activeEl = document.activeElement;
+      if (e.shiftKey) {
+        if (activeEl === firstFocusable) {
+          lastFocusable.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (activeEl === lastFocusable) {
+          firstFocusable.focus();
+          e.preventDefault();
+        }
+      }
+    } else if (e.key === 'Escape') {
+      window.toggleMobileMenu();
+    }
+  }
+
   window.toggleMobileMenu = function() {
     const menu = document.getElementById('mobile-menu');
-    if (menu) menu.classList.toggle('open');
+    if (!menu) return;
+    const isOpen = menu.classList.toggle('open');
+    const btn = document.getElementById('mobile-menu-btn');
+    if (btn) {
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    if (isOpen) {
+      const focusables = menu.querySelectorAll('a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), [tabindex="0"]');
+      if (focusables.length > 0) {
+        firstFocusable = focusables[0];
+        lastFocusable = focusables[focusables.length - 1];
+        firstFocusable.focus();
+        menu.addEventListener('keydown', focusTrapListener);
+      }
+    } else {
+      menu.removeEventListener('keydown', focusTrapListener);
+      const btn = document.getElementById('mobile-menu-btn');
+      if (btn) {
+        btn.focus();
+      }
+    }
   }
 
   // ─── Back to top ─────────────────────────────────────────────────────

@@ -4,7 +4,7 @@
   --bg-tertiary: #f0ede8;
   --text-primary: #0a0a0a;
   --text-secondary: #525252;
-  --text-muted: #a3a3a3;
+  --text-muted: #707070;
   --accent: #6d28d9;
   --accent-light: #ede9fe;
   --border: rgba(0, 0, 0, 0.08);
@@ -27,7 +27,7 @@
   --bg-tertiary: #18181b;
   --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
+  --text-muted: #8c8c96;
   --accent: #a78bfa;
   --accent-light: #1e1b4b;
   --border: rgba(255, 255, 255, 0.08);
@@ -38,6 +38,11 @@
 
 * {
   box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 html {

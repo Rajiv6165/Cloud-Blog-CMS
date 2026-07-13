@@ -41,9 +41,10 @@
           <input type="text" name="first_name" id="id_first_name"
                  value="{{ form.first_name.value|default:'' }}"
                  placeholder="Your first name..."
-                 class="form-input w-full">
+                 class="form-input w-full"
+                 {% if form.first_name.errors %}aria-invalid="true" aria-describedby="first_name-error"{% endif %}>
           {% for error in form.first_name.errors %}
-          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          <p id="first_name-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
           {% endfor %}
         </div>
 
@@ -53,9 +54,10 @@
           <input type="text" name="last_name" id="id_last_name"
                  value="{{ form.last_name.value|default:'' }}"
                  placeholder="Your last name..."
-                 class="form-input w-full">
+                 class="form-input w-full"
+                 {% if form.last_name.errors %}aria-invalid="true" aria-describedby="last_name-error"{% endif %}>
           {% for error in form.last_name.errors %}
-          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          <p id="last_name-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
@@ -66,9 +68,10 @@
         <input type="email" name="email" id="id_email"
                value="{{ form.email.value|default:'' }}"
                placeholder="you@example.com" required
-               class="form-input w-full">
+               class="form-input w-full"
+               {% if form.email.errors %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
         {% for error in form.email.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="email-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -85,9 +88,10 @@
         <input type="url" name="buymeacoffee_url" id="id_buymeacoffee_url"
                value="{{ form.buymeacoffee_url.value|default:'' }}"
                placeholder="https://buymeacoffee.com/yourusername"
-               class="form-input w-full">
+               class="form-input w-full"
+               {% if form.buymeacoffee_url.errors %}aria-invalid="true" aria-describedby="buymeacoffee_url-error"{% endif %}>
         {% for error in form.buymeacoffee_url.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="buymeacoffee_url-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -97,9 +101,10 @@
         <input type="email" name="paypal_email" id="id_paypal_email"
                value="{{ form.paypal_email.value|default:'' }}"
                placeholder="yourname@paypal.com"
-               class="form-input w-full">
+               class="form-input w-full"
+               {% if form.paypal_email.errors %}aria-invalid="true" aria-describedby="paypal_email-error"{% endif %}>
         {% for error in form.paypal_email.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="paypal_email-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -109,11 +114,13 @@
         <input type="text" name="upi_id" id="id_upi_id"
                value="{{ form.upi_id.value|default:'' }}"
                placeholder="username@upi"
-               class="form-input w-full">
+               class="form-input w-full"
+               aria-describedby="upi_id-helper {% if form.upi_id.errors %}upi_id-error{% endif %}"
+               {% if form.upi_id.errors %}aria-invalid="true"{% endif %}>
         {% for error in form.upi_id.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="upi-id-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
-        <p class="text-[11px] text-[var(--text-muted)] mt-1">Enter your UPI ID format: username@bankname</p>
+        <p id="upi_id-helper" class="text-[11px] text-[var(--text-muted)] mt-1">Enter your UPI ID format: username@bankname</p>
       </div>
 
       <hr class="border-[var(--border)] my-6">
@@ -129,9 +136,10 @@
           <label class="form-label" for="id_supporter_price">Supporter Tier Price ($)</label>
           <input type="number" name="supporter_price" id="id_supporter_price" step="0.01" min="0"
                  value="{{ form.supporter_price.value|default:'5.00' }}"
-                 class="form-input w-full">
+                 class="form-input w-full"
+                 {% if form.supporter_price.errors %}aria-invalid="true" aria-describedby="supporter_price-error"{% endif %}>
           {% for error in form.supporter_price.errors %}
-          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          <p id="supporter_price-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
           {% endfor %}
         </div>
 
@@ -140,9 +148,10 @@
           <label class="form-label" for="id_patron_price">Patron Tier Price ($)</label>
           <input type="number" name="patron_price" id="id_patron_price" step="0.01" min="0"
                  value="{{ form.patron_price.value|default:'15.00' }}"
-                 class="form-input w-full">
+                 class="form-input w-full"
+                 {% if form.patron_price.errors %}aria-invalid="true" aria-describedby="patron_price-error"{% endif %}>
           {% for error in form.patron_price.errors %}
-          <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+          <p id="patron_price-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
@@ -152,9 +161,10 @@
         <label class="form-label" for="id_supporter_perks">Supporter Perks</label>
         <textarea name="supporter_perks" id="id_supporter_perks" rows="2"
                   placeholder="Perks for supporters..."
-                  class="form-input w-full resize-none">{{ form.supporter_perks.value|default:'Early access to posts, No ads' }}</textarea>
+                  class="form-input w-full resize-none"
+                  {% if form.supporter_perks.errors %}aria-invalid="true" aria-describedby="supporter_perks-error"{% endif %}>{{ form.supporter_perks.value|default:'Early access to posts, No ads' }}</textarea>
         {% for error in form.supporter_perks.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="supporter_perks-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -163,9 +173,10 @@
         <label class="form-label" for="id_patron_perks">Patron Perks</label>
         <textarea name="patron_perks" id="id_patron_perks" rows="2"
                   placeholder="Perks for patrons..."
-                  class="form-input w-full resize-none">{{ form.patron_perks.value|default:'Everything in Supporter + Direct messages' }}</textarea>
+                  class="form-input w-full resize-none"
+                  {% if form.patron_perks.errors %}aria-invalid="true" aria-describedby="patron_perks-error"{% endif %}>{{ form.patron_perks.value|default:'Everything in Supporter + Direct messages' }}</textarea>
         {% for error in form.patron_perks.errors %}
-        <p class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
+        <p id="patron_perks-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 

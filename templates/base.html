@@ -123,6 +123,11 @@
   {% block head %}{% endblock %}
 </head>
 <body class="bg-[var(--bg-primary)] text-[var(--text-primary)] min-h-screen flex flex-col transition-colors duration-300">
+  <!-- Skip navigation link -->
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-[var(--accent)] focus:text-white focus:rounded-lg">
+    Skip to main content
+  </a>
+
   <!-- Reading progress bar -->
   {% block reading_progress %}{% endblock %}
 
@@ -131,57 +136,57 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
-        <a href="{% url 'blog:post_list' %}" class="font-serif font-bold text-xl logo-gradient tracking-tight">
+        <a href="{% url 'blog:post_list' %}" class="font-serif font-bold text-xl logo-gradient tracking-tight" aria-label="Blog CMS Home">
           Blog CMS
         </a>
 
         <!-- Search Bar (Desktop) -->
-        <form method="get" action="{% url 'blog:post_list' %}" class="hidden md:flex relative items-center">
+        <form method="get" action="{% url 'blog:post_list' %}" class="hidden md:flex relative items-center" role="search">
           <span class="absolute left-3.5 flex items-center pointer-events-none">
-            <svg class="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </span>
-          <input name="q" type="search" placeholder="Search stories..." class="search-input" value="{{ query|default:'' }}">
+          <input name="q" type="search" placeholder="Search stories..." class="search-input" value="{{ query|default:'' }}" aria-label="Search stories">
         </form>
 
         <!-- Desktop Navigation Actions -->
-        <nav class="hidden md:flex items-center gap-6">
+        <nav class="hidden md:flex items-center gap-6" aria-label="Main navigation">
           {% if user.is_authenticated %}
-            <a href="{% url 'blog:post_create' %}" class="btn-primary">
-              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <a href="{% url 'blog:post_create' %}" class="btn-primary" {% if request.resolver_match.url_name == 'post_create' %}aria-current="page"{% endif %}>
+              <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
               New story
             </a>
-            <a href="{% url 'blog:dashboard' %}" class="nav-link">Dashboard</a>
-            <a href="{% url 'blog:profile_edit' %}" class="nav-link">Profile</a>
+            <a href="{% url 'blog:dashboard' %}" class="nav-link" {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+            <a href="{% url 'blog:profile_edit' %}" class="nav-link" {% if request.resolver_match.url_name == 'profile_edit' %}aria-current="page"{% endif %}>Profile</a>
             <form method="post" action="{% url 'logout' %}" class="inline">
               {% csrf_token %}
-              <button type="submit" class="nav-link border-none bg-transparent cursor-pointer p-0 font-medium">Logout</button>
+              <button type="submit" class="nav-link border-none bg-transparent cursor-pointer p-0 font-medium" aria-label="Logout from your account">Logout</button>
             </form>
             {% if user.is_staff %}
               <a href="{% url 'admin:index' %}" class="nav-link text-purple-600 dark:text-purple-400">Admin</a>
             {% endif %}
           {% else %}
-            <a href="{% url 'register' %}" class="nav-link">Register</a>
-            <a href="{% url 'login' %}" class="btn-primary">Sign in</a>
+            <a href="{% url 'register' %}" class="nav-link" {% if request.resolver_match.url_name == 'register' %}aria-current="page"{% endif %}>Register</a>
+            <a href="{% url 'login' %}" class="btn-primary" {% if request.resolver_match.url_name == 'login' %}aria-current="page"{% endif %}>Sign in</a>
           {% endif %}
 
           <!-- Theme Toggle Switcher -->
           <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode" id="theme-btn">
-            <svg id="icon-moon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg id="icon-moon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
             </svg>
-            <svg id="icon-sun" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none">
+            <svg id="icon-sun" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
             </svg>
           </button>
         </nav>
 
         <!-- Mobile hamburger menu button -->
-        <button class="md:hidden theme-toggle" onclick="toggleMobileMenu()" aria-label="Menu">
-          <svg id="menu-icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <button class="md:hidden theme-toggle" onclick="toggleMobileMenu()" aria-label="Open mobile menu" aria-expanded="false" id="mobile-menu-btn" aria-controls="mobile-menu">
+          <svg id="menu-icon" width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
@@ -189,28 +194,28 @@
     </div>
 
     <!-- Mobile Navigation Drawer -->
-    <div class="mobile-menu md:hidden" id="mobile-menu">
-      <form method="get" action="{% url 'blog:post_list' %}" class="mb-4">
-        <input name="q" type="search" placeholder="Search posts..." class="form-input" value="{{ query|default:'' }}">
+    <div class="mobile-menu md:hidden" id="mobile-menu" role="dialog" aria-label="Mobile navigation">
+      <form method="get" action="{% url 'blog:post_list' %}" class="mb-4" role="search">
+        <input name="q" type="search" placeholder="Search posts..." class="form-input" value="{{ query|default:'' }}" aria-label="Search posts">
       </form>
       <div class="flex flex-col gap-2.5">
         {% if user.is_authenticated %}
-          <a href="{% url 'blog:post_create' %}" class="btn-primary justify-center">+ New story</a>
-          <a href="{% url 'blog:dashboard' %}" class="btn-ghost justify-center">Dashboard</a>
-          <a href="{% url 'blog:profile_edit' %}" class="btn-ghost justify-center">Profile</a>
+          <a href="{% url 'blog:post_create' %}" class="btn-primary justify-center" {% if request.resolver_match.url_name == 'post_create' %}aria-current="page"{% endif %}>+ New story</a>
+          <a href="{% url 'blog:dashboard' %}" class="btn-ghost justify-center" {% if request.resolver_match.url_name == 'dashboard' %}aria-current="page"{% endif %}>Dashboard</a>
+          <a href="{% url 'blog:profile_edit' %}" class="btn-ghost justify-center" {% if request.resolver_match.url_name == 'profile_edit' %}aria-current="page"{% endif %}>Profile</a>
           <form method="post" action="{% url 'logout' %}" class="w-full">
             {% csrf_token %}
-            <button type="submit" class="btn-ghost w-full justify-center">Logout</button>
+            <button type="submit" class="btn-ghost w-full justify-center" aria-label="Logout from your account">Logout</button>
           </form>
           {% if user.is_staff %}
             <a href="{% url 'admin:index' %}" class="btn-ghost justify-center text-purple-600 dark:text-purple-400">Admin</a>
           {% endif %}
         {% else %}
-          <a href="{% url 'register' %}" class="btn-ghost justify-center">Register</a>
-          <a href="{% url 'login' %}" class="btn-primary justify-center">Sign in</a>
+          <a href="{% url 'register' %}" class="btn-ghost justify-center" {% if request.resolver_match.url_name == 'register' %}aria-current="page"{% endif %}>Register</a>
+          <a href="{% url 'login' %}" class="btn-primary justify-center" {% if request.resolver_match.url_name == 'login' %}aria-current="page"{% endif %}>Sign in</a>
         {% endif %}
         <!-- Theme toggle (mobile) -->
-        <button class="btn-ghost justify-center gap-2" onclick="toggleTheme()">
+        <button class="btn-ghost justify-center gap-2" onclick="toggleTheme()" aria-label="Toggle light and dark mode">
           <span>Toggle Theme</span>
         </button>
       </div>
@@ -219,15 +224,15 @@
 
   <!-- Feedback/Alert Flash messages -->
   {% if messages %}
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6" aria-live="polite">
     {% for message in messages %}
-    <div data-message class="flex items-center justify-between gap-3 p-4 rounded-xl border mb-3 animate-fade-in transition-all duration-300
+    <div data-message {% if message.tags == 'error' %}role="alert"{% endif %} class="flex items-center justify-between gap-3 p-4 rounded-xl border mb-3 animate-fade-in transition-all duration-300
       {% if message.tags == 'success' %}border-green-200 bg-green-50/50 text-green-800 dark:border-green-900/50 dark:bg-green-950/40 dark:text-green-300
       {% elif message.tags == 'error' %}border-red-200 bg-red-50/50 text-red-800 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300
       {% else %}border-blue-200 bg-blue-50/50 text-blue-800 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300{% endif %}">
       <span class="text-sm font-medium">{{ message }}</span>
-      <button data-dismiss class="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200 text-current" aria-label="Dismiss">
-        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button data-dismiss class="p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors duration-200 text-current" aria-label="Dismiss alert">
+        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
       </button>
@@ -237,7 +242,7 @@
   {% endif %}
 
   <!-- Core Content Frame -->
-  <main class="page-content flex-1">
+  <main class="page-content flex-1" id="main-content">
     {% block content %}{% endblock %}
   </main>
 

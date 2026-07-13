@@ -36,7 +36,7 @@
     <!-- Meta descriptors -->
     <div class="flex flex-wrap items-center gap-4 mt-8 text-sm text-[var(--text-secondary)]">
       <a href="{% url 'blog:author_detail' object.author.username %}" class="flex items-center gap-2 hover:underline">
-        <div class="avatar">
+        <div class="avatar" aria-hidden="true">
           {{ object.author.username|first|upper }}
         </div>
         <span class="font-medium text-[var(--text-primary)]">
@@ -46,18 +46,18 @@
       <span class="text-[var(--text-muted)]">•</span>
       <span>{{ object.published_at|date:"F j, Y" }}</span>
       <span class="text-[var(--text-muted)]">•</span>
-      <span class="stat-badge">
-        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <span class="stat-badge" aria-label="{{ object.reading_time }} minutes read">
+        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
-        {{ object.reading_time }} min read
+        <span aria-hidden="true">{{ object.reading_time }} min read</span>
       </span>
-      <span class="stat-badge">
-        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <span class="stat-badge" aria-label="{{ object.view_count }} views">
+        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
         </svg>
-        {{ object.view_count }} views
+        <span aria-hidden="true">{{ object.view_count }} views</span>
       </span>
     </div>
   </div>
@@ -79,7 +79,7 @@
           src="{{ object.cover_image_blur }}"
           data-src="{{ object.cover_image.url }}"
           class="lazy-img w-full h-full object-cover"
-          alt="{{ object.title }}"
+          alt="Cover image for {{ object.title }}"
           fetchpriority="high"
           width="800"
           height="450"
@@ -153,7 +153,7 @@
         <div class="flex-1 min-w-0">
           <a href="{% url 'blog:ad_click' ad_post_bottom.pk %}" target="_blank" class="block group">
             {% if ad_post_bottom.image %}
-            <img src="{{ ad_post_bottom.image.url }}" alt="{{ ad_post_bottom.title }}" class="w-full max-h-64 object-cover rounded-xl mb-3" loading="lazy" width="600" height="300">
+            <img src="{{ ad_post_bottom.image.url }}" alt="Advertisement for {{ ad_post_bottom.title }}" class="w-full max-h-64 object-cover rounded-xl mb-3" loading="lazy" width="600" height="300">
             {% endif %}
             <h4 class="font-serif font-bold text-lg text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors leading-[1.3]">{{ ad_post_bottom.title }}</h4>
             <p class="text-sm text-[var(--text-secondary)] mt-1">Visit our sponsor to support our writing community.</p>
@@ -165,7 +165,7 @@
       <!-- Footer Author Card & Moderation Controls -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mt-16 pt-8 border-t border-[var(--border)]">
         <a href="{% url 'blog:author_detail' object.author.username %}" class="flex items-center gap-4 group">
-          <div class="avatar !w-12 !h-12 !text-base">
+          <div class="avatar !w-12 !h-12 !text-base" aria-hidden="true">
             {{ object.author.username|first|upper }}
           </div>
           <div>
@@ -231,7 +231,7 @@
           {% if object.allow_comments %}
           <div class="bg-[var(--bg-secondary)] border border-[var(--border)] rounded-2xl p-6 mb-10 animate-fade-in">
             <div class="flex items-center gap-3 mb-4">
-              <div class="avatar">{{ user.username|first|upper }}</div>
+              <div class="avatar" aria-hidden="true">{{ user.username|first|upper }}</div>
               <span class="text-sm font-medium text-[var(--text-primary)]">{{ user.username }}</span>
             </div>
             <form method="post" class="space-y-4">
@@ -262,7 +262,7 @@
           {% for comment in object.comments.all %}
             {% if comment.is_approved %}
             <article class="comment-card flex gap-4">
-              <div class="avatar mt-0.5">{{ comment.user.username|first|upper }}</div>
+              <div class="avatar mt-0.5" aria-hidden="true">{{ comment.user.username|first|upper }}</div>
               <div class="flex-1">
                 <div class="flex items-center justify-between gap-4 mb-1">
                   <div class="flex items-baseline gap-2">
@@ -278,6 +278,7 @@
                   {% if user == comment.user or user.is_staff %}
                   <a href="{% url 'blog:comment_delete' comment.pk %}" 
                      class="text-[11px] text-red-500 hover:underline opacity-65 hover:opacity-100 transition-opacity"
+                     aria-label="Delete comment by {{ comment.user.username }}"
                      onclick="return confirm('Are you sure you want to delete this comment?')">
                     Delete
                   </a>
@@ -311,7 +312,7 @@
           <span class="text-[9px] font-mono font-bold tracking-wide uppercase px-2 py-0.5 rounded bg-zinc-500/10 text-[var(--text-secondary)] border border-[var(--border)] self-start">Sponsored</span>
           <a href="{% url 'blog:ad_click' ad_sidebar_bottom.pk %}" target="_blank" class="block group">
             {% if ad_sidebar_bottom.image %}
-            <img src="{{ ad_sidebar_bottom.image.url }}" alt="{{ ad_sidebar_bottom.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy" width="300" height="250">
+            <img src="{{ ad_sidebar_bottom.image.url }}" alt="Advertisement for {{ ad_sidebar_bottom.title }}" class="w-full h-auto rounded-lg mb-2 object-cover" loading="lazy" width="300" height="250">
             {% endif %}
             <h4 class="font-bold text-sm leading-[1.3] text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">{{ ad_sidebar_bottom.title }}</h4>
           </a>

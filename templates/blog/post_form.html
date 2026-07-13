@@ -59,10 +59,11 @@
         <input type="text" name="title" id="id_title"
                value="{{ form.title.value|default:'' }}"
                placeholder="Write a captivating title..."
-               class="form-input !font-serif !text-xl !font-semibold !py-3.5 !px-5" required>
-        {% for error in form.title.errors %}
-        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-        {% endfor %}
+               class="form-input !font-serif !text-xl !font-semibold !py-3.5 !px-5" required
+               {% if form.title.errors %}aria-invalid="true" aria-describedby="title-error"{% endif %}>
+        {% if form.title.errors %}
+        <p id="title-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.title.errors|join:", " }}</p>
+        {% endif %}
       </div>
 
       <!-- Slug (Auto-generated) -->
@@ -73,49 +74,57 @@
           <input type="text" name="slug" id="id_slug"
                  value="{{ form.slug.value|default:'' }}"
                  placeholder="auto-generated-slug" required
-                 class="flex-1 bg-transparent border-none outline-none px-4 py-2.5 text-sm font-mono text-[var(--text-primary)]">
+                 class="flex-1 bg-transparent border-none outline-none px-4 py-2.5 text-sm font-mono text-[var(--text-primary)]"
+                 {% if form.slug.errors %}aria-invalid="true" aria-describedby="slug-error"{% endif %}>
         </div>
-        {% for error in form.slug.errors %}
-        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-        {% endfor %}
+        {% if form.slug.errors %}
+        <p id="slug-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.slug.errors|join:", " }}</p>
+        {% endif %}
       </div>
 
       <!-- Summary -->
       <div>
         <div class="flex items-center justify-between mb-1.5">
           <label class="form-label !mb-0" for="id_summary">Summary</label>
-          <button type="button" id="btn-auto-summarize" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all">
+          <button type="button" id="btn-auto-summarize" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="Auto-generate summary from content">
             ✨ Auto-generate
           </button>
         </div>
         <textarea name="summary" id="id_summary" rows="2"
                   placeholder="Provide a quick synopsis of the story..."
-                  class="form-input resize-none" maxlength="300">{{ form.summary.value|default:'' }}</textarea>
-        <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono">300 characters remaining</p>
+                  class="form-input resize-none" maxlength="300"
+                  aria-describedby="summary-counter {% if form.summary.errors %}summary-error{% endif %}"
+                  {% if form.summary.errors %}aria-invalid="true"{% endif %}>{{ form.summary.value|default:'' }}</textarea>
+        <p id="summary-counter" class="text-[11px] text-[var(--text-muted)] mt-1.5 text-right font-mono" aria-live="polite">300 characters remaining</p>
+        {% if form.summary.errors %}
+        <p id="summary-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.summary.errors|join:", " }}</p>
+        {% endif %}
       </div>
 
       <!-- Cover Image -->
       <div>
         <label class="form-label" for="id_cover_image">Cover Image</label>
         <input type="file" name="cover_image" id="id_cover_image" accept="image/*"
-               class="form-input !py-2 !px-3 bg-[var(--bg-secondary)] text-[var(--text-primary)]">
+               class="form-input !py-2 !px-3 bg-[var(--bg-secondary)] text-[var(--text-primary)]"
+               {% if form.cover_image.errors %}aria-invalid="true" aria-describedby="cover_image-error"{% endif %}>
         {% if form.instance.cover_image %}
         <p class="text-xs text-[var(--text-secondary)] mt-1.5">
           Current image: <a href="{{ form.instance.cover_image.url }}" target="_blank" class="text-[var(--accent)] hover:underline">{{ form.instance.cover_image.name }}</a>
         </p>
         {% endif %}
-        {% for error in form.cover_image.errors %}
-        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-        {% endfor %}
+        {% if form.cover_image.errors %}
+        <p id="cover_image-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.cover_image.errors|join:", " }}</p>
+        {% endif %}
       </div>
 
       <!-- Content (EasyMDE) -->
       <div>
         <label class="form-label" for="id_content">Content</label>
-        <textarea name="content" id="id_content" required>{{ form.content.value|default:'' }}</textarea>
-        {% for error in form.content.errors %}
-        <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-        {% endfor %}
+        <textarea name="content" id="id_content" required
+                  {% if form.content.errors %}aria-invalid="true" aria-describedby="content-error"{% endif %}>{{ form.content.value|default:'' }}</textarea>
+        {% if form.content.errors %}
+        <p id="content-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.content.errors|join:", " }}</p>
+        {% endif %}
       </div>
 
       <!-- Tags & Status Fields Grid -->
@@ -124,12 +133,14 @@
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="form-label !mb-0" for="id_tags">Tags <span class="font-normal text-[var(--text-muted)]">(Select multiple)</span></label>
-            <button type="button" id="btn-suggest-tags" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all">
+            <button type="button" id="btn-suggest-tags" class="text-xs font-semibold text-purple-650 dark:text-purple-400 hover:underline flex items-center gap-1 transition-all" aria-label="Suggest relevant tags using AI">
               ✨ Suggest tags
             </button>
           </div>
           <select name="tags" id="id_tags" multiple
-                  class="form-input min-h-[120px] !py-2.5 !px-3.5">
+                  class="form-input min-h-[120px] !py-2.5 !px-3.5"
+                  aria-describedby="suggested-tags-container {% if form.tags.errors %}tags-error{% endif %}"
+                  {% if form.tags.errors %}aria-invalid="true"{% endif %}>
             {% for value, name in form.tags.field.choices %}
               <option value="{{ value }}" {% if form.tags.value and value in form.tags.value %}selected{% endif %}>{{ name }}</option>
             {% endfor %}
@@ -137,35 +148,37 @@
           <!-- Suggested Tags Pills Container -->
           <div id="suggested-tags-container" class="flex flex-wrap gap-1.5 mt-2.5"></div>
           
-          {% for error in form.tags.errors %}
-          <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-          {% endfor %}
+          {% if form.tags.errors %}
+          <p id="tags-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.tags.errors|join:", " }}</p>
+          {% endif %}
         </div>
 
         <!-- Publishing Status & Allow Comments Options -->
         <div class="space-y-6">
           <div>
             <label class="form-label" for="id_status">Status</label>
-            <select name="status" id="id_status" class="form-input !py-2.5 !px-3.5">
+            <select name="status" id="id_status" class="form-input !py-2.5 !px-3.5"
+                    {% if form.status.errors %}aria-invalid="true" aria-describedby="status-error"{% endif %}>
               {% for value, name in form.status.field.choices %}
                 <option value="{{ value }}" {% if form.status.value == value %}selected{% endif %}>{{ name }}</option>
               {% endfor %}
             </select>
-            {% for error in form.status.errors %}
-            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-            {% endfor %}
+            {% if form.status.errors %}
+            <p id="status-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.status.errors|join:", " }}</p>
+            {% endif %}
           </div>
 
           <div class="flex items-center">
             <label class="inline-flex items-center cursor-pointer select-none">
               <input type="checkbox" name="allow_comments" id="id_allow_comments"
                      {% if form.allow_comments.value %}checked{% endif %}
-                     class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5">
+                     class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5"
+                     {% if form.allow_comments.errors %}aria-invalid="true" aria-describedby="allow_comments-error"{% endif %}>
               <span class="text-sm font-medium text-[var(--text-secondary)]">Allow comments on this post</span>
             </label>
-            {% for error in form.allow_comments.errors %}
-            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-            {% endfor %}
+            {% if form.allow_comments.errors %}
+            <p id="allow_comments-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.allow_comments.errors|join:", " }}</p>
+            {% endif %}
           </div>
 
           <!-- Premium post fields -->
@@ -174,23 +187,25 @@
               <label class="inline-flex items-center cursor-pointer select-none">
                 <input type="checkbox" name="is_premium" id="id_is_premium"
                        {% if form.is_premium.value %}checked{% endif %}
-                       class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5">
+                       class="w-4.5 h-4.5 rounded border-[var(--border)] text-[var(--accent)] focus:ring-[var(--accent)] bg-[var(--bg-secondary)] mr-2.5"
+                       {% if form.is_premium.errors %}aria-invalid="true" aria-describedby="is_premium-error"{% endif %}>
                 <span class="text-sm font-medium text-[var(--text-secondary)] font-semibold">Mark as Premium post</span>
               </label>
             </div>
-            {% for error in form.is_premium.errors %}
-            <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-            {% endfor %}
+            {% if form.is_premium.errors %}
+            <p id="is_premium-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.is_premium.errors|join:", " }}</p>
+            {% endif %}
 
             <div>
               <label class="form-label" for="id_premium_price">Premium Price ($)</label>
               <input type="number" name="premium_price" id="id_premium_price" step="0.01" min="0"
                      value="{{ form.premium_price.value|default:'' }}"
                      placeholder="e.g. 4.99"
-                     class="form-input !py-2 !px-3">
-              {% for error in form.premium_price.errors %}
-              <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-              {% endfor %}
+                     class="form-input !py-2 !px-3"
+                     {% if form.premium_price.errors %}aria-invalid="true" aria-describedby="premium_price-error"{% endif %}>
+              {% if form.premium_price.errors %}
+              <p id="premium_price-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.premium_price.errors|join:", " }}</p>
+              {% endif %}
             </div>
           </div>
 
@@ -200,10 +215,11 @@
               <label class="form-label" for="id_early_access_at">Early Access Datetime <span class="font-normal text-[var(--text-muted)]">(for subscribers)</span></label>
               <input type="datetime-local" name="early_access_at" id="id_early_access_at"
                      value="{{ form.early_access_at.value|date:'Y-m-d\TH:i' }}"
-                     class="form-input !py-2 !px-3">
-              {% for error in form.early_access_at.errors %}
-              <p class="text-xs text-red-500 mt-1.5">{{ error }}</p>
-              {% endfor %}
+                     class="form-input !py-2 !px-3"
+                     {% if form.early_access_at.errors %}aria-invalid="true" aria-describedby="early_access_at-error"{% endif %}>
+              {% if form.early_access_at.errors %}
+              <p id="early_access_at-error" class="text-xs text-red-500 mt-1.5" role="alert">{{ form.early_access_at.errors|join:", " }}</p>
+              {% endif %}
             </div>
           </div>
         </div>

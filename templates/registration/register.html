@@ -25,12 +25,14 @@
         <input type="text" name="username" id="id_username" required
                value="{{ form.username.value|default:'' }}"
                placeholder="Username"
-               class="form-input">
+               class="form-input"
+               aria-describedby="{% if form.username.help_text %}username-helper {% endif %}{% if form.username.errors %}username-error{% endif %}"
+               {% if form.username.errors %}aria-invalid="true"{% endif %}>
         {% if form.username.help_text %}
-        <p class="text-[10px] text-[var(--text-muted)] mt-1 leading-relaxed">{{ form.username.help_text|safe }}</p>
+        <p id="username-helper" class="text-[10px] text-[var(--text-muted)] mt-1 leading-relaxed">{{ form.username.help_text|safe }}</p>
         {% endif %}
         {% for error in form.username.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="username-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -40,9 +42,10 @@
         <input type="email" name="email" id="id_email" required
                value="{{ form.email.value|default:'' }}"
                placeholder="you@example.com"
-               class="form-input">
+               class="form-input"
+               {% if form.email.errors %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
         {% for error in form.email.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="email-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -51,12 +54,14 @@
         <label class="form-label" for="id_password1">Password</label>
         <input type="password" name="password1" id="id_password1" required
                placeholder="••••••••"
-               class="form-input">
+               class="form-input"
+               aria-describedby="{% if form.password1.help_text %}password1-helper {% endif %}{% if form.password1.errors %}password1-error{% endif %}"
+               {% if form.password1.errors %}aria-invalid="true"{% endif %}>
         {% if form.password1.help_text %}
-        <div class="text-[10px] text-[var(--text-muted)] mt-1.5 leading-relaxed bg-[var(--bg-tertiary)]/50 p-2 rounded-lg border border-[var(--border)]">{{ form.password1.help_text|safe }}</div>
+        <div id="password1-helper" class="text-[10px] text-[var(--text-muted)] mt-1.5 leading-relaxed bg-[var(--bg-tertiary)]/50 p-2 rounded-lg border border-[var(--border)]">{{ form.password1.help_text|safe }}</div>
         {% endif %}
         {% for error in form.password1.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="password1-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -65,9 +70,10 @@
         <label class="form-label" for="id_password2">Confirm Password</label>
         <input type="password" name="password2" id="id_password2" required
                placeholder="••••••••"
-               class="form-input">
+               class="form-input"
+               {% if form.password2.errors %}aria-invalid="true" aria-describedby="password2-error"{% endif %}>
         {% for error in form.password2.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="password2-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 

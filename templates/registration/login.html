@@ -24,9 +24,10 @@
         <label class="form-label" for="id_username">Username</label>
         <input type="text" name="username" id="id_username" required
                placeholder="Your username"
-               class="form-input">
+               class="form-input"
+               {% if form.username.errors %}aria-invalid="true" aria-describedby="username-error"{% endif %}>
         {% for error in form.username.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="username-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
@@ -35,9 +36,10 @@
         <label class="form-label" for="id_password">Password</label>
         <input type="password" name="password" id="id_password" required
                placeholder="••••••••"
-               class="form-input">
+               class="form-input"
+               {% if form.password.errors %}aria-invalid="true" aria-describedby="password-error"{% endif %}>
         {% for error in form.password.errors %}
-        <p class="text-xs text-red-500 mt-1">{{ error }}</p>
+        <p id="password-error" class="text-xs text-red-500 mt-1" role="alert">{{ error }}</p>
         {% endfor %}
       </div>
 
