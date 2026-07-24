@@ -311,7 +311,7 @@
           <span class="font-serif font-bold text-lg logo-gradient tracking-tight">Blog CMS</span>
           <p class="text-xs text-[var(--text-muted)]">{% trans "A premium writing and publishing environment." %}</p>
         </div>
-        <p class="text-sm text-[var(--text-muted)]">{% blocktrans %}© {% now 'Y' %} Editorial Platform. All rights reserved.{% endblocktrans %}</p>
+        <p class="text-sm text-[var(--text-muted)]">{% now "Y" as current_year %}© {{ current_year }} Editorial Platform. All rights reserved.</p>
         <div class="flex items-center gap-6">
           <a href="{% url 'blog:post_list' %}" class="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors">{% trans "Home" %}</a>
           {% if user.is_staff %}
